@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mở Khóa Trái Tim</title>
+    <title>Mở Khóa Tình Yêu</title>
     <link rel="stylesheet" href="css/lock.css" />
     <link
       rel="stylesheet"
@@ -22,23 +22,23 @@
     <div class="floating-hearts" id="floatingHearts"></div>
 
     <div class="lock-container animate__animated animate__fadeIn">
-      <h2 class="lock-title">
-        <i class="fa-solid fa-lock fa-bounce" style="color: #fe6281"></i> Nhập
-        Mã Trí Tuệ
-        <i class="fa-solid fa-lock fa-bounce" style="color: #fe6281"></i>
-      </h2>
-      <div class="lock-inputs">
-        <input type="number" min="0" max="9" maxlength="1" class="digit" />
-        <input type="number" min="0" max="9" maxlength="1" class="digit" />
-        <input type="number" min="0" max="9" maxlength="1" class="digit" />
-        <input type="number" min="0" max="9" maxlength="1" class="digit" />
+      <h2 class="lock-title">Chạm để mở khóa</h2>
+      <p class="lock-subtitle">Giữ trái tim để đong đầy tình yêu ❤️</p>
+
+      <div class="heart-unlock-wrapper">
+        <div class="heart-bg">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+        <div class="heart-fill" id="heartFill">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+        <div class="heart-pulse"></div>
       </div>
-      <button class="unlock-btn" onclick="checkCode()">
-        <span class="lock-icon"
-          ><i class="fa-solid fa-brain fa-beat-fade"></i
-        ></span>
-        Mở khóa
-      </button>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="unlockProgress"></div>
+      </div>
+
       <div class="lock-message" id="lockMessage"></div>
     </div>
 

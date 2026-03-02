@@ -1,164 +1,540 @@
-<!DOCTYPE html>
-<html lang="vi">
+<!doctype html>
+<html lang="vi" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chúc Mừng Sinh Nhật!</title>
-    <link rel="stylesheet" href="css/celebration.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Thêm trong phần head -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link
       rel="stylesheet"
-      href="https://unpkg.com/swiper@8/swiper-bundle.min.css"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/celebration_new.css" />
   </head>
-  <body>
-    <div class="celebration-container">
-      <div class="content-wrapper">
-        <h1 class="birthday-title">Chúc Mừng Sinh Nhật</h1>
-        <h2 id="birthday-person">Người Đặc Biệt</h2>
+  <body
+    class="bg-pink-50 text-gray-800 relative min-h-screen overflow-x-hidden"
+  >
+    <!-- Overlay Effects -->
+    <div class="bg-grid"></div>
+    <div class="scrolling-text">
+      Happy Birthday Lovie ✨ Happy Birthday Lovie ✨ Happy Birthday Lovie ✨
+      Happy Birthday Lovie ✨
+    </div>
+    <canvas
+      id="canvas-overlay"
+      class="fixed inset-0 pointer-events-none z-0"
+    ></canvas>
 
-        <div class="cake-container">
-          <div class="cake">
-            <div class="plate"></div>
-            <div class="layer layer-bottom"></div>
-            <div class="layer layer-middle"></div>
-            <div class="layer layer-top"></div>
-            <div class="icing"></div>
-
-            <div class="decoration decoration-1"></div>
-            <div class="decoration decoration-2"></div>
-            <div class="decoration decoration-3"></div>
-            <div class="decoration decoration-4"></div>
-
-            <div class="candle candle-1">
-              <div class="candle-cap"></div>
-              <div class="flame"></div>
-            </div>
-            <div class="candle candle-2">
-              <div class="candle-cap"></div>
-              <div class="flame"></div>
-            </div>
-            <div class="candle candle-3">
-              <div class="candle-cap"></div>
-              <div class="flame"></div>
-            </div>
-            <div class="candle candle-4">
-              <div class="candle-cap"></div>
-              <div class="flame"></div>
-            </div>
-          </div>
-
-          <div class="blow-instruction">Nhấn để thổi nến nào!</div>
-        </div>
-
-        <div class="photo-slider-container">
-          <div class="swiper-container">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <img
-                  src="assets/images/Anh1.PNG"
-                  class="image-container"
-                  alt=""
-                />
-                <div class="image-caption">Khi bạn cố tỏ ra nguy hiểm</div>
-              </div>
-              <div class="swiper-slide">
-                <img
-                  src="assets/images/Anh3.PNG"
-                  class="image-container"
-                  alt=""
-                />
-                <div class="image-caption">
-                  Khi bạn hít khói cuộc đời mà vẫn phải mỉm cười
-                </div>
-              </div>
-              <div class="swiper-slide">
-                <img
-                  src="assets/images/Anh4.PNG"
-                  class="image-container"
-                  alt=""
-                />
-                <div class="image-caption">
-                  Đầu hàng cuộc sống nhưng vẫn đòi quyền lợi
-                </div>
-              </div>
-              <div class="swiper-slide">
-                <img
-                  src="assets/images/Anh5.PNG"
-                  class="image-container"
-                  alt=""
-                />
-                <div class="image-caption">
-                  Khi bạn uống 1 ly nhưng mặt bạn kể chuyện 10 ly
-                </div>
-              </div>
-              <div class="swiper-slide">
-                <img
-                  src="assets/images/Anh6.PNG"
-                  class="image-container"
-                  alt=""
-                />
-                <div class="image-caption">Chết in tại cổng trung thu</div>
-              </div>
-              <div class="swiper-slide">
-                <img
-                  src="assets/images/Anh7.PNG"
-                  class="image-container"
-                  alt=""
-                />
-                <div class="image-caption">
-                  Ngu mà không biết mình ngu là một dạng thiên tài
-                </div>
-              </div>
-            </div>
-
-            <!-- <div class="swiper-pagination"></div> -->
-            <!-- <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div> -->
-          </div>
-        </div>
-
-        <div class="wish-section  funny-mode">
-          <div class="wish-message">
-            <p>
-              Chúc bạn sinh nhật tuổi mới - càng thêm "xì tin" nhưng đừng "xì
-              teen" quá nhé!
-            </p>
-            <p class="jump">
-              Tuổi mới chúc Chu nghi: <br />
-              Tiền vào như nước sông Đà 💵<br />
-              Tình vào như mưa mùa hạ ❤️<br />
-              Cân nặng thì... đứng yên nhé! 🚫⚖️
-            </p>
-            <p class="spin">
-              Cứ vui chơi đi - tuổi già tính sau!<br />
-              Mãi tuổi 18 trong tim mà, đúng không? 😜<br />
-              <span class="rainbow-text">Sinh nhật zui zẻ nhaaaa!!! 🥳🎊</span>
-            </p>
-            <p>
-              Cảm ơn vì đã luôn tỏa sáng theo cách riêng của bạn. Hãy cứ mơ lớn,
-              cười nhiều và sống hết mình nhé – vì bạn xứng đáng với những điều
-              tuyệt vời nhất! 💖
-            </p>
-          </div>
-        </div>
-
-        <!-- <button class="action-button">Gửi lời chúc của bạn</button> -->
+    <!-- Balloons and Ribbons in CSS (handled by CSS animations mostly) -->
+    <div
+      class="floating-elements-container absolute inset-0 pointer-events-none z-0 overflow-hidden"
+    >
+      <div class="balloon text-5xl" style="left: 10%; animation-delay: 0s">
+        🎈
       </div>
-
-      <div class="confetti-container" id="confetti-container"></div>
+      <div class="balloon text-4xl" style="right: 15%; animation-delay: 2s">
+        🎈
+      </div>
+      <div
+        class="balloon text-5xl"
+        style="left: 60%; top: 30%; animation-delay: 5s"
+      >
+        🎀
+      </div>
+      <div
+        class="balloon text-3xl"
+        style="right: 5%; top: 50%; animation-delay: 8s"
+      >
+        ✨
+      </div>
     </div>
 
-    <!-- Audio element for birthday song -->
-    <audio id="birthday-song" loop>
+    <!-- Header Mới (Responsive) -->
+    <header
+      class="fixed top-0 left-0 w-full z-50 px-4 py-3 md:px-6 md:py-4 glass border-b border-pink-100/20 transition-all duration-300"
+    >
+      <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <h1
+          class="text-2xl md:text-3xl font-bold text-pink-600 font-dancing drop-shadow-sm cursor-pointer"
+          onclick="window.scrollTo(0, 0)"
+        >
+          Birthday Sweetie
+        </h1>
+
+        <!-- Menu Desktop -->
+        <nav
+          class="hidden md:flex space-x-8 font-medium text-gray-600 font-quicksand"
+        >
+          <a href="#intro" class="hover:text-pink-600 transition-colors"
+            >Giới thiệu</a
+          >
+          <a href="#album" class="hover:text-pink-600 transition-colors"
+            >Kỷ niệm</a
+          >
+          <a href="#cake" class="hover:text-pink-600 transition-colors"
+            >Điều ước</a
+          >
+          <a href="#wishes" class="hover:text-pink-600 transition-colors"
+            >Lời chúc</a
+          >
+        </nav>
+
+        <div class="flex items-center gap-4">
+          <!-- Spotify Vinyl Button -->
+          <div
+            id="music-toggle"
+            class="music-vinyl play relative flex-shrink-0 cursor-pointer group"
+            title="Bật/tắt nhạc"
+          >
+            <img
+              src="assets/images/Anh1.PNG"
+              alt="Music"
+              class="w-10 h-10 rounded-full border-2 border-pink-400 shadow-lg"
+              onerror="
+                this.src =
+                  'https://images.unsplash.com/photo-1614613535308-eb5fbd3b2c17?auto=format&fit=crop&q=80&w=150'
+              "
+            />
+            <div
+              class="absolute inset-0 bg-black/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <i class="fa-solid fa-music text-white text-xs"></i>
+            </div>
+          </div>
+
+          <!-- Menu Mobile Hamburger -->
+          <button
+            id="mobile-menu-btn"
+            class="md:hidden text-gray-600 hover:text-pink-600 focus:outline-none"
+          >
+            <i class="fa-solid fa-bars text-2xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Dropdown -->
+      <div
+        id="mobile-menu"
+        class="hidden md:hidden absolute top-full left-0 w-full glass border-b border-pink-100/20 py-4 font-quicksand text-center space-y-4 font-medium text-gray-600 shadow-xl"
+      >
+        <a
+          href="#intro"
+          class="block hover:text-pink-600 transition-colors mobile-link"
+          >Giới thiệu</a
+        >
+        <a
+          href="#album"
+          class="block hover:text-pink-600 transition-colors mobile-link"
+          >Kỷ niệm</a
+        >
+        <a
+          href="#cake"
+          class="block hover:text-pink-600 transition-colors mobile-link"
+          >Điều ước</a
+        >
+        <a
+          href="#wishes"
+          class="block hover:text-pink-600 transition-colors mobile-link"
+          >Lời chúc</a
+        >
+      </div>
+    </header>
+
+    <main class="w-full relative z-10 pt-[80px]">
+      <!-- Intro Section -->
+      <section
+        id="intro"
+        class="min-h-[85vh] flex flex-col items-center justify-center relative overflow-hidden py-10"
+      >
+        <div
+          class="text-center z-10 px-4 w-full max-w-4xl mx-auto intro-content scale-95 opacity-0 transition-all duration-1000 ease-out transform"
+        >
+          <h2
+            class="text-5xl sm:text-7xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400 mb-6 font-dancing"
+          >
+            Happy Birthday!
+          </h2>
+          <p
+            class="text-xl sm:text-2xl text-gray-600 mb-10 font-light tracking-wide font-quicksand"
+          >
+            Chúc mừng ngày đặc biệt của thiên thần nhỏ...
+          </p>
+          <div
+            class="w-48 h-48 md:w-64 md:h-64 rounded-full border-8 border-white shadow-2xl overflow-hidden mx-auto hover:scale-105 transition-transform duration-500 relative group"
+          >
+            <img
+              src="assets/images/Anh7.PNG"
+              alt="Birthday Person"
+              class="w-full h-full object-cover"
+            />
+            <div
+              class="absolute inset-0 bg-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+            >
+              <i
+                class="fa-solid fa-heart text-white text-4xl animate-bounce"
+              ></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Album Section -->
+      <section id="album" class="py-20 relative bg-white/40">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+          <h2
+            class="text-5xl md:text-6xl font-bold text-pink-600 mb-12 font-dancing"
+          >
+            Kỷ Niệm Của Chúng Ta
+          </h2>
+          <div
+            class="swiper mySwiper rounded-[2rem] shadow-[0_20px_50px_rgba(232,90,157,0.15)] overflow-hidden bg-white/50 backdrop-blur-sm border border-white/60"
+          >
+            <div class="swiper-wrapper">
+              <!-- Sẽ chèn các ảnh bằng loop JS hoặc HTML cứng -->
+              <div class="swiper-slide h-[300px] md:h-[500px]">
+                <img
+                  src="assets/images/Anh2.PNG"
+                  class="w-full h-full object-cover object-top"
+                />
+                <div
+                  class="absolute bottom-0 w-full bg-gradient-to-t from-black/70 to-transparent p-6 text-white text-left font-quicksand"
+                >
+                  <p class="text-lg md:text-xl font-medium">
+                    Khoảnh khắc đáng nhớ 💖
+                  </p>
+                </div>
+              </div>
+              <div class="swiper-slide h-[300px] md:h-[500px]">
+                <img
+                  src="assets/images/Anh3.PNG"
+                  class="w-full h-full object-cover object-center"
+                />
+                <div
+                  class="absolute bottom-0 w-full bg-gradient-to-t from-black/70 to-transparent p-6 text-white text-left font-quicksand"
+                >
+                  <p class="text-lg md:text-xl font-medium">
+                    Nụ cười tỏa nắng ✨
+                  </p>
+                </div>
+              </div>
+              <div class="swiper-slide h-[300px] md:h-[500px]">
+                <img
+                  src="assets/images/Anh4.PNG"
+                  class="w-full h-full object-cover object-center"
+                />
+              </div>
+              <div class="swiper-slide h-[300px] md:h-[500px]">
+                <img
+                  src="assets/images/Anh5.PNG"
+                  class="w-full h-full object-cover object-center"
+                />
+              </div>
+              <div class="swiper-slide h-[300px] md:h-[500px]">
+                <img
+                  src="assets/images/Anh6.PNG"
+                  class="w-full h-full object-cover object-center"
+                />
+              </div>
+            </div>
+            <div
+              class="swiper-button-next !text-pink-500 after:!text-2xl md:after:!text-3xl"
+            ></div>
+            <div
+              class="swiper-button-prev !text-pink-500 after:!text-2xl md:after:!text-3xl"
+            ></div>
+            <div class="swiper-pagination !bottom-4"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cake Section -->
+      <section
+        id="cake"
+        class="min-h-screen flex flex-col items-center justify-center py-20 relative"
+      >
+        <div class="text-center mb-8 px-4 max-w-2xl mx-auto">
+          <h2
+            class="text-5xl md:text-6xl font-bold text-pink-600 mb-4 font-dancing"
+          >
+            Điều Ước Tuổi Mới
+          </h2>
+          <p class="text-gray-600 text-lg md:text-xl font-quicksand">
+            Hãy nhắm mắt lại, ước một điều thật đẹp và thổi nến nhé!
+          </p>
+        </div>
+
+        <!-- Vùng render Cake Animation SVG -->
+        <div
+          id="cake-renderer"
+          class="relative w-full max-w-[400px] h-[500px] flex items-end justify-center perspective-container opacity-0 translate-y-20 transition-all duration-1000"
+        >
+          <!-- SVG Cake sẽ được load từ file js riêng cho sạch file HTML -->
+        </div>
+
+        <div class="mt-8 text-center px-4 w-full">
+          <button
+            id="activate-mic-btn"
+            class="px-6 py-3 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors shadow-lg font-quicksand font-bold mb-4 flex mx-auto items-center gap-2"
+          >
+            <i class="fa-solid fa-microphone"></i> Chuẩn bị thổi nến
+          </button>
+          <p
+            id="mic-status"
+            class="hidden text-gray-500 bg-white/50 px-6 py-3 rounded-full border border-pink-200 inline-flex items-center gap-3 font-quicksand text-sm md:text-base backdrop-blur-md shadow-sm"
+          >
+            <span class="w-3 h-3 bg-pink-400 rounded-full animate-pulse"></span>
+            Hãy thổi thật mạnh vào điện thoại / máy tính của bạn...
+          </p>
+          <button
+            id="reset-candle"
+            class="hidden mt-6 mx-auto px-6 py-2 bg-white text-pink-500 rounded-2xl border-2 border-pink-400 hover:bg-pink-50 transition-all font-bold shadow-sm font-quicksand"
+          >
+            Thắp lại nến 🕯️
+          </button>
+        </div>
+      </section>
+
+      <!-- Wishes Section -->
+      <section
+        id="wishes"
+        class="py-20 px-4 bg-white/30 backdrop-blur-md border-t border-white/50 relative overflow-hidden"
+      >
+        <!-- Floating decors -->
+        <div
+          class="absolute -top-10 -left-10 text-6xl opacity-20 transform -rotate-12"
+        >
+          💌
+        </div>
+        <div
+          class="absolute bottom-10 -right-10 text-6xl opacity-20 transform rotate-45"
+        >
+          🎁
+        </div>
+
+        <div class="max-w-6xl mx-auto">
+          <h2
+            class="text-5xl md:text-6xl font-bold text-center text-pink-600 mb-12 font-dancing drop-shadow-sm"
+          >
+            Gửi Lời Chúc Của Bạn
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+            <!-- Form -->
+            <div
+              class="bg-white/80 p-6 md:p-8 rounded-[2rem] shadow-[0_10px_40px_rgba(232,90,157,0.1)] border border-white"
+            >
+              <form id="wish-form" class="space-y-5 font-quicksand">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-2"
+                    >Tên của bạn</label
+                  >
+                  <input
+                    type="text"
+                    id="wish-name"
+                    class="w-full px-5 py-3 rounded-xl border border-pink-200 focus:ring-4 focus:ring-pink-200 focus:border-pink-400 outline-none transition-all bg-white/50 backdrop-blur-sm"
+                    placeholder="Nhập tên người gửi..."
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-2"
+                    >Lời chúc</label
+                  >
+                  <textarea
+                    id="wish-content"
+                    class="w-full px-5 py-3 rounded-xl border border-pink-200 h-36 focus:ring-4 focus:ring-pink-200 focus:border-pink-400 outline-none transition-all bg-white/50 backdrop-blur-sm resize-none"
+                    placeholder="Viết những lời yêu thương nhất..."
+                    required
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  class="w-full py-4 bg-gradient-to-r from-pink-500 to-rose-400 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all active:scale-95 font-bold text-lg uppercase tracking-wider"
+                >
+                  🚀 Gửi Đi Không Chờ Đợi
+                </button>
+              </form>
+            </div>
+
+            <!-- Messages List -->
+            <div
+              class="flex flex-col space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"
+              id="wishes-list"
+            >
+              <!-- Default Message 1 -->
+              <div
+                class="bg-white/90 p-5 rounded-2xl border-l-4 border-pink-400 shadow-md font-quicksand animate-slide-up transform transition-all duration-300 hover:-translate-y-1"
+              >
+                <div class="flex items-center gap-3 mb-2">
+                  <div
+                    class="w-8 h-8 rounded-full bg-pink-100 flex justify-center items-center text-pink-500 font-bold text-sm"
+                  >
+                    AD
+                  </div>
+                  <h4 class="font-bold text-pink-600">Admin</h4>
+                </div>
+                <p class="text-gray-700 leading-relaxed text-sm md:text-base">
+                  Tuổi mới luôn rạng rỡ và tràn ngập niềm vui nhé. Hãy sống rực
+                  rỡ như những đóa hoa! 🌸✨
+                </p>
+                <div class="text-xs text-gray-400 mt-2 text-right">
+                  02/03/2026
+                </div>
+              </div>
+
+              <!-- Default Message 2 -->
+              <div
+                class="bg-gradient-to-br from-pink-50 to-white p-5 rounded-2xl border-l-4 border-rose-400 shadow-md font-quicksand animate-slide-up transform transition-all duration-300 hover:-translate-y-1"
+                style="animation-delay: 0.1s"
+              >
+                <div class="flex items-center gap-3 mb-2">
+                  <div
+                    class="w-8 h-8 rounded-full bg-rose-100 flex justify-center items-center text-rose-500 font-bold text-sm"
+                  >
+                    QT
+                  </div>
+                  <h4 class="font-bold text-rose-500">Người Giấu Tên</h4>
+                </div>
+                <p class="text-gray-700 leading-relaxed text-sm md:text-base">
+                  Bớt khùng lại và giảm cân thành công nhé em gái hehehe =))
+                  🎂🎉
+                </p>
+                <div class="text-xs text-gray-400 mt-2 text-right">
+                  02/03/2026
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="bg-gray-900 text-white py-16 px-6 font-quicksand relative overflow-hidden z-20"
+    >
+      <!-- Decorative circles -->
+      <div
+        class="absolute top-0 right-0 w-64 h-64 bg-pink-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"
+      ></div>
+
+      <div
+        class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 relative z-10 text-center md:text-left"
+      >
+        <!-- Col 1 -->
+        <div class="flex flex-col items-center md:items-start">
+          <h3
+            class="text-4xl font-bold font-dancing text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-300 mb-4 drop-shadow-sm"
+          >
+            Birthday Sweetie
+          </h3>
+          <p
+            class="text-gray-400 leading-relaxed max-w-xs text-sm md:text-base"
+          >
+            Món quà nhỏ bé nhưng chứa đựng tình cảm to lớn. Web chỉ dành riêng
+            cho bạn trong ngày thu lãng mạn này.
+          </p>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="flex flex-col items-center md:items-start">
+          <h4
+            class="font-bold mb-6 text-lg tracking-wider uppercase text-pink-200"
+          >
+            Truy Cập Nhanh
+          </h4>
+          <ul class="space-y-3 text-gray-400 font-medium">
+            <li>
+              <a
+                href="#intro"
+                class="hover:text-pink-400 hover:translate-x-1 inline-block transition-transform"
+                >Trang chủ</a
+              >
+            </li>
+            <li>
+              <a
+                href="#album"
+                class="hover:text-pink-400 hover:translate-x-1 inline-block transition-transform"
+                >Kỷ niệm</a
+              >
+            </li>
+            <li>
+              <a
+                href="#cake"
+                class="hover:text-pink-400 hover:translate-x-1 inline-block transition-transform"
+                >Thổi Nến</a
+              >
+            </li>
+            <li>
+              <a
+                href="#wishes"
+                class="hover:text-pink-400 hover:translate-x-1 inline-block transition-transform"
+                >Viết Lời Chúc</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Col 3 -->
+        <div class="flex flex-col items-center md:items-start">
+          <h4
+            class="font-bold mb-6 text-lg tracking-wider uppercase text-pink-200"
+          >
+            Kết nối
+          </h4>
+          <div class="flex space-x-4">
+            <a
+              href="#"
+              class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-pink-500 hover:text-white transition-all hover:scale-110 shadow-lg"
+            >
+              <i class="fa-brands fa-facebook-f"></i>
+            </a>
+            <a
+              href="#"
+              class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all hover:scale-110 shadow-lg"
+            >
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a
+              href="#"
+              class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-black hover:text-white transition-all hover:scale-110 shadow-lg"
+            >
+              <i class="fa-brands fa-tiktok"></i>
+            </a>
+          </div>
+          <p class="mt-6 text-gray-400 text-sm">Follow để xem thêm hình ảnh!</p>
+        </div>
+      </div>
+
+      <div
+        class="mt-16 text-center text-gray-500 text-sm md:text-base border-t border-gray-800 pt-8 font-quicksand font-medium"
+      >
+        &copy; 2026 Developed with
+        <i class="fa-solid fa-heart text-pink-500 animate-pulse"></i> by
+        TungLor. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- Audio Element cho bài nhạc nền -->
+    <audio id="bg-music" loop>
       <source src="assets/sounds/birthday.mp3" type="audio/mpeg" />
+      <source
+        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+        type="audio/mpeg"
+      />
     </audio>
-    <script src="js/celebration.js"></script>
-    <!-- Thêm trước thẻ script cuối cùng -->
-    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="js/renderCake.js"></script>
+    <script src="js/celebration_new.js"></script>
   </body>
 </html>

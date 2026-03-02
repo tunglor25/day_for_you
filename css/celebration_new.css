@@ -1,0 +1,178 @@
+/* Fonts: Quicksand and Dancing Script are fetched via Google Fonts in HTML */
+body {
+    scroll-behavior: smooth;
+}
+
+.font-dancing {
+    font-family: 'Dancing Script', cursive;
+}
+
+.font-quicksand {
+    font-family: 'Quicksand', sans-serif;
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Background Grids */
+.bg-grid {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(to right, rgba(232, 90, 157, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(232, 90, 157, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+}
+
+/* Scrolling Text Hidden in Background */
+.scrolling-text {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%) rotate(-10deg);
+    font-family: 'Dancing Script', cursive;
+    font-size: 15vw;
+    color: rgba(255, 107, 139, 0.03);
+    /* Rất nhạt, ẩn ẩn phía sau */
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 0;
+    animation: scrollBg 60s linear infinite;
+    user-select: none;
+}
+
+@keyframes scrollBg {
+    from {
+        transform: translateY(-50%) rotate(-10deg) translateX(0);
+    }
+
+    to {
+        transform: translateY(-50%) rotate(-10deg) translateX(-50%);
+    }
+}
+
+/* Header & Scrolling logic for transparent -> glass */
+header.is-scrolled {
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Animations that show up when page load / section into view */
+.intro-text.opacity-100 {
+    opacity: 1 !important;
+}
+
+/* Balloons */
+.balloon {
+    position: absolute;
+    animation: floatBalloon 15s ease-in-out infinite;
+    filter: drop-shadow(2px 5px 5px rgba(0, 0, 0, 0.1));
+}
+
+@keyframes floatBalloon {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+
+    50% {
+        transform: translateY(-50px) rotate(2deg);
+    }
+}
+
+/* Spotify Vinyl Animation */
+.music-vinyl {
+    transition: transform 0.3s;
+}
+
+.music-vinyl img {
+    animation: spin 4s linear infinite;
+    animation-play-state: paused;
+    /* Default paused */
+}
+
+.music-vinyl.play img {
+    animation-play-state: running;
+    /* Bắn class play vào là quay tròn */
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Custom Scrollbar cho list lời chúc */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 107, 139, 0.1);
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 107, 139, 0.5);
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 107, 139, 0.8);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slideUp 0.5s ease backwards;
+}
+
+/* Cake Classes (Rendered by JS) */
+.fuego {
+    transform-origin: bottom center;
+    animation: flickerFlame 0.1s infinite alternate;
+}
+
+@keyframes flickerFlame {
+    0% {
+        transform: scale(1) rotate(-1deg) skewX(2deg);
+        opacity: 0.9;
+    }
+
+    100% {
+        transform: scale(1.05) rotate(1deg) skewX(-2deg);
+        opacity: 1;
+    }
+}
+
+.fuego.blown {
+    display: none !important;
+}
+
+.perspective-container {
+    perspective: 1000px;
+}
+
+#cake-renderer.intersected {
+    opacity: 1;
+    transform: translateY(0);
+}

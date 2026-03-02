@@ -1,216 +1,154 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Tự động focus vào ô đầu tiên
-  document.querySelector(".digit").focus();
-
-  // Tạo trái tim bay
-  createFloatingHearts();
-});
-
-function createFloatingHearts() {
-  const container = document.getElementById("floatingHearts");
-  const heartCount = 15;
+    createFloatingHearts();
   
-  // Danh sách các icon troll/tếu tếu
-  const trollIcons = ["😂", "🤣", "😜", "🤪", "😝", "🤑", "🤡", "👻", "💩", "🙈", "🐒", "🦄", "🍌", "🎃", "🍕"];
-
-  for (let i = 0; i < heartCount; i++) {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    // Chọn ngẫu nhiên một icon từ mảng
-    heart.innerHTML = trollIcons[Math.floor(Math.random() * trollIcons.length)];
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = Math.random() * 20 + 10 + "px";
-    heart.style.animationDuration = Math.random() * 10 + 10 + "s";
-    heart.style.animationDelay = Math.random() * 5 + "s";
-    container.appendChild(heart);
-  }
-}
-
-function checkCode() {
-  const inputs = document.querySelectorAll(".digit");
-  const enteredCode = Array.from(inputs)
-    .map((input) => input.value)
-    .join("");
-  const correctCode = "0107"; // Mã mở khóa
-
-  const messageEl = document.getElementById("lockMessage");
-  const lockImg = document.querySelector(".heart-lock");
-  const container = document.querySelector(".lock-container");
-
-  if (enteredCode === correctCode) {
-    messageEl.innerHTML =
-      "❤️ Mở khóa thành công! Vào bữa tiệc thôi ❤️";
-    messageEl.style.color = "var(--dark-color)";
-    // lockImg.classList.add("unlock-success");
-    container.classList.add("animate__pulse");
-
-    // Thêm hiệu ứng pháo hoa
-    createFireworks();
-
-    // Chuyển trang sau 2 giây
-    setTimeout(() => {
-      window.location.href = "celebration.html";
-    }, 1000);
-  } else {
-    messageEl.innerHTML = "❌ Mã sai rồi, thử lại nào! Em có chắc là em nhớ k?";
-    messageEl.style.color = "var(--dark-color)";
-
-    // Hiệu ứng rung
-    inputs.forEach((input) => {
-      input.classList.add("shake");
+    const heartWrapper = document.querySelector('.heart-unlock-wrapper');
+    const heartFill = document.getElementById('heartFill');
+    const progressBar = document.getElementById('unlockProgress');
+    const lockMessage = document.getElementById('lockMessage');
+    const container = document.querySelector('.lock-container');
+    
+    let pressTimer;
+    let progress = 0;
+    const maxProgress = 100;
+    let isPressing = false;
+    let unlocked = false;
+  
+    const updateUI = () => {
+      // clip-path goes from bottom to top
+      const percentage = 100 - progress; 
+      heartFill.style.clipPath = `polygon(0 100%, 100% 100%, 100% ${percentage}%, 0 ${percentage}%)`;
+      progressBar.style.width = `${progress}%`;
+    };
+  
+    const handlePressStart = (e) => {
+      if (e.type === 'touchstart') e.preventDefault(); // prevent default touch behavior
+      if (unlocked) return;
+      
+      isPressing = true;
+      heartWrapper.classList.add('is-pressing');
+      lockMessage.textContent = "Tiếp tục giữ nhé... ❤️";
+      
+      clearInterval(pressTimer);
+      pressTimer = setInterval(() => {
+        if (progress < maxProgress) {
+          progress += 2; // Speed of fill
+          updateUI();
+        }
+        
+        if (progress >= maxProgress) {
+          handleUnlock();
+        }
+      }, 30);
+    };
+  
+    const handlePressEnd = () => {
+      if (unlocked) return;
+      isPressing = false;
+      heartWrapper.classList.remove('is-pressing');
+      clearInterval(pressTimer);
+      
+      if (progress > 0 && progress < maxProgress) {
+        // Automatically decrease if let go early
+        lockMessage.textContent = "Đừng buông tay ra chứ! 🥺";
+        
+        pressTimer = setInterval(() => {
+          if (isPressing || unlocked) {
+            clearInterval(pressTimer);
+            return;
+          }
+          if (progress > 0) {
+            progress -= 3;
+            if (progress < 0) progress = 0;
+            updateUI();
+          } else {
+            clearInterval(pressTimer);
+            lockMessage.textContent = "";
+          }
+        }, 30);
+      }
+    };
+  
+    const handleUnlock = () => {
+      unlocked = true;
+      clearInterval(pressTimer);
+      heartWrapper.classList.remove('is-pressing');
+      
+      lockMessage.innerHTML = "❤️ Trái tim đã mở cửa! ❤️";
+      heartWrapper.classList.add('unlock-success-anim');
+      
+      createFireworks();
+      
+      // Fade out container and redirect
       setTimeout(() => {
-        input.classList.remove("shake");
-      }, 600);
-    });
-  }
+        container.style.opacity = '0';
+        container.style.transform = 'scale(1.1)';
+      }, 1000);
+      
+      setTimeout(() => {
+        window.location.href = "celebration.html";
+      }, 1500);
+    };
+  
+    // Mouse Events
+    heartWrapper.addEventListener('mousedown', handlePressStart);
+    document.addEventListener('mouseup', handlePressEnd);
+    heartWrapper.addEventListener('mouseleave', handlePressEnd);
+    
+    // Touch Events
+    heartWrapper.addEventListener('touchstart', handlePressStart, { passive: false });
+    document.addEventListener('touchend', handlePressEnd);
+    heartWrapper.addEventListener('touchcancel', handlePressEnd);
+});
+  
+function createFloatingHearts() {
+    const container = document.getElementById("floatingHearts");
+    const heartCount = 15;
+    const trollIcons = ["❤️", "💖", "💗", "💕", "💞", "💓", "💘", "💝", "✨", "🌸", "🦋"];
+  
+    for (let i = 0; i < heartCount; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = trollIcons[Math.floor(Math.random() * trollIcons.length)];
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = Math.random() * 15 + 15 + "px";
+        heart.style.animationDuration = Math.random() * 10 + 10 + "s";
+        heart.style.animationDelay = Math.random() * 5 + "s";
+        container.appendChild(heart);
+    }
 }
-
+  
 function createFireworks() {
-  const colors = ["#ff6b8b", "#ff8e9e", "#ffb3c1", "#ffd6de", "#ffffff"];
-  const container = document.querySelector(".lock-container");
-
-  for (let i = 0; i < 30; i++) {
-    const particle = document.createElement("div");
-    particle.style.position = "absolute";
-    particle.style.width = "6px";
-    particle.style.height = "6px";
-    particle.style.borderRadius = "50%";
-    particle.style.backgroundColor =
-      colors[Math.floor(Math.random() * colors.length)];
-    particle.style.left = "50%";
-    particle.style.top = "50%";
-    particle.style.pointerEvents = "none";
-    container.appendChild(particle);
-
-    const angle = Math.random() * Math.PI * 2;
-    const velocity = 3 + Math.random() * 3;
-    const distance = 50 + Math.random() * 100;
-
-    const animation = particle.animate(
-      [
-        {
-          transform: "translate(-50%, -50%)",
-          opacity: 1,
-        },
-        {
-          transform: `translate(${Math.cos(angle) * distance - 50}%, ${
-            Math.sin(angle) * distance - 50
-          }%)`,
-          opacity: 0,
-        },
-      ],
-      {
-        duration: 1000 + Math.random() * 500,
-        easing: "cubic-bezier(0.1, 0.8, 0.2, 1)",
-      }
-    );
-
-    animation.onfinish = () => particle.remove();
-  }
-}
-
-// Tự động chuyển ô khi nhập
-document.querySelectorAll(".digit").forEach((input, index) => {
-  input.addEventListener("input", function () {
-    this.value = this.value.slice(0, 1);
-    if (this.value.length === 1) {
-      const next = this.nextElementSibling;
-      if (next && next.classList.contains("digit")) {
-        next.focus();
-      }
+    const colors = ["#ff6b8b", "#ff8e9e", "#ffb3c1", "#ffd6de", "#ffffff"];
+    const container = document.querySelector(".lock-container");
+  
+    for (let i = 0; i < 40; i++) {
+        const particle = document.createElement("div");
+        particle.style.position = "absolute";
+        particle.style.width = "8px";
+        particle.style.height = "8px";
+        particle.style.borderRadius = "50%";
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.left = "50%";
+        particle.style.top = "50%";
+        particle.style.pointerEvents = "none";
+        particle.style.zIndex = "10";
+        container.appendChild(particle);
+    
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = 3 + Math.random() * 3;
+        const distance = 80 + Math.random() * 150;
+    
+        const animation = particle.animate(
+            [
+            { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+            { transform: `translate(${Math.cos(angle) * distance - 50}%, ${Math.sin(angle) * distance - 50}%) scale(0)`, opacity: 0 }
+            ],
+            {
+            duration: 1000 + Math.random() * 800,
+            easing: "cubic-bezier(0.1, 0.8, 0.2, 1)",
+            }
+        );
+    
+        animation.onfinish = () => particle.remove();
     }
-  });
-
-  // Xử lý phím Backspace
-  input.addEventListener("keydown", function (e) {
-    if (e.key === "Backspace" && this.value.length === 0) {
-      const prev = this.previousElementSibling;
-      if (prev && prev.classList.contains("digit")) {
-        prev.focus();
-      }
-    }
-  });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  // Tạo trái tim bay
-  createFloatingHearts();
-
-  const envelope = document.getElementById("envelope");
-  const continueBtn = document.querySelector(".continue-btn");
-
-  // Mở thư khi click
-  envelope.addEventListener("click", function () {
-    this.classList.toggle("open");
-
-    if (this.classList.contains("open")) {
-      createConfetti();
-    }
-  });
-
-  // Chuyển trang khi click tiếp tục
-  continueBtn.addEventListener("click", function () {
-    // Hiệu ứng trước khi chuyển trang
-    envelope.classList.add("animate__hinge");
-    document.body.style.backgroundColor = "var(--primary-color)";
-
-    setTimeout(() => {
-      alert("Đây chỉ là demo, bạn có thể thay đổi URL chuyển hướng");
-      // window.location.href = "lock.html";
-    }, 1500);
-  });
-
-  // Hiệu ứng hover
-  envelope.addEventListener("mouseenter", function () {
-    if (!this.classList.contains("open")) {
-      this.style.transform = "translateY(-10px)";
-    }
-  });
-
-  envelope.addEventListener("mouseleave", function () {
-    if (!this.classList.contains("open")) {
-      this.style.transform = "";
-    }
-  });
-});
-
-
-
-function createConfetti() {
-  const envelope = document.getElementById("envelope");
-  const colors = ["#ff6b8b", "#ff8e9e", "#ffb3c1", "#ffd6de", "#ffffff"];
-
-  for (let i = 0; i < 50; i++) {
-    const confetti = document.createElement("div");
-    confetti.classList.add("confetti");
-    confetti.style.backgroundColor =
-      colors[Math.floor(Math.random() * colors.length)];
-    confetti.style.left = Math.random() * 100 + "%";
-    confetti.style.top = Math.random() * 100 + "%";
-    confetti.style.width = Math.random() * 8 + 5 + "px";
-    confetti.style.height = Math.random() * 8 + 5 + "px";
-    confetti.style.borderRadius = Math.random() > 0.5 ? "50%" : "0";
-    envelope.appendChild(confetti);
-
-    const animation = confetti.animate(
-      [
-        {
-          transform: "translateY(0) rotate(0deg)",
-          opacity: 1,
-        },
-        {
-          transform: `translateY(${Math.random() * 200 - 100}px) rotate(${
-            Math.random() * 360
-          }deg)`,
-          opacity: 0,
-        },
-      ],
-      {
-        duration: 1000 + Math.random() * 1000,
-        easing: "cubic-bezier(0.1, 0.8, 0.2, 1)",
-      }
-    );
-
-    animation.onfinish = () => confetti.remove();
-  }
 }
