@@ -77,17 +77,20 @@ function applyConfig(config) {
     for (let i = 1; i <= count; i++) {
       slidesHTML += `
           <div class="swiper-slide h-[300px] md:h-[500px]">
-            <img src="\${basePath}Anh\${i}.PNG" class="w-full h-full object-cover object-center" 
+            <img src="${basePath}Anh${i}.PNG" class="w-full h-full object-cover object-center" 
                  onerror="this.src='https://images.unsplash.com/photo-1513258496099-48166d22c97a?w=400&q=80'" />
           </div>
         `;
     }
-    // Lặp thêm file rỗng để chống Lỗi đen viền loop của CSS
+    // Lặp thêm file chính nó để chống Lỗi đen viền loop của CSS (Swiper Loop yêu cầu ít nhất 6 slides)
     if (count < 6) {
-      for (let i = 1; i <= 6 - count; i++) {
+      let duplicateNeeded = 6 - count;
+      for (let i = 1; i <= duplicateNeeded; i++) {
+        // Lấy lại ảnh theo vòng lặp bằng toán tử chia lấy dư
+        let imgIndex = ((i - 1) % count) + 1;
         slidesHTML += `
           <div class="swiper-slide h-[300px] md:h-[500px]">
-             <img src="\${basePath}Anh\${i}.PNG" class="w-full h-full object-cover object-center" 
+             <img src="${basePath}Anh${imgIndex}.PNG" class="w-full h-full object-cover object-center" 
                   onerror="this.src='https://images.unsplash.com/photo-1513258496099-48166d22c97a?w=400&q=80'" />
           </div>
         `;
