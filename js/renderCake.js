@@ -9,11 +9,11 @@ window.renderCakeSVG = function () {
   const age = currentYear - birthYear;
 
   const cakeSVGTemplate = `
-<div class="relative flex flex-col items-center py-5 w-full">
-    <div class="bg-birthday-number number-21-left absolute top-[10%] left-[-10%] md:left-[10%] text-[8rem] md:text-[20rem] font-bold text-pink-300 opacity-20 transform -rotate-12 z-0 font-quicksand drop-shadow-sm pointer-events-none select-none">${age}</div>
-    <div class="bg-birthday-number number-21-right absolute bottom-[10%] right-[-10%] md:right-[10%] text-[8rem] md:text-[20rem] font-bold text-pink-300 opacity-20 transform rotate-12 z-0 font-quicksand drop-shadow-sm pointer-events-none select-none">${age}</div>
+<div class="relative w-full max-w-[400px] mx-auto py-5">
+    <div class="bg-birthday-number number-21-left">${age}</div>
+    <div class="bg-birthday-number number-21-right">${age}</div>
 
-    <div class="svg-cake-container relative z-10 w-[200px] h-[500px] flex flex-col items-center justify-center scale-90 md:scale-110">
+    <div class="svg-cake-container relative z-10 w-[200px] h-[500px] mx-auto scale-[0.9] sm:scale-100 md:scale-125">
         <!-- Decor Items -->
         <div class="float-element text-3xl hidden md:block" style="position: absolute; top: 0; left: -50px; opacity: 0.6">🍭</div>
         <div class="float-element text-3xl hidden md:block" style="position: absolute; bottom: 0; right: -50px; opacity: 0.6">🍦</div>
@@ -33,12 +33,12 @@ window.renderCakeSVG = function () {
         </div>
 
         <!-- Candle Structure (5 layers of fire) -->
-        <div class="candle-svg-container" style="animation: candle-in 500ms 3.5s ease-out forwards, fire-appear 0.3s 3.3s forwards;">
-            <div class="fuego" style="animation: fuego-custom 2s 4s infinite, fire-appear 0.5s 4s forwards;"></div>
-            <div class="fuego" style="animation: fuego-custom 1.5s 4s infinite, fire-appear 0.5s 4s forwards;"></div>
-            <div class="fuego" style="animation: fuego-custom 1s 4s infinite, fire-appear 0.5s 4s forwards;"></div>
-            <div class="fuego" style="animation: fuego-custom 0.5s 4s infinite, fire-appear 0.5s 4s forwards;"></div>
-            <div class="fuego" style="animation: fuego-custom 0.2s 4s infinite, fire-appear 0.5s 4s forwards;"></div>
+        <div class="candle-svg-container">
+            <div class="fuego"></div>
+            <div class="fuego"></div>
+            <div class="fuego"></div>
+            <div class="fuego"></div>
+            <div class="fuego"></div>
         </div>
 
         <!-- SVG Cake Animation -->
@@ -119,7 +119,7 @@ window.renderCakeSVG = function () {
             </path>
             <path fill="#f8a4b8" opacity="0" d="M173.667,21.571c-33.174,0-111.467,0-147.334,0c-4,0-4-16.002,0-16.002c39.836,0,105.982,0,147.334,0
             C177.668,5.569,177.667,21.571,173.667,21.571z">
-                <animate id="bizcocho_1" attributeName="d" calcMode="spline" keySplines="0 0 1 1; 0 0 1 1; 0 0 1 1; 0.25 0 1 1; 0 0 1 1; 0.25 0 0.6 1" begin="0.8s" dur="0.8s" fill="freeze" values="
+                <animate id="bizcocho_1" attributeName="d" calcMode="spline" keySplines="0 0 1 1; 0 0 1 1; 0 0 1 1; 0.25 0 1 1; 0 0 1 1; 0.25 0 0.6 1" begin="indefinite" dur="0.8s" fill="freeze" values="
                   M173.667,21.571c-33.174,0-111.467,0-147.334,0c-4,0-4-16.002,0-16.002c39.836,0,105.982,0,147.334,0
             C177.668,5.569,177.667,21.571,173.667,21.571z
                   ;
@@ -141,7 +141,7 @@ window.renderCakeSVG = function () {
                   M173.667,475.571c-46.512,0-105.486,0-147.334,0c-3.999,0-4-16.002,0-16.002c43.566,0,97.96,0,147.334,0
             C177.667,459.569,177.666,475.571,173.667,475.571z
                   " />
-                <animate attributeName="opacity" from="0" to="1" begin="0.7s" dur="0.1s" fill="freeze" />
+                <animate id="op_1" attributeName="opacity" from="0" to="1" begin="indefinite" dur="0.1s" fill="freeze" />
             </path>
             <path fill="#fefae9" opacity="0" d="M104.812,113.216c0,3.119-2.164,5.67-4.812,5.67c-2.646,0-4.812-2.551-4.812-5.67c0-5.594,0-16.782,0-22.375
           c0-5.143,0-15.427,0-20.568c0-7.333,0-21.998,0-29.33c0-5.523,0-16.569,0-22.092c0-3.295,0-9.885,0-13.181
@@ -191,7 +191,7 @@ window.renderCakeSVG = function () {
               <animate attributeName="opacity" from="0" to="1" begin="bizcocho_3.end" dur="0.3s" fill="freeze" />
             </path>
             <rect x="10" y="475.571" fill="#fefae9" width="180" height="4" opacity="0">
-                <animate attributeName="opacity" from="0" to="1" begin="0.8s" dur="0.1s" fill="freeze" />
+                <animate id="op_2" attributeName="opacity" from="0" to="1" begin="indefinite" dur="0.1s" fill="freeze" />
             </rect>
         </svg>
     </div>
@@ -200,9 +200,17 @@ window.renderCakeSVG = function () {
 
   container.innerHTML = cakeSVGTemplate;
 
-  // Reset lại svg animation
-  const svg = document.getElementById("cake-svg");
-  if (svg) {
-    svg.setCurrentTime(0);
-  }
+  // Bỏ Reset lại svg animation vì lớp Wrapper opacity CSS đã bị gỡ, SVG tự kích hoạt
+  setTimeout(() => {
+    try {
+      if (document.getElementById("bizcocho_1"))
+        document.getElementById("bizcocho_1").beginElement();
+      if (document.getElementById("op_1"))
+        document.getElementById("op_1").beginElement();
+      if (document.getElementById("op_2"))
+        document.getElementById("op_2").beginElement();
+    } catch (e) {
+      console.log("Lỗi không kích hoạt được SMIL: ", e);
+    }
+  }, 100);
 };

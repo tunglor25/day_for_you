@@ -1,30 +1,42 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // 1. Khởi tạo Swiper Slider
-  // Khắc phục lỗi lỏ lỏ khi vuốt tay bằng cách chặn bóng đổ, thiết lập chế độ xoay gắt hơn để Swiper hiểu lướt tới/lùi
-  window.mySwiper = new Swiper(".mySwiper", {
-    effect: "cards",
-    grabCursor: true,
-    loop: true,
-    speed: 500, // Thêm độ mượt chuyển động
-    autoplay: {
-      delay: 3000,
-      disableOnInteraction: false,
-    },
-    cardsEffect: {
-      slideShadows: false, // Bỏ bóng đổ 3D tối để tránh viền đen khi kéo nhanh
-      perSlideOffset: 10,
-      perSlideRotate: 5,
-    },
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-      dynamicBullets: true,
-    },
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-  });
+  // 1. Khởi tạo Swiper Slider (Chuyển thành Global Function để Firebase gọi sau khi Load Ảnh)
+  window.initMySwiper = function () {
+    if (window.mySwiper) {
+      window.mySwiper.destroy(true, true);
+    }
+    const slides = document.querySelectorAll(".mySwiper .swiper-slide");
+    const shouldLoop = slides.length >= 6; // Đảm bảo loop chỉ bật khi đủ slide
+
+    window.mySwiper = new Swiper(".mySwiper", {
+      grabCursor: true,
+      loop: shouldLoop,
+      speed: 800,
+      effect: "creative",
+      creativeEffect: {
+        prev: {
+          shadow: true,
+          translate: ["-20%", 0, -1],
+          opacity: 0,
+        },
+        next: {
+          translate: ["100%", 0, 0],
+        },
+      },
+      autoplay: {
+        delay: 3500,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+        dynamicBullets: true,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+  };
 
   // 2. Logic tắt mở Music Spotify
   const musicToggle = document.getElementById("music-toggle");
@@ -93,9 +105,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Render Cake
         if (entry.target.id === "cake-renderer" && !cakeRendered) {
-          window.renderCakeSVG();
           cakeRendered = true;
           entry.target.classList.add("intersected");
+
+          // Delay nhỏ để lách bug không chạy animation SVG của một số trình duyệt khi thẻ div đang opacity 0
+          setTimeout(() => {
+            window.renderCakeSVG();
+          }, 100);
         }
       }
     });
@@ -107,37 +123,55 @@ document.addEventListener("DOMContentLoaded", function () {
   // 6. Audio Blowing Logic
   const activateBtn = document.getElementById("activate-mic-btn");
   const micStatus = document.getElementById("mic-status");
-  let audioContext, microphone, analyser;
-  let blownCandles = 0;
+  const btnStartRitual = document.getElementById("btn-start-ritual");
+  const wishNotice = document.getElementById("wish-notice");
 
-  activateBtn.addEventListener("click", () => {
-    if (!window.AudioContext && !window.webkitAudioContext) {
-      alert("Trình duyệt không hỗ trợ bắt Microphone.");
-      return;
-    }
-
-    activateBtn.classList.add("hidden");
-    micStatus.classList.remove("hidden");
-    micStatus.classList.add("flex");
-
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-    navigator.mediaDevices
-      .getUserMedia({ audio: true, video: false })
-      .then((stream) => {
-        microphone = audioContext.createMediaStreamSource(stream);
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 256;
-        microphone.connect(analyser);
-        detectBlowing();
-      })
-      .catch((err) => {
-        alert(
-          "Không thể truy cập Microphone! Bạn có thể tự click (chạm) vào nến để tắt nó.",
-        );
-        setupClickToBlow(); // Fallback
+  if (btnStartRitual) {
+    btnStartRitual.addEventListener("click", function () {
+      // 1. Châm nến (Từng ngọn cho đẹp)
+      const flames = document.querySelectorAll(".fuego");
+      flames.forEach((f, index) => {
+        setTimeout(() => {
+          f.classList.add("ignited");
+          setTimeout(() => f.classList.add("animating"), 300);
+        }, index * 150);
       });
-  });
+
+      // 2. Tắt đèn
+      document.body.classList.add("lights-off");
+
+      // 3. Ẩn nút bắt đầu & Bắt đầu thu âm ngay lập tức
+      this.classList.add("hidden");
+
+      // Kích hoạt Mic tự động
+      if (!window.AudioContext && !window.webkitAudioContext) {
+        alert(
+          "Trình duyệt không hỗ trợ bắt Microphone. Hãy chạm vào nến để tắt nhé!",
+        );
+        setupClickToBlow();
+        return;
+      }
+
+      micStatus.classList.remove("hidden");
+      micStatus.classList.add("flex");
+
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+      navigator.mediaDevices
+        .getUserMedia({ audio: true, video: false })
+        .then((stream) => {
+          microphone = audioContext.createMediaStreamSource(stream);
+          analyser = audioContext.createAnalyser();
+          analyser.fftSize = 256;
+          microphone.connect(analyser);
+          detectBlowing();
+        })
+        .catch((err) => {
+          console.log("Mic access denied:", err);
+          setupClickToBlow(); // Fallback
+        });
+    });
+  }
 
   function setupClickToBlow() {
     micStatus.innerHTML = "Hãy nhấn tay vào từng ngọn nến để thổi nhé!";
@@ -200,6 +234,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (flamesRemaining.length === 0) {
       micStatus.innerHTML = "Wow, Mọi điều ước sẽ thành hiện thực! ✨";
       fireConfetti();
+
+      // Sau khi nến tắt 2s là sáng đèn lại theo yêu cầu người dùng
+      setTimeout(() => {
+        document.body.classList.remove("lights-off");
+      }, 2000);
     }
   }
 

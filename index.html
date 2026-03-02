@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
@@ -33,14 +33,14 @@
     <div class="card-container">
       <div class="card animate__animated animate__bounceIn" id="card">
         <div
-          class="relative bg-black w-[850px] sm:w-[600px] group transition-all duration-700 h-[450px] flex items-center justify-center"
+          class="relative bg-black w-[90vw] max-w-[600px] aspect-[1.8/1] group transition-all duration-700 flex items-center justify-center shadow-2xl rounded-lg overflow-visible"
         >
           <!-- Nội dung thư -->
           <div
-            class="transition-all flex flex-col items-center py-8 justify-start duration-300 group-hover:duration-1000 bg-white w-full h-full absolute group-hover:-translate-y-32 overflow-y-auto"
+            class="transition-all flex flex-col items-center py-4 sm:py-8 justify-start duration-300 group-hover:duration-1000 bg-white w-[95%] mx-auto h-[120%] absolute bottom-0 group-hover:-translate-y-20 md:group-hover:-translate-y-32 shadow-xl rounded-t-lg overflow-y-auto z-10"
           >
             <h2
-              class="dancing-font text-2xl sm:text-3xl font-semibold text-gray-500 mb-4"
+              class="dancing-font text-2xl sm:text-3xl font-semibold text-gray-500 mb-4 receiver-name"
             >
               Lời Mời Đặc Biệt
             </h2>
@@ -84,6 +84,7 @@
       </div>
     </div>
 
+    <script type="module" src="js/firebase_db.js"></script>
     <script src="js/script.js"></script>
   </body>
 </html>

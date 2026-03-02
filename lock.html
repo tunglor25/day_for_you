@@ -17,12 +17,14 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+    <!-- Tailwind for Modal -->
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
     <div class="floating-hearts" id="floatingHearts"></div>
 
     <div class="lock-container animate__animated animate__fadeIn">
-      <h2 class="lock-title">Chạm để mở khóa</h2>
+      <h2 class="lock-title receiver-name-lock">Chạm để mở khóa</h2>
       <p class="lock-subtitle">Giữ trái tim để đong đầy tình yêu ❤️</p>
 
       <div class="heart-unlock-wrapper">
@@ -42,6 +44,77 @@
       <div class="lock-message" id="lockMessage"></div>
     </div>
 
+    <!-- Privacy & Mic Permission Modal -->
+    <div
+      id="privacy-modal"
+      class="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-500 hidden"
+    >
+      <div
+        class="[--shadow:rgba(60,64,67,0.3)_0_1px_2px_0,rgba(60,64,67,0.15)_0_2px_6px_2px] w-11/12 h-auto rounded-3xl bg-white/90 backdrop-blur-md [box-shadow:var(--shadow)] max-w-[320px] transform transition-all duration-500 scale-95 opacity-0 m-4"
+        id="modal-content"
+      >
+        <div
+          class="flex flex-col items-center justify-between pt-10 px-6 pb-6 relative"
+        >
+          <span
+            class="relative mx-auto -mt-20 mb-6 bg-white rounded-full p-2 shadow-sm"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              height="60"
+              width="80"
+              viewBox="0 0 65 46"
+            >
+              <path
+                stroke="#000"
+                fill="#EAB789"
+                d="M49.157 15.69L44.58.655l-12.422 1.96L21.044.654l-8.499 2.615-6.538 5.23-4.576 9.153v11.114l4.576 8.5 7.846 5.23 10.46 1.96 7.845-2.614 9.153 2.615 11.768-2.615 7.846-7.846 1.96-5.884.655-7.191-7.846-1.308-6.537-3.922z"
+              ></path>
+              <path
+                fill="#9C6750"
+                d="M32.286 3.749c-6.94 3.65-11.69 11.053-11.69 19.591 0 8.137 4.313 15.242 10.724 19.052a20.513 20.513 0 01-8.723 1.937c-11.598 0-21-9.626-21-21.5 0-11.875 9.402-21.5 21-21.5 3.495 0 6.79.874 9.689 2.42z"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+              ></path>
+              <path
+                fill="#634647"
+                d="M64.472 20.305a.954.954 0 00-1.172-.824 4.508 4.508 0 01-3.958-.934.953.953 0 00-1.076-.11c-.46.252-.977.383-1.502.382a3.154 3.154 0 01-2.97-2.11.954.954 0 00-.833-.634 4.54 4.54 0 01-4.205-4.507c.002-.23.022-.46.06-.687a.952.952 0 00-.213-.767 3.497 3.497 0 01-.614-3.5.953.953 0 00-.382-1.138 3.522 3.522 0 01-1.5-3.992.951.951 0 00-.762-1.227A22.611 22.611 0 0032.3 2.16 22.41 22.41 0 0022.657.001a22.654 22.654 0 109.648 43.15 22.644 22.644 0 0032.167-22.847zM22.657 43.4a20.746 20.746 0 110-41.493c2.566-.004 5.11.473 7.501 1.407a22.64 22.64 0 00.003 38.682 20.6 20.6 0 01-7.504 1.404zm19.286 0a20.746 20.746 0 112.131-41.384 5.417 5.417 0 001.918 4.635 5.346 5.346 0 00-.133 1.182A5.441 5.441 0 0046.879 11a5.804 5.804 0 00-.028.568 6.456 6.456 0 005.38 6.345 5.053 5.053 0 006.378 2.472 6.412 6.412 0 004.05 1.12 20.768 20.768 0 01-20.716 21.897z"
+              ></path>
+            </svg>
+          </span>
+
+          <h5 class="text-lg font-bold mb-3 text-zinc-800 text-center">
+            Chào bạn! ✨
+          </h5>
+
+          <p
+            class="w-full mb-6 text-sm text-gray-600 text-center leading-relaxed"
+          >
+            Để buổi tiệc sinh nhật diễn ra tuyệt vời nhất, hãy cho phép chúng
+            mình sử dụng <b>Cookies</b> và <b>Microphone</b> (để bạn thổi nến
+            nhé!) 🎂🎤
+          </p>
+
+          <div class="flex flex-col w-full gap-2">
+            <button
+              id="btn-accept-privacy"
+              class="w-full py-3 px-6 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl transition-all shadow-md active:scale-95"
+              type="button"
+            >
+              Đồng ý tất cả ❤️
+            </button>
+            <button
+              class="w-full py-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              Tùy chọn khác
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/firebase_db.js"></script>
     <script src="js/lock.js"></script>
   </body>
 </html>

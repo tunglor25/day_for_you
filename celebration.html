@@ -1,10 +1,29 @@
 <!doctype html>
 <html lang="vi" class="scroll-smooth">
   <head>
+    <script>
+      // Kiểm tra mở khóa trước khi render bất cứ thứ gì
+      (function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id") || "chunghi";
+        const isUnlocked = sessionStorage.getItem("unlocked_" + id);
+        if (!isUnlocked) {
+          window.location.href = "lock.html?id=" + id;
+        }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chúc Mừng Sinh Nhật!</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        corePlugins: {
+          preflight: true,
+        },
+      };
+      // Tắt log cảnh báo của Tailwind (không thể tắt hoàn toàn từ Play CDN nhưng có thể giảm thiểu)
+    </script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
@@ -22,6 +41,8 @@
   <body
     class="bg-pink-50 text-gray-800 relative min-h-screen overflow-x-hidden"
   >
+    <!-- Overlay cho hiệu ứng tắt đèn -->
+    <div class="dark-room-overlay"></div>
     <!-- Overlay Effects -->
     <div class="bg-grid"></div>
     <div class="scrolling-text">
@@ -95,13 +116,10 @@
             title="Bật/tắt nhạc"
           >
             <img
-              src="assets/images/Anh1.PNG"
+              id="music-avatar"
+              src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
               alt="Music"
               class="w-10 h-10 rounded-full border-2 border-pink-400 shadow-lg"
-              onerror="
-                this.src =
-                  'https://images.unsplash.com/photo-1614613535308-eb5fbd3b2c17?auto=format&fit=crop&q=80&w=150'
-              "
             />
             <div
               class="absolute inset-0 bg-black/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
@@ -172,7 +190,8 @@
             class="w-48 h-48 md:w-64 md:h-64 rounded-full border-8 border-white shadow-2xl overflow-hidden mx-auto hover:scale-105 transition-transform duration-500 relative group"
           >
             <img
-              src="assets/images/Anh7.PNG"
+              id="intro-avatar"
+              src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
               alt="Birthday Person"
               class="w-full h-full object-cover"
             />
@@ -223,7 +242,10 @@
           >
             Điều Ước Tuổi Mới
           </h2>
-          <p class="text-gray-600 text-lg md:text-xl font-quicksand">
+          <p
+            id="wish-notice"
+            class="text-gray-600 text-lg md:text-xl font-quicksand"
+          >
             Hãy nhắm mắt lại, ước một điều thật đẹp và thổi nến nhé!
           </p>
         </div>
@@ -231,24 +253,26 @@
         <!-- Vùng render Cake Animation SVG -->
         <div
           id="cake-renderer"
-          class="relative w-full max-w-[400px] h-[500px] flex items-end justify-center perspective-container opacity-0 translate-y-20 transition-all duration-1000"
+          class="relative w-full max-w-[400px] h-[500px] flex items-end justify-center perspective-container"
         >
           <!-- SVG Cake sẽ được load từ file js riêng cho sạch file HTML -->
         </div>
 
-        <div class="mt-8 text-center px-4 w-full">
+        <div class="mt-8 text-center px-4 w-full flex flex-col items-center">
+          <!-- 1 Nút bấm đơn giản nhất -->
           <button
-            id="activate-mic-btn"
-            class="px-6 py-3 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors shadow-lg font-quicksand font-bold mb-4 flex mx-auto items-center gap-2"
+            id="btn-start-ritual"
+            class="ritual-button mb-4 flex items-center gap-2"
           >
-            <i class="fa-solid fa-microphone"></i> Chuẩn bị thổi nến
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Tắt đèn & Ước nguyện
           </button>
+
           <p
             id="mic-status"
-            class="hidden text-gray-500 bg-white/50 px-6 py-3 rounded-full border border-pink-200 inline-flex items-center gap-3 font-quicksand text-sm md:text-base backdrop-blur-md shadow-sm"
+            class="hidden text-gray-400 bg-white/40 px-6 py-3 rounded-full border border-pink-100 inline-flex items-center gap-3 font-quicksand text-sm backdrop-blur-md shadow-sm"
           >
-            <span class="w-3 h-3 bg-pink-400 rounded-full animate-pulse"></span>
-            Hãy thổi thật mạnh vào điện thoại / máy tính của bạn...
+            <span class="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></span>
+            Hãy ước một điều và thổi thật mạnh nhé...
           </p>
           <button
             id="reset-candle"
@@ -284,41 +308,140 @@
           </h2>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-            <!-- Form -->
-            <div
-              class="bg-white/80 p-6 md:p-8 rounded-[2rem] shadow-[0_10px_40px_rgba(232,90,157,0.1)] border border-white"
-            >
-              <form id="wish-form" class="space-y-5 font-quicksand">
-                <div>
-                  <label class="block text-sm font-bold text-gray-700 mb-2"
-                    >Tên của bạn</label
-                  >
-                  <input
-                    type="text"
-                    id="wish-name"
-                    class="w-full px-5 py-3 rounded-xl border border-pink-200 focus:ring-4 focus:ring-pink-200 focus:border-pink-400 outline-none transition-all bg-white/50 backdrop-blur-sm"
-                    placeholder="Nhập tên người gửi..."
-                    required
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-bold text-gray-700 mb-2"
-                    >Lời chúc</label
-                  >
-                  <textarea
-                    id="wish-content"
-                    class="w-full px-5 py-3 rounded-xl border border-pink-200 h-36 focus:ring-4 focus:ring-pink-200 focus:border-pink-400 outline-none transition-all bg-white/50 backdrop-blur-sm resize-none"
-                    placeholder="Viết những lời yêu thương nhất..."
-                    required
-                  ></textarea>
-                </div>
-                <button
-                  type="submit"
-                  class="w-full py-4 bg-gradient-to-r from-pink-500 to-rose-400 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all active:scale-95 font-bold text-lg uppercase tracking-wider"
+            <!-- Letter Form -->
+            <div class="letter-box relative group">
+              <!-- Envelope Back/Shadow -->
+              <div
+                class="absolute inset-0 bg-pink-100/50 rounded-2xl transform rotate-1 group-hover:rotate-0 transition-transform duration-500"
+              ></div>
+
+              <div
+                class="relative bg-[#fdfcf0] p-8 md:p-10 rounded-sm shadow-xl border-l-[12px] border-pink-400/30 overflow-hidden"
+              >
+                <!-- Nền giấy kẻ ngang -->
+                <div
+                  class="absolute inset-0 opacity-10 pointer-events-none"
+                  style="
+                    background-image: linear-gradient(
+                      #94a3b8 1px,
+                      transparent 1px
+                    );
+                    background-size: 100% 2.5rem;
+                  "
+                ></div>
+
+                <h3
+                  class="font-dancing text-3xl font-bold text-pink-600 mb-8 relative z-10"
                 >
-                  🚀 Gửi Đi Không Chờ Đợi
-                </button>
-              </form>
+                  Gửi tâm tình... 💌
+                </h3>
+
+                <form id="wish-form" class="space-y-6 relative z-10">
+                  <div class="relative">
+                    <input
+                      type="text"
+                      id="wish-name"
+                      class="w-full bg-transparent border-b-2 border-pink-200 py-2 outline-none focus:border-pink-500 transition-colors font-quicksand font-bold text-gray-700 placeholder:text-gray-300"
+                      placeholder="Người gửi: (Tên của bạn)"
+                      required
+                    />
+                  </div>
+
+                  <!-- Photo Preview Area -->
+                  <div
+                    id="wish-img-preview-container"
+                    class="hidden relative w-full aspect-video rounded-xl overflow-hidden border-2 border-dashed border-pink-200 bg-pink-50/30 group/preview mt-4"
+                  >
+                    <img
+                      id="wish-img-preview"
+                      src=""
+                      class="w-full h-full object-contain"
+                    />
+                    <button
+                      type="button"
+                      id="btn-remove-img"
+                      class="absolute top-2 right-2 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-rose-500 transition-colors shadow-lg"
+                    >
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+
+                  <div class="relative">
+                    <textarea
+                      id="wish-content"
+                      class="w-full bg-transparent border-b-2 border-pink-200 py-2 outline-none focus:border-pink-500 transition-colors font-dancing text-2xl h-40 resize-none leading-[2.5rem] text-gray-700 placeholder:text-gray-300"
+                      placeholder="Viết những lời chúc ngọt ngào nhất vào đây nhé..."
+                      required
+                    ></textarea>
+                  </div>
+
+                  <div class="flex justify-between items-end pt-4">
+                    <div class="flex items-center gap-4">
+                      <!-- Custom File Upload Button -->
+                      <label
+                        for="wish-file"
+                        class="cursor-pointer group/cam flex flex-col items-center gap-1"
+                      >
+                        <div
+                          class="w-12 h-12 rounded-full border-2 border-pink-300 flex items-center justify-center text-pink-400 group-hover/cam:bg-pink-500 group-hover/cam:text-white group-hover/cam:border-pink-500 transition-all shadow-sm"
+                        >
+                          <i class="fa-solid fa-camera text-xl"></i>
+                        </div>
+                        <span
+                          class="text-[9px] text-pink-400 font-bold font-quicksand uppercase tracking-tighter"
+                          >Đính kèm ảnh</span
+                        >
+                      </label>
+                      <input
+                        type="file"
+                        id="wish-file"
+                        class="hidden"
+                        accept="image/*"
+                      />
+
+                      <div
+                        class="text-[10px] text-gray-400 uppercase tracking-widest font-bold font-quicksand"
+                      >
+                        With love <br />
+                        from the heart
+                      </div>
+                    </div>
+
+                    <!-- Submit button as a Wax Seal -->
+                    <button
+                      type="submit"
+                      id="btn-submit-wish"
+                      class="relative w-16 h-16 bg-rose-500 rounded-full shadow-lg hover:shadow-rose-500/50 hover:scale-110 transition-all active:scale-90 flex items-center justify-center group/btn overflow-hidden disabled:bg-gray-400 disabled:shadow-none disabled:scale-100"
+                      title="Gửi thư"
+                    >
+                      <div
+                        class="absolute inset-1 border-2 border-dashed border-white/30 rounded-full"
+                      ></div>
+                      <div
+                        id="btn-wish-loader"
+                        class="hidden absolute inset-0 bg-rose-600/80 z-20 flex items-center justify-center"
+                      >
+                        <i
+                          class="fa-solid fa-circle-notch animate-spin text-white"
+                        ></i>
+                      </div>
+                      <i
+                        class="fa-solid fa-paper-plane text-white text-xl group-hover/btn:translate-x-10 group-hover/btn:-translate-y-10 transition-all duration-300"
+                      ></i>
+                      <i
+                        class="fa-solid fa-heart text-white text-xl absolute -translate-x-10 translate-y-10 group-hover/btn:translate-x-0 group-hover/btn:translate-y-0 transition-all duration-300"
+                      ></i>
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Stamp Decor -->
+                <div
+                  class="absolute top-6 right-6 w-14 h-16 border-2 border-dashed border-pink-300/50 p-1 flex items-center justify-center transform rotate-12 opacity-40"
+                >
+                  <i class="fa-solid fa-stamp text-2xl text-pink-400"></i>
+                </div>
+              </div>
             </div>
 
             <!-- Messages List -->
@@ -405,23 +528,110 @@
             Kết nối
           </h4>
           <div class="flex space-x-4">
+            <!-- Facebook -->
             <a
-              href="#"
-              class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-pink-500 hover:text-white transition-all hover:scale-110 shadow-lg"
+              href="https://www.facebook.com/TT.Tung25/"
+              class="group flex justify-center p-2 rounded-md drop-shadow-xl bg-[#316FF6] text-white font-semibold hover:translate-y-3 hover:rounded-[50%] transition-all duration-500 hover:from-[#331029] hover:to-[#310413] relative"
             >
-              <i class="fa-brands fa-facebook-f"></i>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 448 512"
+                fill="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  d="M400 32H48A48 48 0 0 0 0 80v352a48 48 0 0 0 48 48h137.25V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.27c-30.81 0-40.42 19.12-40.42 38.73V256h68.78l-11 71.69h-57.78V480H400a48 48 0 0 0 48-48V80a48 48 0 0 0-48-48z"
+                ></path>
+              </svg>
+              <span
+                class="absolute opacity-0 group-hover:opacity-100 group-hover:text-pink-600 group-hover:text-xs group-hover:-translate-y-10 duration-700 font-bold bg-white px-2 py-1 rounded shadow-md pointer-events-none whitespace-nowrap"
+              >
+                Facebook
+              </span>
             </a>
+
+            <!-- Instagram -->
             <a
-              href="#"
-              class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all hover:scale-110 shadow-lg"
+              href="https://www.instagram.com/tthanh_tung_05/"
+              class="group flex justify-center p-2 rounded-md drop-shadow-xl text-white font-semibold hover:translate-y-3 hover:rounded-[50%] transition-all duration-500 hover:from-[#331029] hover:to-[#310413] relative"
+              style="
+                background: radial-gradient(
+                  circle at 30% 107%,
+                  #fdf497 0%,
+                  #fdf497 5%,
+                  #fd5949 45%,
+                  #d6249f 60%,
+                  #285aeb 90%
+                );
+              "
             >
-              <i class="fa-brands fa-instagram"></i>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  d="M12.001 9C10.3436 9 9.00098 10.3431 9.00098 12C9.00098 13.6573 10.3441 15 12.001 15C13.6583 15 15.001 13.6569 15.001 12C15.001 10.3427 13.6579 9 12.001 9ZM12.001 7C14.7614 7 17.001 9.2371 17.001 12C17.001 14.7605 14.7639 17 12.001 17C9.24051 17 7.00098 14.7629 7.00098 12C7.00098 9.23953 9.23808 7 12.001 7ZM18.501 6.74915C18.501 7.43926 17.9402 7.99917 17.251 7.99917C16.5609 7.99917 16.001 7.4384 16.001 6.74915C16.001 6.0599 16.5617 5.5 17.251 5.5C17.9393 5.49913 18.501 6.0599 18.501 6.74915ZM12.001 4C9.5265 4 9.12318 4.00655 7.97227 4.0578C7.18815 4.09461 6.66253 4.20007 6.17416 4.38967C5.74016 4.55799 5.42709 4.75898 5.09352 5.09255C4.75867 5.4274 4.55804 5.73963 4.3904 6.17383C4.20036 6.66332 4.09493 7.18811 4.05878 7.97115C4.00703 9.0752 4.00098 9.46105 4.00098 12C4.00098 14.4745 4.00753 14.8778 4.05877 16.0286C4.0956 16.8124 4.2012 17.3388 4.39034 17.826C4.5591 18.2606 4.7605 18.5744 5.09246 18.9064C5.42863 19.2421 5.74179 19.4434 6.17187 19.6094C6.66619 19.8005 7.19148 19.9061 7.97212 19.9422C9.07618 19.9939 9.46203 20 12.001 20C14.4755 20 14.8788 19.9934 16.0296 19.9422C16.8117 19.9055 17.3385 19.7996 17.827 19.6106C18.2604 19.4423 18.5752 19.2402 18.9074 18.9085C19.2436 18.5718 19.4445 18.2594 19.6107 17.8283C19.8013 17.3358 19.9071 16.8098 19.9432 16.0289C19.9949 14.9248 20.001 14.5389 20.001 12C20.001 9.52552 19.9944 9.12221 19.9432 7.97137C19.9064 7.18906 19.8005 6.66149 19.6113 6.17318C19.4434 5.74038 19.2417 5.42635 18.9084 5.09255C18.573 4.75715 18.2616 4.55693 17.8271 4.38942C17.338 4.19954 16.8124 4.09396 16.0298 4.05781C14.9258 4.00605 14.5399 4 12.001 4ZM12.001 2C14.7176 2 15.0568 2.01 16.1235 2.06C17.1876 2.10917 17.9135 2.2775 18.551 2.525C19.2101 2.77917 19.7668 3.1225 20.3226 3.67833C20.8776 4.23417 21.221 4.7925 21.476 5.45C21.7226 6.08667 21.891 6.81333 21.941 7.8775C21.9885 8.94417 22.001 9.28333 22.001 12C22.001 14.7167 21.991 15.0558 21.941 16.1225C21.8918 17.1867 21.7226 17.9125 21.476 18.55C21.2218 19.2092 20.8776 19.7658 20.3226 20.3217C19.7668 20.8767 19.2076 21.22 18.551 21.475C17.9135 21.7217 17.1876 21.89 16.1235 21.94C15.0568 21.9875 14.7176 22 12.001 22C9.28431 22 8.94514 21.99 7.87848 21.94C6.81431 21.8908 6.08931 21.7217 5.45098 21.475C4.79264 21.2208 4.23514 20.8767 3.67931 20.3217C3.12348 19.7658 2.78098 19.2067 2.52598 18.55C2.27848 17.9125 2.11098 17.1867 2.06098 16.1225C2.01348 15.0558 2.00098 14.7167 2.00098 12C2.00098 9.28333 2.01098 8.94417 2.06098 7.8775C2.11014 6.8125 2.27848 6.0875 2.52598 5.45C2.78014 4.79167 3.12348 4.23417 3.67931 3.67833C4.23514 3.1225 4.79348 2.78 5.45098 2.525C6.08848 2.2775 6.81348 2.11 7.87848 2.06C8.94514 2.0125 9.28431 2 12.001 2Z"
+                ></path>
+              </svg>
+              <span
+                class="absolute opacity-0 group-hover:opacity-100 group-hover:text-pink-600 group-hover:text-xs group-hover:-translate-y-10 duration-700 font-bold bg-white px-2 py-1 rounded shadow-md pointer-events-none whitespace-nowrap"
+              >
+                Instagram
+              </span>
             </a>
+
+            <!-- Youtube -->
             <a
-              href="#"
-              class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-black hover:text-white transition-all hover:scale-110 shadow-lg"
+              href="https://www.youtube.com/@TTTung25"
+              class="group flex justify-center p-2 rounded-md drop-shadow-xl bg-[#CD201F] text-white font-semibold hover:translate-y-3 hover:rounded-[50%] transition-all duration-500 hover:from-[#331029] hover:to-[#310413] relative"
             >
-              <i class="fa-brands fa-tiktok"></i>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 576 512"
+                fill="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"
+                ></path>
+              </svg>
+              <span
+                class="absolute opacity-0 group-hover:opacity-100 group-hover:text-pink-600 group-hover:text-xs group-hover:-translate-y-10 duration-700 font-bold bg-white px-2 py-1 rounded shadow-md pointer-events-none whitespace-nowrap"
+              >
+                Youtube
+              </span>
+            </a>
+
+            <!-- Tiktok -->
+            <a
+              href="https://www.tiktok.com/@tgun258?is_from_webapp=1&sender_device=pc"
+              class="group flex justify-center p-2 rounded-md drop-shadow-xl bg-[#000000] text-white font-semibold hover:translate-y-3 hover:rounded-[50%] transition-all duration-500 hover:from-[#331029] hover:to-[#310413] relative"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 448 512"
+                fill="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  d="M448 209.91a210.06 210.06 0 0 1-122.77-39.25V349.38A162.55 162.55 0 1 1 185 188.31V278.2a74.62 74.62 0 1 0 52.23 71.18V0l88 0a121.18 121.18 0 0 0 1.86 22.17h0A122.18 122.18 0 0 0 381 102.39a121.43 121.43 0 0 0 67 20.14Z"
+                ></path>
+              </svg>
+              <span
+                class="absolute opacity-0 group-hover:opacity-100 group-hover:text-pink-600 group-hover:text-xs group-hover:-translate-y-10 duration-700 font-bold bg-white px-2 py-1 rounded shadow-md pointer-events-none whitespace-nowrap"
+              >
+                Tiktok
+              </span>
             </a>
           </div>
           <p class="mt-6 text-gray-400 text-sm">Follow để xem thêm hình ảnh!</p>

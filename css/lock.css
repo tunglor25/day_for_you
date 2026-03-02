@@ -16,6 +16,12 @@ body {
     padding: 20px;
     overflow-x: hidden;
     user-select: none;
+    -webkit-user-select: none;
+}
+
+img {
+    -webkit-user-drag: none;
+    user-drag: none;
 }
 
 .floating-hearts {
@@ -35,10 +41,23 @@ body {
 }
 
 @keyframes float-up {
-    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-    10% { opacity: 0.6; }
-    90% { opacity: 0.6; }
-    100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.6;
+    }
+
+    90% {
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
 }
 
 .lock-container {
@@ -60,9 +79,10 @@ body {
     font-family: 'Dancing Script', cursive;
     color: var(--dark-color);
     font-size: 42px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     margin-top: 0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    line-height: 1.2;
 }
 
 .lock-subtitle {
@@ -85,7 +105,8 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-.heart-unlock-wrapper:active, .heart-unlock-wrapper.is-pressing {
+.heart-unlock-wrapper:active,
+.heart-unlock-wrapper.is-pressing {
     transform: scale(0.95);
 }
 
@@ -111,7 +132,7 @@ body {
     position: absolute;
     width: 120px;
     height: 120px;
-    background: radial-gradient(circle, rgba(254,98,129,0.8) 0%, rgba(254,98,129,0) 70%);
+    background: radial-gradient(circle, rgba(254, 98, 129, 0.8) 0%, rgba(254, 98, 129, 0) 70%);
     border-radius: 50%;
     z-index: 0;
     opacity: 0;
@@ -124,8 +145,15 @@ body {
 }
 
 @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 0.5; }
-    100% { transform: scale(1.5); opacity: 0; }
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
 }
 
 .progress-bar-container {
@@ -160,9 +188,19 @@ body {
 }
 
 @keyframes successPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); filter: brightness(1.2); }
-    100% { transform: scale(0); opacity: 0; }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+        filter: brightness(1.2);
+    }
+
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
 }
 
 /* Responsive */
@@ -170,17 +208,32 @@ body {
     .lock-container {
         padding: 40px 20px;
     }
+
     .lock-title {
         font-size: 34px;
     }
+
     .heart-unlock-wrapper {
         width: 140px;
         height: 140px;
     }
+
     .heart-bg {
         font-size: 130px;
     }
+
     .heart-fill {
         font-size: 130px;
+    }
+}
+
+@media (max-width: 375px) {
+    .lock-title {
+        font-size: 28px;
+    }
+
+    .lock-subtitle {
+        font-size: 14px;
+        margin-bottom: 20px;
     }
 }

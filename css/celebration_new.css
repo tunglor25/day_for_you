@@ -1,6 +1,38 @@
 /* Fonts: Quicksand and Dancing Script are fetched via Google Fonts in HTML */
+/* Letter Box Styles */
+.letter-box {
+    perspective: 1000px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(232, 90, 157, 0.2);
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(232, 90, 157, 0.4);
+}
+
 body {
     scroll-behavior: smooth;
+    /* Chặn bôi đen và kéo ảnh */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+img {
+    -webkit-user-drag: none;
+    user-drag: none;
 }
 
 .font-dancing {
@@ -149,81 +181,19 @@ header.is-scrolled {
 }
 
 /* Cake Classes (Rendered by JS) */
-.candle-svg-container {
-    position: absolute;
-    top: 365px;
-    left: 50%;
-    margin-left: -6px;
-    width: 12px;
-    height: 45px;
-    transform: translateY(-300px);
-    backface-visibility: hidden;
-    opacity: 0;
-    z-index: -1;
-    background: repeating-linear-gradient(0deg, #ff7eb9 0px, #ff7eb9 5px, #ffffff 5px, #ffffff 10px);
-    border-radius: 3px 3px 2px 2px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
-}
+/* Removed redundant candle-svg-container old definitions */
 
-.candle-svg-container:after {
-    content: "";
-    position: absolute;
-    top: -9px;
-    left: 50%;
-    margin-left: -1px;
-    width: 2px;
-    height: 11px;
-    background: linear-gradient(to top, #666, #333);
-    border-radius: 1px;
-}
-
-.candle-svg-container:before {
-    content: "";
-    position: absolute;
-    top: -2px;
-    left: -1px;
-    width: calc(100% + 2px);
-    height: 5px;
-    background: linear-gradient(to bottom, #ffcce0, #ff7eb9);
-    border-radius: 4px 4px 0 0;
-}
-
-.fuego {
-    border-radius: 100%;
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    margin-left: -3.3px;
-    width: 6.6px;
-    height: 18px;
-    opacity: 0;
-}
-
-@keyframes fuego-custom {
-
-    0%,
-    100% {
-        background: rgba(254, 248, 97, 0.6);
-        box-shadow: 0 0 20px 5px rgba(248, 233, 209, 0.4);
-        transform: translateY(0) scale(1);
-    }
-
-    50% {
-        background: rgba(255, 50, 0, 0.2);
-        box-shadow: 0 0 30px 10px rgba(248, 233, 209, 0.3);
-        transform: translateY(-10px) scale(0.8);
-    }
-}
-
-@keyframes fire-appear {
-    to {
-        opacity: 1;
-    }
-}
+/* Removed redundant fuego and fire-appear */
 
 @keyframes candle-in {
+    from {
+        transform: translateX(-50%) translateY(50px);
+        opacity: 0;
+    }
+
     to {
-        transform: translateY(0);
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
     }
 }
 
@@ -243,6 +213,31 @@ header.is-scrolled {
 /* Fix lỗi lóe bóng đen viền của Swiper Effect Cards */
 .swiper-slide-shadow-cards {
     background: transparent !important;
+}
+
+/* Background Numbers 21 */
+.bg-birthday-number {
+    position: absolute;
+    font-size: clamp(10rem, 20vw, 25rem);
+    font-weight: 900;
+    color: rgba(232, 90, 157, 0.08);
+    z-index: 0;
+    user-select: none;
+    pointer-events: none;
+    font-family: "Quicksand", sans-serif;
+    line-height: 1;
+}
+
+.number-21-left {
+    top: 5%;
+    left: 0%;
+    transform: rotate(-10deg);
+}
+
+.number-21-right {
+    bottom: 10%;
+    right: 0%;
+    transform: rotate(10deg);
 }
 
 .float-element {
@@ -360,4 +355,234 @@ header.is-scrolled {
         opacity: 1;
         transform: translateY(0) rotate(0deg);
     }
+}
+
+/* Dark Room Effect */
+.dark-room-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center,
+            transparent 150px,
+            rgba(0, 0, 0, 0.9) 400px);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+body.lights-off .dark-room-overlay {
+    opacity: 1;
+}
+
+/* --- Original Candle Style --- */
+.candle-svg-container {
+    position: absolute;
+    top: 368px;
+    /* Nhích lên 1 chút để cắm đúng mặt bánh */
+    left: 50%;
+    margin-left: -6px;
+    width: 12px;
+    height: 45px;
+    backface-visibility: hidden;
+    opacity: 0;
+    z-index: 10;
+    /* Nằm sau lớp kem trắng (z-index 11) */
+    background: repeating-linear-gradient(0deg,
+            #ff7eb9 0px,
+            #ff7eb9 5px,
+            #ffffff 5px,
+            #ffffff 10px);
+    border-radius: 3px 3px 2px 2px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+    animation: candle-in 500ms 2s ease-out forwards;
+}
+
+/* Wick */
+.candle-svg-container:after {
+    content: "";
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    margin-left: -1px;
+    width: 2px;
+    height: 11px;
+    background: linear-gradient(to top, #666, #333);
+    border-radius: 1px;
+}
+
+/* Candle top cap */
+.candle-svg-container:before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -1px;
+    width: calc(100% + 2px);
+    height: 5px;
+    background: linear-gradient(to bottom, #ffcce0, #ff7eb9);
+    border-radius: 4px 4px 0 0;
+}
+
+@keyframes candle-in {
+    from {
+        transform: translateY(-300px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Fire Styles (5 layers of flame) */
+.fuego {
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    position: absolute;
+    top: -24px;
+    /* Nhích lên 1 chút cho ngọn lửa bay trên bấc */
+    left: 50%;
+    margin-left: -5px;
+    /* (width/2) để căn giữa tuyệt đối */
+    width: 10px;
+    /* Tăng độ dày dạn của lửa */
+    height: 22px;
+    opacity: 0;
+    pointer-events: none;
+    filter: blur(0.5px);
+}
+
+.fuego.ignited {
+    opacity: 1;
+}
+
+.fuego.ignited:nth-child(1) {
+    animation: fuego 2s infinite;
+}
+
+.fuego.ignited:nth-child(2) {
+    animation: fuego 1.5s infinite;
+}
+
+.fuego.ignited:nth-child(3) {
+    animation: fuego 1s infinite;
+}
+
+.fuego.ignited:nth-child(4) {
+    animation: fuego 0.5s infinite;
+}
+
+.fuego.ignited:nth-child(5) {
+    animation: fuego 0.2s infinite;
+}
+
+@keyframes fuego {
+
+    0%,
+    100% {
+        background: rgba(254, 248, 97, 0.9);
+        box-shadow: 0 0 25px 12px rgba(248, 233, 209, 0.7);
+        transform: translateX(0) scale(1);
+    }
+
+    50% {
+        background: rgba(255, 80, 0, 0.6);
+        box-shadow: 0 0 45px 20px rgba(248, 233, 209, 0.5);
+        transform: translateX(1px) translateY(-12px) scale(1.2);
+    }
+}
+
+.ritual-button {
+    background: linear-gradient(45deg, #ff6b8b, #ff8e9e);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(255, 107, 139, 0.2);
+    transition: all 0.3s ease;
+}
+
+.ritual-button:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* Hide remnants */
+.torch-container,
+.lighter-container {
+    display: none !important;
+}
+
+/* Swiper Slider Fixes */
+.mySwiper {
+    width: 95%;
+    max-width: 600px;
+    /* Tăng chiều rộng để ảnh ngang đẹp hơn */
+    height: 500px;
+    margin: 40px auto;
+    z-index: 10;
+}
+
+.swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    /* Nền đen cho các khoảng trống nếu có */
+}
+
+.swiper-pagination-bullet {
+    background: var(--primary) !important;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: var(--primary) !important;
+}
+
+@media (max-width: 768px) {
+    .mySwiper {
+        height: 450px;
+    }
+}
+
+.swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background-color: #fce4e4;
+    overflow: hidden;
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Fix shadow cards effect overlapping */
+.swiper-cards .swiper-slide {
+    backface-visibility: hidden;
+}
+
+/* Ensure candle is visible */
+.candle-svg-container {
+    z-index: 200 !important;
+    /* Cực cao để ko bị đè */
+}
+
+.fuego {
+    z-index: 201 !important;
+}
+
+#cake-renderer {
+    z-index: 10;
+}
+
+/* Ritual Button Positioning */
+#btn-start-ritual {
+    position: relative;
+    z-index: 50;
 }
