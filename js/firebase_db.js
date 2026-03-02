@@ -123,10 +123,8 @@ function applyConfig(config) {
     }
 
     if (introImg) {
-      // Ưu tiên dùng ảnh có đuôi theo imgCount hoặc ảnh 7 (do trước đó HTML hardcode Anh7)
-      introImg.src =
-        basePath +
-        (config.imgCount ? "Anh" + config.imgCount + ".PNG" : "Anh7.PNG");
+      // Luôn dùng Anh7.PNG làm ảnh đại diện intro
+      introImg.src = basePath + "Anh7.PNG";
       // Xử lý báo lỗi tải ảnh Fallback
       introImg.onerror = function () {
         this.src = "https://loremflickr.com/600/400/birthday,cake";
@@ -165,10 +163,10 @@ function applyConfig(config) {
             <div class="absolute inset-0 bg-black/10 z-0"></div>
             <!-- Lớp nền mờ (Blurred Background) -->
             <img src="${basePath}Anh${i}.PNG" class="absolute inset-0 w-full h-full object-cover z-0 blur-xl opacity-50 scale-110" 
-                 onerror="this.src='https://loremflickr.com/600/400/birthday,cake'" />
+                 onerror="this.onerror=null; this.src='${basePath}Anh${i}.jpg'; this.onerror=function(){this.onerror=null; this.src='${basePath}Anh${i}.jpeg'; this.onerror=function(){this.src='https://loremflickr.com/600/400/birthday,cake';};};" />
             <!-- Lớp ảnh chính sắc nét (Sharp Foreground) -->
             <img src="${basePath}Anh${i}.PNG" class="relative z-10 w-full h-full object-contain drop-shadow-2xl" 
-                 onerror="this.src='https://loremflickr.com/600/400/birthday,cake'" />
+                 onerror="this.onerror=null; this.src='${basePath}Anh${i}.jpg'; this.onerror=function(){this.onerror=null; this.src='${basePath}Anh${i}.jpeg'; this.onerror=function(){this.src='https://loremflickr.com/600/400/birthday,cake';};};" />
           </div>
         `;
     }
@@ -184,10 +182,10 @@ function applyConfig(config) {
             <div class="absolute inset-0 bg-black/10 z-0"></div>
             <!-- Lớp nền mờ -->
             <img src="${basePath}Anh${imgIndex}.PNG" class="absolute inset-0 w-full h-full object-cover z-0 blur-xl opacity-50 scale-110" 
-                    onerror="this.src='https://loremflickr.com/600/400/birthday,cake'" />
+                    onerror="this.onerror=null; this.src='${basePath}Anh${imgIndex}.jpg'; this.onerror=function(){this.onerror=null; this.src='${basePath}Anh${imgIndex}.jpeg'; this.onerror=function(){this.src='https://loremflickr.com/600/400/birthday,cake';};};" />
             <!-- Lớp ảnh chính -->
             <img src="${basePath}Anh${imgIndex}.PNG" class="relative z-10 w-full h-full object-contain drop-shadow-2xl" 
-                    onerror="this.src='https://loremflickr.com/600/400/birthday,cake'" />
+                    onerror="this.onerror=null; this.src='${basePath}Anh${imgIndex}.jpg'; this.onerror=function(){this.onerror=null; this.src='${basePath}Anh${imgIndex}.jpeg'; this.onerror=function(){this.src='https://loremflickr.com/600/400/birthday,cake';};};" />
           </div>
         `;
       }
