@@ -37,7 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  createFloatingHearts();
+  // Khởi tạo phông nền ban đầu (có thể sẽ bị override nếu Theme = Boy)
+  createFloatingHearts("girl");
 
   const heartWrapper = document.querySelector(".heart-unlock-wrapper");
   const heartFill = document.getElementById("heartFill");
@@ -64,7 +65,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     isPressing = true;
     heartWrapper.classList.add("is-pressing");
-    lockMessage.textContent = "Tiếp tục giữ nhé... ❤️";
+    lockMessage.textContent =
+      window.cakeTheme === "boy"
+        ? "Đang bơm nhiên liệu... 🚀"
+        : "Tiếp tục giữ nhé... ❤️";
 
     clearInterval(pressTimer);
     pressTimer = setInterval(() => {
@@ -87,7 +91,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (progress > 0 && progress < maxProgress) {
       // Automatically decrease if let go early
-      lockMessage.textContent = "Đừng buông tay ra chứ! 🥺";
+      lockMessage.textContent =
+        window.cakeTheme === "boy"
+          ? "Đang mất dần nhiên liệu kìa! 🥺"
+          : "Đừng buông tay ra chứ! 🥺";
 
       pressTimer = setInterval(() => {
         if (isPressing || unlocked) {
@@ -111,7 +118,10 @@ document.addEventListener("DOMContentLoaded", function () {
     clearInterval(pressTimer);
     heartWrapper.classList.remove("is-pressing");
 
-    lockMessage.innerHTML = "❤️ Trái tim đã mở cửa! ❤️";
+    lockMessage.innerHTML =
+      window.cakeTheme === "boy"
+        ? "🚀 Tên lửa đã cất cánh! 🚀"
+        : "❤️ Trái tim đã mở cửa! ❤️";
     heartWrapper.classList.add("unlock-success-anim");
 
     createFireworks();
@@ -146,22 +156,16 @@ document.addEventListener("DOMContentLoaded", function () {
   heartWrapper.addEventListener("touchcancel", handlePressEnd);
 });
 
-function createFloatingHearts() {
+window.createFloatingHearts = function (theme = "girl") {
   const container = document.getElementById("floatingHearts");
+  if (!container) return;
+  container.innerHTML = ""; // Xóa bộ cũ đi khi được gọi lại
+
   const heartCount = 15;
-  const trollIcons = [
-    "❤️",
-    "💖",
-    "💗",
-    "💕",
-    "💞",
-    "💓",
-    "💘",
-    "💝",
-    "✨",
-    "🌸",
-    "🦋",
-  ];
+  const trollIcons =
+    theme === "boy"
+      ? ["⭐", "✨", "🚀", "🪐", "🔥", "💫", "⚡"]
+      : ["❤️", "💖", "💗", "💕", "💞", "💓", "💘", "💝", "✨", "🌸", "🦋"];
 
   for (let i = 0; i < heartCount; i++) {
     const heart = document.createElement("div");
@@ -173,7 +177,7 @@ function createFloatingHearts() {
     heart.style.animationDelay = Math.random() * 5 + "s";
     container.appendChild(heart);
   }
-}
+};
 
 function createFireworks() {
   const colors = ["#ff6b8b", "#ff8e9e", "#ffb3c1", "#ffd6de", "#ffffff"];

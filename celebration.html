@@ -446,7 +446,7 @@
 
             <!-- Messages List -->
             <div
-              class="flex flex-col space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"
+              class="flex flex-col space-y-4 max-h-[500px] overflow-y-scroll overflow-x-hidden pr-3 pb-4 custom-scrollbar"
               id="wishes-list"
             ></div>
           </div>
@@ -661,5 +661,15 @@
     <script src="js/renderCake.js"></script>
     <script src="js/celebration_new.js"></script>
     <script type="module" src="js/firebase_db.js"></script>
+
+    <!-- Image Viewer Modal -->
+    <div id="image-modal">
+      <span
+        class="close-modal-btn"
+        onclick="if (window.closeImageModal) window.closeImageModal();"
+        >&times;</span
+      >
+      <img id="image-modal-img" src="" alt="Zoomed view" />
+    </div>
   </body>
 </html>

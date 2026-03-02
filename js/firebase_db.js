@@ -164,8 +164,8 @@ function applyConfig(config) {
             <!-- Lớp nền mờ (Blurred Background) -->
             <img src="${basePath}Anh${i}.PNG" class="absolute inset-0 w-full h-full object-cover z-0 blur-xl opacity-50 scale-110" 
                  onerror="this.onerror=null; this.src='${basePath}Anh${i}.jpg'; this.onerror=function(){this.onerror=null; this.src='${basePath}Anh${i}.jpeg'; this.onerror=function(){this.src='https://loremflickr.com/600/400/birthday,cake';};};" />
-            <!-- Lớp ảnh chính sắc nét (Sharp Foreground) -->
-            <img src="${basePath}Anh${i}.PNG" class="relative z-10 w-full h-full object-contain drop-shadow-2xl" 
+            <!-- Lớp ảnh chính sắc nét (Sharp Foreground) kèm tính năng Phóng To Popup -->
+            <img src="${basePath}Anh${i}.PNG" class="relative z-10 w-full h-full object-contain drop-shadow-2xl cursor-pointer" onclick="if(window.openImageModal) window.openImageModal(this.src)"
                  onerror="this.onerror=null; this.src='${basePath}Anh${i}.jpg'; this.onerror=function(){this.onerror=null; this.src='${basePath}Anh${i}.jpeg'; this.onerror=function(){this.src='https://loremflickr.com/600/400/birthday,cake';};};" />
           </div>
         `;
@@ -183,8 +183,8 @@ function applyConfig(config) {
             <!-- Lớp nền mờ -->
             <img src="${basePath}Anh${imgIndex}.PNG" class="absolute inset-0 w-full h-full object-cover z-0 blur-xl opacity-50 scale-110" 
                     onerror="this.onerror=null; this.src='${basePath}Anh${imgIndex}.jpg'; this.onerror=function(){this.onerror=null; this.src='${basePath}Anh${imgIndex}.jpeg'; this.onerror=function(){this.src='https://loremflickr.com/600/400/birthday,cake';};};" />
-            <!-- Lớp ảnh chính -->
-            <img src="${basePath}Anh${imgIndex}.PNG" class="relative z-10 w-full h-full object-contain drop-shadow-2xl" 
+            <!-- Lớp ảnh chính kèm popup ảnh -->
+            <img src="${basePath}Anh${imgIndex}.PNG" class="relative z-10 w-full h-full object-contain drop-shadow-2xl cursor-pointer" onclick="if(window.openImageModal) window.openImageModal(this.src)"
                     onerror="this.onerror=null; this.src='${basePath}Anh${imgIndex}.jpg'; this.onerror=function(){this.onerror=null; this.src='${basePath}Anh${imgIndex}.jpeg'; this.onerror=function(){this.src='https://loremflickr.com/600/400/birthday,cake';};};" />
           </div>
         `;
@@ -198,8 +198,125 @@ function applyConfig(config) {
     }
   }
 
-  // Set biến toàn cục để file renderCake tính số độ tuổi trên nến
+  // Set cấu hình Theme Nam / Nữ
+  if (config.theme === "boy") {
+    // Inject CSS ghi đè các màu sắc Pink/Rose thành Blue/Sky
+    const style = document.createElement("style");
+    style.innerHTML = `
+      /* Màu nền trang */
+      body.bg-pink-50 { background-color: #f0f9ff !important; }
+      .bg-pink-50 { background-color: #f0f9ff !important; }
+      .bg-pink-100 { background-color: #e0f2fe !important; }
+      .bg-pink-200 { background-color: #bae6fd !important; }
+      .bg-pink-400 { background-color: #38bdf8 !important; }
+      .bg-pink-500 { background-color: #0ea5e9 !important; }
+      .bg-pink-600 { background-color: #0284c7 !important; }
+      
+      .bg-rose-500 { background-color: #0ea5e9 !important; }
+      .bg-rose-600 { background-color: #0284c7 !important; }
+      
+      /* Màu Text */
+      .text-pink-200 { color: #bae6fd !important; }
+      .text-pink-400 { color: #38bdf8 !important; }
+      .text-pink-500 { color: #0ea5e9 !important; }
+      .text-pink-600 { color: #0284c7 !important; }
+      
+      .text-rose-300 { color: #7dd3fc !important; }
+      .text-rose-400 { color: #38bdf8 !important; }
+      .text-rose-500 { color: #0ea5e9 !important; }
+      
+      /* Viền (Border) */
+      .border-pink-100 { border-color: #e0f2fe !important; }
+      .border-pink-200 { border-color: #bae6fd !important; }
+      .border-pink-300 { border-color: #7dd3fc !important; }
+      .border-pink-400 { border-color: #38bdf8 !important; }
+      .border-pink-500 { border-color: #0ea5e9 !important; }
+      
+      /* Gradient Text */
+      .from-pink-500 { --tw-gradient-from: #0ea5e9 !important; }
+      .to-rose-400 { --tw-gradient-to: #38bdf8 !important; }
+      .from-pink-400 { --tw-gradient-from: #38bdf8 !important; }
+      .to-rose-300 { --tw-gradient-to: #7dd3fc !important; }
+      
+      /* Gradient Background */
+      .from-pink-400 { --tw-gradient-from: #38bdf8 !important; }
+      .to-rose-300 { --tw-gradient-to: #7dd3fc !important; }
+      
+      /* Button Nổi bật (Music, Gửi Thư...) */
+      .ritual-button { background: linear-gradient(45deg, #0ea5e9, #38bdf8) !important; box-shadow: 0 10px 20px rgba(14, 165, 233, 0.2) !important; }
+      
+      /* CSS Tùy Chỉnh Swiper */
+      .swiper-pagination-bullet { background: #0ea5e9 !important; }
+      .swiper-button-next, .swiper-button-prev { color: #0ea5e9 !important; }
+      .bg-birthday-number { color: rgba(14, 165, 233, 0.08) !important; }
+      .scrolling-text { color: rgba(14, 165, 233, 0.05) !important; }
+      .bg-grid { background-image: linear-gradient(to right, rgba(14, 165, 233, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(14, 165, 233, 0.05) 1px, transparent 1px) !important; }
+      
+      /* Ghi đè CSS riêng của trang Lock (lock.css) */
+      body { background: linear-gradient(135deg, #f0f9ff 0%, #bae6fd 100%) !important; }
+      :root {
+          --primary-color: #0ea5e9 !important;
+          --secondary-color: #38bdf8 !important;
+          --dark-color: #0284c7 !important;
+          --light-color: #f0f9ff !important;
+      }
+      .lock-container { box-shadow: 0 20px 50px rgba(14, 165, 233, 0.2) !important; }
+      .lock-message { color: var(--dark-color) !important; }
+      
+      /* Đổi màu progress bar và heart fill trong lock.html */
+      .heart-bg { color: #e0f2fe !important; }
+      .heart-fill { color: #0ea5e9 !important; filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.6)) !important; }
+      .heart-pulse { background: radial-gradient(circle, rgba(14, 165, 233, 0.8) 0%, rgba(14, 165, 233, 0) 70%) !important; }
+      .progress-bar { background: linear-gradient(90deg, #38bdf8, #0ea5e9) !important; }
+      .progress-bar-container { background: #e0f2fe !important; }
+
+      /* Rotate Rocket in Lock Page */
+      .fa-rocket { transform: translateY(-3px) rotate(-45deg); font-size: 130px; }
+      @media (max-width: 480px) { .fa-rocket { font-size: 110px; } }
+    `;
+    document.head.appendChild(style);
+
+    // Cập nhật giao diện Lock Page nếu đang ở trang Lock
+    const lockWrapper = document.querySelector(".heart-unlock-wrapper");
+    if (lockWrapper) {
+      const lockTitle = document.querySelector(".lock-title");
+      if (lockTitle && lockTitle.innerHTML.includes("Mở khóa trái tim")) {
+        lockTitle.innerHTML = "Sẵn sàng khởi hành";
+      }
+      const lockSubtitle = document.querySelector(".lock-subtitle");
+      if (lockSubtitle) {
+        lockSubtitle.innerHTML = "Giữ tên lửa để kích hoạt động cơ 🚀";
+      }
+
+      // Sửa câu thoại sến súa trong Modal Quyền
+      const modalText = document.querySelector("#modal-content p");
+      if (modalText && modalText.innerHTML.includes("thổi nến")) {
+        modalText.innerHTML =
+          "Để buổi tiệc sinh nhật diễn ra tuyệt vời nhất, hãy cho phép chúng mình sử dụng <b>Cookies</b> và <b>Microphone</b> (để bạn kích hoạt buồng đốt nha!) 🚀🎤";
+      }
+      const modalBtn = document.querySelector("#btn-accept-privacy");
+      if (modalBtn) {
+        modalBtn.innerHTML = "Sẵn sàng cất cánh 🚀";
+      }
+
+      // Đổi icon heart thành rocket
+      document
+        .querySelectorAll(".heart-unlock-wrapper .fa-heart")
+        .forEach((el) => {
+          el.classList.remove("fa-heart");
+          el.classList.add("fa-rocket");
+        });
+
+      // Tạo lại bộ icon bay lơ lửng cho boy
+      if (window.createFloatingHearts) {
+        window.createFloatingHearts("boy");
+      }
+    }
+  }
+
+  // Set biến toàn cục để file renderCake tính số độ tuổi trên nến và check render bánh nam
   window.cakeBirthYear = config.birthYear || 2005;
+  window.cakeTheme = config.theme || "girl";
 }
 
 // Lắng nghe sự kiện thêm mới hoặc fetch dữ liệu ban đầu
@@ -239,7 +356,7 @@ if (wishesList) {
 
 function renderWishMsg(name, content, dateStr, imgUrl) {
   return `
-    <div class="relative bg-[#fff9c4]/50 p-6 rounded-sm shadow-md border-l-4 border-pink-400/50 font-quicksand animate-slide-up transform transition-all duration-300 hover:-translate-y-1 overflow-hidden group">
+    <div class="relative bg-[#fff9c4]/50 p-6 rounded-sm shadow-md border-l-4 border-pink-400/50 font-quicksand animate-slide-up transform transition-all duration-300 hover:-translate-y-1 overflow-hidden group shrink-0">
         <!-- Băng dính trang trí (Tape effect) -->
         <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-12 h-6 bg-pink-200/40 rotate-2 opacity-50 group-hover:opacity-100 transition-opacity"></div>
         
@@ -261,7 +378,7 @@ function renderWishMsg(name, content, dateStr, imgUrl) {
           imgUrl
             ? `
         <div class="mt-4 rounded-lg overflow-hidden border border-pink-100 shadow-sm relative z-10 group/img">
-            <img src="${imgUrl}" class="w-full h-auto max-h-60 object-cover hover:scale-105 transition-transform duration-500" />
+            <img src="${imgUrl}" class="w-full h-auto max-h-60 object-cover hover:scale-105 transition-transform duration-500 cursor-pointer" onclick="if(window.openImageModal) window.openImageModal(this.src)" />
         </div>
         `
             : ""

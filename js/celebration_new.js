@@ -267,4 +267,32 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     })();
   }
+
+  // 7. Image Modal View Logic
+  const imageModal = document.getElementById("image-modal");
+  const imageModalImg = document.getElementById("image-modal-img");
+
+  window.openImageModal = function (src) {
+    if (imageModal && imageModalImg) {
+      imageModalImg.src = src;
+      imageModal.classList.add("active");
+      document.body.style.overflow = "hidden"; // Ngăn cuộn
+    }
+  };
+
+  window.closeImageModal = function () {
+    if (imageModal) {
+      imageModal.classList.remove("active");
+      document.body.style.overflow = ""; // Khôi phục cuộn
+    }
+  };
+
+  // Nhấn vào khoảng tối để tắt
+  if (imageModal) {
+    imageModal.addEventListener("click", function (e) {
+      if (e.target === imageModal) {
+        window.closeImageModal();
+      }
+    });
+  }
 });
