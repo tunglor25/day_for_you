@@ -1,12 +1,19 @@
 document.addEventListener("DOMContentLoaded", function () {
   // 1. Khởi tạo Swiper Slider
-  new Swiper(".mySwiper", {
-    loop: true,
+  // Khắc phục lỗi lỏ lỏ khi vuốt tay bằng cách chặn bóng đổ, thiết lập chế độ xoay gắt hơn để Swiper hiểu lướt tới/lùi
+  window.mySwiper = new Swiper(".mySwiper", {
     effect: "cards",
     grabCursor: true,
+    loop: true,
+    speed: 500, // Thêm độ mượt chuyển động
     autoplay: {
       delay: 3000,
       disableOnInteraction: false,
+    },
+    cardsEffect: {
+      slideShadows: false, // Bỏ bóng đổ 3D tối để tránh viền đen khi kéo nhanh
+      perSlideOffset: 10,
+      perSlideRotate: 5,
     },
     pagination: {
       el: ".swiper-pagination",
@@ -221,37 +228,4 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     })();
   }
-
-  // 7. Handles Wish Form
-  const wishForm = document.getElementById("wish-form");
-  const wishesList = document.getElementById("wishes-list");
-
-  wishForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const name = document.getElementById("wish-name").value;
-    const content = document.getElementById("wish-content").value;
-    const dateStr = new Date().toLocaleDateString("vi-VN");
-    const initials = name.substring(0, 2).toUpperCase();
-
-    const newMsg = `
-            <div class="bg-white/90 p-5 rounded-2xl border-l-4 border-pink-400 shadow-xl font-quicksand animate-slide-up transform transition-all duration-300">
-                <div class="flex items-center gap-3 mb-2">
-                    <div class="w-8 h-8 rounded-full bg-pink-100 flex justify-center items-center text-pink-500 font-bold text-sm">
-                        ${initials}
-                    </div>
-                    <h4 class="font-bold text-pink-600">${name}</h4>
-                </div>
-                <p class="text-gray-700 leading-relaxed">${content}</p>
-                <div class="text-xs text-gray-400 mt-2 text-right">${dateStr}</div>
-            </div>
-        `;
-
-    wishesList.insertAdjacentHTML("afterbegin", newMsg);
-    wishForm.reset();
-    confetti({
-      particleCount: 150,
-      spread: 80,
-      origin: { y: 0.6 },
-    });
-  });
 });

@@ -33,25 +33,27 @@ body {
     position: fixed;
     top: 50%;
     left: 0;
-    transform: translateY(-50%) rotate(-10deg);
+    width: 200%;
+    transform: translateY(-50%);
     font-family: 'Dancing Script', cursive;
-    font-size: 15vw;
-    color: rgba(255, 107, 139, 0.03);
-    /* Rất nhạt, ẩn ẩn phía sau */
+    font-size: 15rem;
+    font-weight: 900;
+    color: rgba(255, 107, 139, 0.05);
+    /* Adjust opacity if needed */
     white-space: nowrap;
     pointer-events: none;
     z-index: 0;
-    animation: scrollBg 60s linear infinite;
+    animation: scroll-left 60s linear infinite;
     user-select: none;
 }
 
-@keyframes scrollBg {
+@keyframes scroll-left {
     from {
-        transform: translateY(-50%) rotate(-10deg) translateX(0);
+        transform: translateY(-50%) translateX(0);
     }
 
     to {
-        transform: translateY(-50%) rotate(-10deg) translateX(-50%);
+        transform: translateY(-50%) translateX(-50%);
     }
 }
 
@@ -147,20 +149,81 @@ header.is-scrolled {
 }
 
 /* Cake Classes (Rendered by JS) */
-.fuego {
-    transform-origin: bottom center;
-    animation: flickerFlame 0.1s infinite alternate;
+.candle-svg-container {
+    position: absolute;
+    top: 365px;
+    left: 50%;
+    margin-left: -6px;
+    width: 12px;
+    height: 45px;
+    transform: translateY(-300px);
+    backface-visibility: hidden;
+    opacity: 0;
+    z-index: -1;
+    background: repeating-linear-gradient(0deg, #ff7eb9 0px, #ff7eb9 5px, #ffffff 5px, #ffffff 10px);
+    border-radius: 3px 3px 2px 2px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-@keyframes flickerFlame {
-    0% {
-        transform: scale(1) rotate(-1deg) skewX(2deg);
-        opacity: 0.9;
+.candle-svg-container:after {
+    content: "";
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    margin-left: -1px;
+    width: 2px;
+    height: 11px;
+    background: linear-gradient(to top, #666, #333);
+    border-radius: 1px;
+}
+
+.candle-svg-container:before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -1px;
+    width: calc(100% + 2px);
+    height: 5px;
+    background: linear-gradient(to bottom, #ffcce0, #ff7eb9);
+    border-radius: 4px 4px 0 0;
+}
+
+.fuego {
+    border-radius: 100%;
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    margin-left: -3.3px;
+    width: 6.6px;
+    height: 18px;
+    opacity: 0;
+}
+
+@keyframes fuego-custom {
+
+    0%,
+    100% {
+        background: rgba(254, 248, 97, 0.6);
+        box-shadow: 0 0 20px 5px rgba(248, 233, 209, 0.4);
+        transform: translateY(0) scale(1);
     }
 
-    100% {
-        transform: scale(1.05) rotate(1deg) skewX(-2deg);
+    50% {
+        background: rgba(255, 50, 0, 0.2);
+        box-shadow: 0 0 30px 10px rgba(248, 233, 209, 0.3);
+        transform: translateY(-10px) scale(0.8);
+    }
+}
+
+@keyframes fire-appear {
+    to {
         opacity: 1;
+    }
+}
+
+@keyframes candle-in {
+    to {
+        transform: translateY(0);
     }
 }
 
@@ -175,4 +238,126 @@ header.is-scrolled {
 #cake-renderer.intersected {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Fix lỗi lóe bóng đen viền của Swiper Effect Cards */
+.swiper-slide-shadow-cards {
+    background: transparent !important;
+}
+
+.float-element {
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+    animation: float-around 10s ease-in-out infinite;
+}
+
+@keyframes float-around {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    33% {
+        transform: translate(30px, -50px) rotate(10deg);
+    }
+
+    66% {
+        transform: translate(-20px, -30px) rotate(-10deg);
+    }
+}
+
+/* Strawberries */
+.strawberry {
+    position: absolute;
+    z-index: 11;
+    opacity: 0;
+    transform: translateY(-80px) rotate(0deg);
+    animation: strawberry-fall 0.8s ease-out forwards;
+}
+
+.strawberry-body {
+    width: 14px;
+    height: 18px;
+    background: linear-gradient(135deg, #e74c5e 0%, #c0392b 60%, #a93226 100%);
+    border-radius: 50% 50% 50% 50% / 35% 35% 65% 65%;
+    position: relative;
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.15), 1px 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+.strawberry-body::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    background-image: radial-gradient(circle, #f5d76e 0.8px, transparent 0.8px),
+        radial-gradient(circle, #f5d76e 0.8px, transparent 0.8px),
+        radial-gradient(circle, #f5d76e 0.8px, transparent 0.8px),
+        radial-gradient(circle, #f5d76e 0.8px, transparent 0.8px);
+    background-size: 5px 6px;
+    background-position: 0 0, 3px 3px, 1px 7px, 5px 10px;
+    background-repeat: no-repeat;
+    border-radius: inherit;
+}
+
+.strawberry-body::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 6px;
+    background: #27ae60;
+    clip-path: polygon(50% 100%, 0% 0%, 25% 0%, 50% 60%, 75% 0%, 100% 0%);
+}
+
+.strawberry.sm .strawberry-body {
+    width: 10px;
+    height: 14px;
+}
+
+.strawberry.lg .strawberry-body {
+    width: 16px;
+    height: 20px;
+}
+
+.strawberry.half .strawberry-body {
+    border-radius: 50% 0 0 50% / 35% 0 0 65%;
+    background: linear-gradient(90deg, #e74c5e 0%, #d4444f 40%, #fce4e4 42%, #fff0f0 100%);
+    overflow: hidden;
+}
+
+.strawberry.half .strawberry-body::after {
+    background-image: radial-gradient(circle, #f5d76e 0.8px, transparent 0.8px),
+        radial-gradient(circle, #f5d76e 0.8px, transparent 0.8px);
+    background-size: 4px 5px;
+    background-position: 0 1px, 2px 5px;
+}
+
+.strawberry.half .strawberry-body::before {
+    width: 8px;
+    left: 30%;
+}
+
+@keyframes strawberry-fall {
+    0% {
+        opacity: 0;
+        transform: translateY(-80px) rotate(-20deg);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateY(5px) rotate(10deg);
+    }
+
+    80% {
+        transform: translateY(-3px) rotate(-5deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+    }
 }
