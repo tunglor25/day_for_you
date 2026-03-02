@@ -16,6 +16,58 @@
     </style>
   </head>
   <body class="bg-gray-50 min-h-screen p-6">
+    <!-- Màn hình Đăng nhập (Overlay) -->
+    <div
+      id="login-overlay"
+      class="fixed inset-0 bg-gray-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-opacity duration-300"
+    >
+      <div
+        class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center"
+      >
+        <div
+          class="w-16 h-16 bg-pink-100 text-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 scale-110"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            />
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-pink-600 mb-2">Trung Tâm Bí Mật</h2>
+        <p class="text-gray-500 mb-6 text-sm">
+          Trang dành cho người sáng tạo, nhập mật khẩu để vào thiết lập.
+        </p>
+        <div class="space-y-4">
+          <input
+            type="password"
+            id="login-pwd"
+            placeholder="Mật Mã..."
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all text-center text-xl font-bold tracking-[0.2em] shadow-inner text-pink-600"
+          />
+          <p
+            id="login-error"
+            class="text-red-500 text-sm hidden font-medium animate-pulse"
+          >
+            Ops! Mật khẩu không chính xác!
+          </p>
+          <button
+            id="login-btn"
+            class="w-full py-4 font-bold text-white bg-pink-500 hover:bg-pink-600 rounded-xl shadow-lg hover:shadow-pink-500/30 transition-all transform hover:-translate-y-1"
+          >
+            MỞ KHÓA TRANG ADMIN
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-xl">
       <h1 class="text-3xl font-bold text-pink-600 mb-6 text-center">
         Quản Lý Cấu Hình Thiệp
@@ -123,8 +175,8 @@
             class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
           />
           <p class="text-xs text-gray-400 mt-1">
-            Mã mặc định là: 123456 (chỉ phòng mấy người nghịch bấm bậy lưu đè dữ
-            liệu).
+            Xác nhận lại mật khẩu: 25082005 để ghi đè dữ liệu lên Server
+            Database.
           </p>
         </div>
 
@@ -183,6 +235,28 @@
       const pinInput = document.getElementById("cfg-pin");
       const alertBox = document.getElementById("alert-box");
 
+      // ====== Xử Lý Màn Hình Login Khóa Cửa =======
+      const loginOverlay = document.getElementById("login-overlay");
+      const loginPwd = document.getElementById("login-pwd");
+      const loginBtn = document.getElementById("login-btn");
+      const loginErr = document.getElementById("login-error");
+
+      const handleLogin = () => {
+        if (loginPwd.value === "25082005") {
+          loginErr.classList.add("hidden");
+          loginOverlay.classList.add("opacity-0", "pointer-events-none");
+          setTimeout(() => loginOverlay.classList.add("hidden"), 300); // Ẩn hoàn toàn sau animation
+        } else {
+          loginErr.classList.remove("hidden");
+        }
+      };
+
+      loginBtn.addEventListener("click", handleLogin);
+      loginPwd.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") handleLogin();
+      });
+      // ============================================
+
       function showAlert(msg, isSuccess) {
         alertBox.className =
           "mb-6 p-4 rounded-xl text-sm font-medium " +
@@ -221,7 +295,7 @@
         e.preventDefault();
 
         const pin = pinInput.value;
-        if (pin !== "123456") {
+        if (pin !== "25082005") {
           showAlert("Mã Admin PIN không đúng. Không thể lưu dữ liệu!", false);
           return;
         }
