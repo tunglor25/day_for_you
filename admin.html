@@ -13,9 +13,26 @@
       body {
         font-family: "Quicksand", sans-serif;
       }
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.4s ease;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
     </style>
   </head>
-  <body class="bg-gray-50 min-h-screen p-6">
+  <body class="bg-gray-50 min-h-screen p-4 md:p-6">
     <!-- Màn hình Đăng nhập (Overlay) -->
     <div
       id="login-overlay"
@@ -68,155 +85,358 @@
         </div>
       </div>
     </div>
-    <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-xl">
-      <h1 class="text-3xl font-bold text-pink-600 mb-6 text-center">
-        Quản Lý Cấu Hình Thiệp
-      </h1>
 
-      <!-- Thông báo -->
+    <!-- MAIN ADMIN PANEL -->
+    <div
+      class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden"
+    >
+      <!-- HEADER & TABS -->
+      <div class="bg-pink-600 p-6 sm:p-8 text-center text-white">
+        <h1 class="text-3xl font-bold mb-2">Quản Trị Thiệp CMS</h1>
+        <p class="text-pink-100 text-sm opacity-90">
+          Hệ thống tạo và phân phối thiệp chúc mừng đa kênh
+        </p>
+      </div>
+
+      <!-- TAB MENU -->
+      <div class="flex border-b border-gray-200 bg-gray-50 overflow-x-auto">
+        <button
+          class="tab-btn active flex-1 py-4 px-4 text-center font-bold text-pink-600 border-b-2 border-pink-600 bg-white transition cursor-pointer whitespace-nowrap"
+          data-target="tab-config"
+        >
+          1. Khởi Tạo Thông Tin
+        </button>
+        <button
+          class="tab-btn flex-1 py-4 px-4 text-center font-bold text-gray-500 border-b-2 border-transparent hover:text-pink-500 transition cursor-pointer whitespace-nowrap"
+          data-target="tab-letter"
+        >
+          2. Viết Thư Cá Nhân
+        </button>
+        <button
+          class="tab-btn flex-1 py-4 px-4 text-center font-bold text-gray-500 border-b-2 border-transparent hover:text-pink-500 transition cursor-pointer whitespace-nowrap"
+          data-target="tab-database"
+        >
+          3. Sửa Data (Full)
+        </button>
+      </div>
+
+      <!-- ALERTS -->
       <div
         id="alert-box"
-        class="hidden mb-6 p-4 rounded-xl text-sm font-medium"
+        class="hidden mx-6 mt-6 p-4 rounded-xl text-sm font-medium"
       ></div>
 
-      <form id="admin-form" class="space-y-6">
-        <!-- Mã ID Thiệp -->
-        <div>
-          <label class="block text-gray-700 font-bold mb-2">
-            Mã ID Thiệp (Cực kỳ quan trọng)
-            <span class="text-xs text-red-500 font-normal ml-2"
-              >* Dùng để gửi link (VD: id=h01)</span
-            >
-          </label>
-          <input
-            type="text"
-            id="cfg-id"
-            required
-            placeholder="VD: chunghi, h01, bx..."
-            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
-          />
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Tên người nhận -->
-          <div>
-            <label class="block text-gray-700 font-bold mb-2"
-              >Tên Người Nhận</label
-            >
-            <input
-              type="text"
-              id="cfg-name"
-              required
-              placeholder="VD: Lan Xinh"
-              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
-            />
-          </div>
-
-          <!-- Năm Sinh -->
-          <div>
-            <label class="block text-gray-700 font-bold mb-2">Năm Sinh</label>
-            <input
-              type="number"
-              id="cfg-yob"
-              required
-              placeholder="VD: 2003"
-              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
-            />
-          </div>
-        </div>
-
-        <!-- Thư Mục Ảnh -->
-        <div>
-          <label class="block text-gray-700 font-bold mb-2">
-            Tên Thư Mục Ảnh Trên GitHub
-            <span class="text-xs text-gray-500 font-normal ml-2"
-              >VD: Ảnh nằm ở assets/images/LAN/ thì nhập LAN</span
-            >
-          </label>
-          <input
-            type="text"
-            id="cfg-folder"
-            required
-            placeholder="Mặc định là thư mục gốc: để trống hoặc ghi dấu /"
-            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
-          />
-          <p class="text-sm text-gray-400 mt-2 italic">
-            Lưu ý: Bạn phải tự tạo thư mục này trong Source Code và update 6 ảnh
-            có tên: Anh1.PNG -> Anh6.PNG vào đó.
+      <div class="p-6 sm:p-8">
+        <!-- ================= TAB 1: KHỞI TẠO THÔNG TIN ================= -->
+        <div id="tab-config" class="tab-content active">
+          <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
+            Khởi Tạo ID Thiệp Mới
+          </h2>
+          <p class="text-sm text-gray-500 mb-6 italic">
+            Lưu ý: Thao tác LƯU ở tab này sẽ ghi đè (tạo mới) một Record trắng,
+            không chứa nội dung Thư trên DB.
           </p>
+
+          <form id="form-config" class="space-y-5">
+            <div>
+              <label class="block text-gray-700 font-bold mb-2"
+                >Mã ID (Đích nhận) <span class="text-red-500">*</span></label
+              >
+              <input
+                type="text"
+                id="cfg-id"
+                required
+                placeholder="VD: anna, h01..."
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-gray-700 font-bold mb-2"
+                  >Tên Người Nhận <span class="text-red-500">*</span></label
+                >
+                <input
+                  type="text"
+                  id="cfg-name"
+                  required
+                  placeholder="VD: Lan Xinh"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 outline-none"
+                />
+              </div>
+              <div>
+                <label class="block text-gray-700 font-bold mb-2"
+                  >Năm Sinh <span class="text-red-500">*</span></label
+                >
+                <input
+                  type="number"
+                  id="cfg-yob"
+                  required
+                  placeholder="VD: 2003"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 outline-none"
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div class="col-span-1 md:col-span-2">
+                <label class="block text-gray-700 font-bold mb-2"
+                  >Thư Mục Ảnh Trên Nguồn</label
+                >
+                <input
+                  type="text"
+                  id="cfg-folder"
+                  placeholder="VD: LAN"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 outline-none"
+                />
+              </div>
+              <div class="col-span-1">
+                <label class="block text-gray-700 font-bold mb-2">Số ảnh</label>
+                <input
+                  type="number"
+                  id="cfg-img-count"
+                  required
+                  value="6"
+                  min="3"
+                  max="100"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 outline-none"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-gray-700 font-bold mb-2"
+                >Chủ đề (Theme UI)</label
+              >
+              <select
+                id="cfg-theme"
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 outline-none bg-white"
+              >
+                <option value="girl" selected>
+                  Hết sẩy (Giao diện Mặc định Nữ)
+                </option>
+                <option value="boy">Đại Dương Xanh (Nam)</option>
+              </select>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100">
+              <label class="block text-gray-700 font-bold mb-2"
+                >Mã Khóa Bảo Mật (PIN)
+                <span class="text-red-500">*</span></label
+              >
+              <input
+                type="password"
+                id="cfg-pin"
+                required
+                placeholder="Nhập PIN admin..."
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 outline-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-4 font-bold text-white bg-pink-600 hover:bg-pink-700 rounded-xl shadow-md transition-colors"
+            >
+              KHỞI TẠO MỚI (SET)
+            </button>
+          </form>
         </div>
 
-        <!-- Chủ Đề (Nam/Nữ) -->
-        <div>
-          <label class="block text-gray-700 font-bold mb-2"
-            >Chủ đề (Nữ/Nam)</label
-          >
-          <select
-            id="cfg-theme"
-            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all bg-white"
-          >
-            <option value="girl" selected>Hồng Ngọt Ngào (Dành cho Nữ)</option>
-            <option value="boy">Xanh Đại Dương (Dành cho Nam)</option>
-          </select>
-        </div>
-
-        <!-- Số Lượng Ảnh -->
-        <div>
-          <label class="block text-gray-700 font-bold mb-2"
-            >Số lượng ảnh có trong thư mục</label
-          >
-          <input
-            type="number"
-            id="cfg-img-count"
-            required
-            value="6"
-            min="3"
-            max="100"
-            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
-          />
-        </div>
-
-        <!-- Mật Khẩu Admin Tạm -->
-        <div class="pt-4 border-t border-gray-100">
-          <label class="block text-gray-700 font-bold mb-2"
-            >Mã Khóa Chống Phá Hoại (Admin PIN)</label
-          >
-          <input
-            type="password"
-            id="cfg-pin"
-            required
-            placeholder="Nhập mã pin để được lưu..."
-            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
-          />
-          <p class="text-xs text-gray-400 mt-1">
-            Xác nhận lại mật khẩu: 25082005 để ghi đè dữ liệu lên Server
-            Database.
+        <!-- ================= TAB 2: VIẾT THƯ CÁ NHÂN ================= -->
+        <div id="tab-letter" class="tab-content">
+          <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
+            Tâm Thư Riêng Tư
+          </h2>
+          <p class="text-sm text-gray-500 mb-6 italic">
+            Gửi riêng lời chúc cho 1 ID đã tồn tại. Thao tác này CHỈ cập nhật
+            nội dung thư chữ nằm ở bìa sách, không phá rớt cấu hình giao diện.
           </p>
+
+          <form id="form-letter" class="space-y-5">
+            <div>
+              <label class="block text-gray-700 font-bold mb-2"
+                >Mã ID (Đích nhận) <span class="text-red-500">*</span></label
+              >
+              <div class="flex gap-2">
+                <input
+                  type="text"
+                  id="let-id"
+                  required
+                  placeholder="Gõ ID và bấm LOAD..."
+                  class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 outline-none"
+                />
+                <button
+                  type="button"
+                  id="btn-load-letter"
+                  class="px-6 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition"
+                >
+                  LOAD
+                </button>
+              </div>
+              <p
+                id="let-status"
+                class="text-xs text-blue-500 mt-2 font-medium hidden"
+              >
+                Trạng thái: ...
+              </p>
+            </div>
+
+            <div>
+              <label class="block text-gray-700 font-bold mb-2"
+                >Nội Dung Thư
+                <span class="text-xs text-gray-400 font-normal ml-2"
+                  >(Max 400 ký tự)</span
+                ></label
+              >
+              <textarea
+                id="let-content"
+                rows="6"
+                maxlength="400"
+                placeholder="Viết thư tâm tình vào đây. Giới hạn khoảng 400 ký tự để không bị tràn sách..."
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 outline-none resize-y shadow-inner bg-gray-50 focus:bg-white"
+              ></textarea>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100">
+              <label class="block text-gray-700 font-bold mb-2"
+                >Mã Khóa Bảo Mật (PIN)
+                <span class="text-red-500">*</span></label
+              >
+              <input
+                type="password"
+                id="let-pin"
+                required
+                placeholder="Nhập PIN admin..."
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 outline-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-4 font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-colors"
+            >
+              GHI NỘI DUNG THƯ VÀO DB (UPDATE)
+            </button>
+          </form>
         </div>
 
-        <button
-          type="submit"
-          class="w-full py-4 font-bold text-white bg-pink-600 hover:bg-pink-700 rounded-xl shadow-md transition-colors"
-        >
-          LƯU CẤU HÌNH VÀO DATABASE
-        </button>
-      </form>
+        <!-- ================= TAB 3: SỬA DB (FULL) ================= -->
+        <div id="tab-database" class="tab-content">
+          <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
+            Chỉnh Sửa Dữ Liệu Tồn Tại
+          </h2>
+          <p class="text-sm text-gray-500 mb-6 italic">
+            Dành cho việc bảo trì: Trích xuất toàn bộ dữ liệu hiện tại của ID
+            khỏi Database, sửa đổi cấp tốc và lưu đè (Update toàn diện).
+          </p>
 
-      <div
-        class="mt-8 pt-6 border-t border-gray-100 bg-gray-50 p-4 rounded-xl text-sm text-gray-600 space-y-2"
-      >
-        <h3 class="font-bold text-gray-800">Hướng dẫn tạo Link thiệp:</h3>
-        <p>1. Cập nhật thông tin mã ID (ví dụ: `m01`) ở trên và bấm LƯU.</p>
-        <p>
-          2. Đẩy một thư mục ảnh lên tài khoản GitHub tương ứng với folder đã
-          nhập.
-        </p>
-        <p>
-          3. Copy đường link này gửi cho người nhận: <br /><code
-            class="bg-gray-200 text-pink-600 px-2 py-1 rounded inline-block mt-1"
-            >https://{tên_bạn}.github.io/{tên_dự_án}/celebration.html?id=m01</code
-          >
-        </p>
+          <form id="form-db" class="space-y-5">
+            <div>
+              <label class="block text-gray-700 font-bold mb-2"
+                >Tra Cứu Mã ID <span class="text-red-500">*</span></label
+              >
+              <div class="flex gap-2">
+                <input
+                  type="text"
+                  id="db-id"
+                  required
+                  placeholder="Gõ ID cần sửa..."
+                  class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 outline-none"
+                />
+                <button
+                  type="button"
+                  id="btn-load-db"
+                  class="px-6 bg-pink-100 text-pink-700 font-bold rounded-xl hover:bg-pink-200 transition"
+                >
+                  TRA CỨU
+                </button>
+              </div>
+            </div>
+
+            <!-- Khối Edit Fields (Mặc định ẩn, hiện ra khi load thành công) -->
+            <div
+              id="db-fields"
+              class="hidden space-y-4 p-5 bg-gray-50 border border-gray-200 rounded-xl"
+            >
+              <div>
+                <label class="text-xs font-bold text-gray-500 uppercase"
+                  >Tên Người Nhận</label
+                >
+                <input
+                  type="text"
+                  id="db-name"
+                  class="w-full bg-white border border-gray-300 rounded px-3 py-2 mt-1"
+                />
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="text-xs font-bold text-gray-500 uppercase"
+                    >Năm sinh</label
+                  >
+                  <input
+                    type="number"
+                    id="db-yob"
+                    class="w-full bg-white border border-gray-300 rounded px-3 py-2 mt-1"
+                  />
+                </div>
+                <div>
+                  <label class="text-xs font-bold text-gray-500 uppercase"
+                    >Số Ảnh</label
+                  >
+                  <input
+                    type="number"
+                    id="db-img-count"
+                    class="w-full bg-white border border-gray-300 rounded px-3 py-2 mt-1"
+                  />
+                </div>
+              </div>
+              <div>
+                <label class="text-xs font-bold text-gray-500 uppercase"
+                  >Tên Folder Nguồn</label
+                >
+                <input
+                  type="text"
+                  id="db-folder"
+                  class="w-full bg-white border border-gray-300 rounded px-3 py-2 mt-1"
+                />
+              </div>
+              <div>
+                <label class="text-xs font-bold text-gray-500 uppercase"
+                  >Theme</label
+                >
+                <select
+                  id="db-theme"
+                  class="w-full bg-white border border-gray-300 rounded px-3 py-2 mt-1"
+                >
+                  <option value="girl">Hết sẩy (Giao diện Nữ)</option>
+                  <option value="boy">Đại Dương Xanh (Nam)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100">
+              <label class="block text-gray-700 font-bold mb-2"
+                >Mã Khóa (PIN) <span class="text-red-500">*</span></label
+              >
+              <input
+                type="password"
+                id="db-pin"
+                required
+                placeholder="Nhập PIN admin..."
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-2 outline-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              id="btn-submit-db"
+              disabled
+              class="w-full py-4 font-bold text-white bg-gray-300 cursor-not-allowed rounded-xl transition-colors"
+            >
+              XÁC NHẬN SỬA LỖI (PATCH)
+            </button>
+          </form>
+        </div>
       </div>
     </div>
 
@@ -228,9 +448,10 @@
         ref,
         set,
         get,
+        update,
       } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-      // Cấu hình Database y như bên trang chính
+      // Cấu hình Database
       const firebaseConfig = {
         databaseURL:
           "https://birthday-d859f-default-rtdb.asia-southeast1.firebasedatabase.app/",
@@ -239,38 +460,60 @@
       const app = initializeApp(firebaseConfig);
       const database = getDatabase(app);
 
-      // Tham chiếu DOM
-      const form = document.getElementById("admin-form");
-      const idInput = document.getElementById("cfg-id");
-      const nameInput = document.getElementById("cfg-name");
-      const yobInput = document.getElementById("cfg-yob");
-      const folderInput = document.getElementById("cfg-folder");
-      const imgCountInput = document.getElementById("cfg-img-count");
-      const themeInput = document.getElementById("cfg-theme");
-      const pinInput = document.getElementById("cfg-pin");
+      // DOM Elements chung
       const alertBox = document.getElementById("alert-box");
+      const adminPinCorrect = "25082005";
 
-      // ====== Xử Lý Màn Hình Login Khóa Cửa =======
+      // ====== LOGIN ======
       const loginOverlay = document.getElementById("login-overlay");
       const loginPwd = document.getElementById("login-pwd");
       const loginBtn = document.getElementById("login-btn");
       const loginErr = document.getElementById("login-error");
 
       const handleLogin = () => {
-        if (loginPwd.value === "25082005") {
+        if (loginPwd.value === adminPinCorrect) {
           loginErr.classList.add("hidden");
           loginOverlay.classList.add("opacity-0", "pointer-events-none");
-          setTimeout(() => loginOverlay.classList.add("hidden"), 300); // Ẩn hoàn toàn sau animation
+          setTimeout(() => loginOverlay.classList.add("hidden"), 300);
         } else {
           loginErr.classList.remove("hidden");
         }
       };
-
       loginBtn.addEventListener("click", handleLogin);
       loginPwd.addEventListener("keypress", (e) => {
         if (e.key === "Enter") handleLogin();
       });
-      // ============================================
+
+      // ====== TAB LOGIC ======
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      tabBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Reset UI Tabs
+          tabBtns.forEach((b) => {
+            b.classList.remove(
+              "active",
+              "text-pink-600",
+              "border-pink-600",
+              "bg-white",
+            );
+            b.classList.add("text-gray-500", "border-transparent");
+          });
+          tabContents.forEach((content) => content.classList.remove("active"));
+
+          // Set Active
+          btn.classList.add(
+            "active",
+            "text-pink-600",
+            "border-pink-600",
+            "bg-white",
+          );
+          btn.classList.remove("text-gray-500", "border-transparent");
+          document.getElementById(btn.dataset.target).classList.add("active");
+          alertBox.classList.add("hidden"); // Clear alert when switch tab
+        });
+      });
 
       function showAlert(msg, isSuccess) {
         alertBox.className =
@@ -280,68 +523,174 @@
             : "bg-red-100 text-red-700");
         alertBox.textContent = msg;
         alertBox.classList.remove("hidden");
-        setTimeout(() => alertBox.classList.add("hidden"), 5000); // Ẩn sau 5s
+        setTimeout(() => alertBox.classList.add("hidden"), 5000);
       }
 
-      // Xử lý Check Data xem ID này đã tồn tại chưa để Load ra Edit
-      idInput.addEventListener("blur", async (e) => {
-        const idVal = e.target.value.trim();
-        if (!idVal) return;
+      // ==========================================
+      // TAB 1: KHỞI TẠO (SỬ DỤNG SET)
+      // ==========================================
+      const formConfig = document.getElementById("form-config");
+      formConfig.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const pin = document.getElementById("cfg-pin").value;
+        if (pin !== adminPinCorrect)
+          return showAlert("Sai mã PIN Admin!", false);
+
+        const id = document.getElementById("cfg-id").value.trim();
+        if (!id) return showAlert("Thiếu ID!", false);
+
+        const payload = {
+          name: document.getElementById("cfg-name").value.trim(),
+          birthYear: parseInt(document.getElementById("cfg-yob").value),
+          folder: document.getElementById("cfg-folder").value.trim(),
+          imgCount: parseInt(document.getElementById("cfg-img-count").value),
+          theme: document.getElementById("cfg-theme").value,
+          timestamp: Date.now(),
+        };
 
         try {
-          const snapshot = await get(ref(database, "celebrations/" + idVal));
-          if (snapshot.exists()) {
-            const data = snapshot.val();
-            nameInput.value = data.name || "";
-            yobInput.value = data.birthYear || "";
-            folderInput.value = data.folder || "";
-            imgCountInput.value = data.imgCount || 6;
-            if (data.theme) {
-              themeInput.value = data.theme;
-            } else {
-              themeInput.value = "girl";
-            }
-            showAlert(
-              "Đã tải dữ liệu Config cũ của ID này, bạn có thể chỉnh sửa!",
-              true,
-            );
-          }
-        } catch (err) {
-          console.log("No previous data");
+          await set(ref(database, "celebrations/" + id), payload);
+          showAlert(`[TAB 1] Đã khởi tạo mới ID: ${id} hoàn tất!`, true);
+          document.getElementById("cfg-pin").value = "";
+          // Không xóa form để rảnh tay Copy URL
+        } catch (e) {
+          showAlert("Lỗi Firebase: " + e.message, false);
         }
       });
 
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
+      // ==========================================
+      // TAB 2: VIẾT THƯ TÌNH (SỬ DỤNG UPDATE LETTER ONLY)
+      // ==========================================
+      const formLetter = document.getElementById("form-letter");
+      const btnLoadLetter = document.getElementById("btn-load-letter");
+      const letId = document.getElementById("let-id");
+      const letContent = document.getElementById("let-content");
+      const letStatus = document.getElementById("let-status");
 
-        const pin = pinInput.value;
-        if (pin !== "25082005") {
-          showAlert("Mã Admin PIN không đúng. Không thể lưu dữ liệu!", false);
-          return;
+      const fetchLetterData = async () => {
+        const id = letId.value.trim();
+        if (!id) return;
+        letStatus.classList.remove("hidden");
+        letStatus.className =
+          "text-xs mt-2 font-medium text-gray-500 animate-pulse";
+        letStatus.textContent = "Đang tìm dữ liệu...";
+
+        try {
+          const snapshot = await get(ref(database, "celebrations/" + id));
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            letContent.value = data.letterContent || "";
+            letStatus.className = "text-xs mt-2 font-bold text-green-600";
+            letStatus.textContent = `>>> Đã tải tệp thư của user [${data.name}]. Có thể sửa ngay!`;
+          } else {
+            letStatus.className = "text-xs mt-2 font-bold text-red-500";
+            letStatus.textContent = `>>> ID này chưa từng tồn tại! Xin hãy qua Tab 1 tạo User trước.`;
+            letContent.value = "";
+          }
+        } catch (e) {
+          letStatus.textContent = "Lỗi kết nối!";
         }
+      };
 
-        const id = idInput.value.trim();
-        if (!id) return showAlert("Vui lòng nhập ID!", false);
+      btnLoadLetter.addEventListener("click", fetchLetterData);
+      letId.addEventListener("blur", fetchLetterData); // Hover tự tra luôn
 
-        const configData = {
-          name: nameInput.value.trim(),
-          birthYear: parseInt(yobInput.value),
-          folder: folderInput.value.trim(),
-          imgCount: parseInt(imgCountInput.value),
-          theme: themeInput.value,
+      formLetter.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const pin = document.getElementById("let-pin").value;
+        if (pin !== adminPinCorrect) return showAlert("Sai PIN Admin!", false);
+
+        const id = letId.value.trim();
+        if (!id) return showAlert("Vui lòng điền ID!", false);
+
+        const payload = {
+          letterContent: letContent.value.trim(),
+          updatedAt: Date.now(),
         };
 
-        set(ref(database, "celebrations/" + id), configData)
-          .then(() => {
-            showAlert(
-              "Đã lưu cấu hình thành công vào Firebase Database!",
-              true,
-            );
-            pinInput.value = ""; // Xóa pass sau khi lưu
-          })
-          .catch((error) => {
-            showAlert("Có lỗi khi lưu Database: " + error.message, false);
-          });
+        try {
+          await update(ref(database, "celebrations/" + id), payload);
+          showAlert(
+            `[TAB 2] Đã lưu thư Tình yêu cho ID: ${id} thành công!`,
+            true,
+          );
+          document.getElementById("let-pin").value = "";
+        } catch (e) {
+          showAlert("Lỗi Update Firebase: " + e.message, false);
+        }
+      });
+
+      // ==========================================
+      // TAB 3: SỬA DATABASE TOÀN DIỆN (UPDATE BẤT KỲ)
+      // ==========================================
+      const formDb = document.getElementById("form-db");
+      const dbId = document.getElementById("db-id");
+      const btnLoadDb = document.getElementById("btn-load-db");
+      const dbFields = document.getElementById("db-fields");
+      const btnSubmitDb = document.getElementById("btn-submit-db");
+
+      // inputs tab 3
+      const dName = document.getElementById("db-name");
+      const dYob = document.getElementById("db-yob");
+      const dCount = document.getElementById("db-img-count");
+      const dFolder = document.getElementById("db-folder");
+      const dTheme = document.getElementById("db-theme");
+
+      btnLoadDb.addEventListener("click", async () => {
+        const id = dbId.value.trim();
+        if (!id) return showAlert("Chưa nhập ID cần tra cứu", false);
+
+        try {
+          const snapshot = await get(ref(database, "celebrations/" + id));
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            // Đổ data
+            dName.value = data.name || "";
+            dYob.value = data.birthYear || "";
+            dCount.value = data.imgCount || "";
+            dFolder.value = data.folder || "";
+            dTheme.value = data.theme || "";
+
+            dbFields.classList.remove("hidden");
+            btnSubmitDb.disabled = false;
+            btnSubmitDb.className =
+              "w-full py-4 font-bold text-white bg-green-600 hover:bg-green-700 cursor-pointer rounded-xl shadow-md transition-colors";
+            showAlert("Đã tải dữ liệu thô! Có thể sửa ngay.", true);
+          } else {
+            dbFields.classList.add("hidden");
+            btnSubmitDb.disabled = true;
+            btnSubmitDb.className =
+              "w-full py-4 font-bold text-white bg-gray-300 cursor-not-allowed rounded-xl transition-colors";
+            showAlert("Bản ghi ID này Không Tồn Tại trên DB!", false);
+          }
+        } catch (e) {
+          showAlert("Lỗi Firebase!", false);
+        }
+      });
+
+      formDb.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const pin = document.getElementById("db-pin").value;
+        if (pin !== adminPinCorrect)
+          return showAlert("Mã quản trị sai!", false);
+
+        const id = dbId.value.trim();
+        const payload = {
+          name: dName.value.trim(),
+          birthYear: parseInt(dYob.value),
+          imgCount: parseInt(dCount.value),
+          folder: dFolder.value.trim(),
+          theme: dTheme.value.trim(),
+          updatedAt: Date.now(),
+        };
+
+        try {
+          await update(ref(database, "celebrations/" + id), payload);
+          showAlert(`[TAB 3] Sửa Lỗi Database cho ${id} thành công!`, true);
+          document.getElementById("db-pin").value = "";
+        } catch (e) {
+          showAlert("Ghi DB thất bại: " + e.message, false);
+        }
       });
     </script>
   </body>
