@@ -190,6 +190,8 @@ if (canvas) {
 
 // ====== MUSIC & VINYL ======
 const vinylDisc = document.getElementById("vinyl-disc");
+const mobileVinyl = document.getElementById("mobile-nav-vinyl");
+const mobileVinylIcon = document.getElementById("mobile-vinyl-icon");
 const bgMusic = document.getElementById("bg-music");
 let isMusicPlaying = false;
 
@@ -200,7 +202,29 @@ const playlist = [
 ];
 let currentSongIndex = 0;
 
-if (vinylDisc && bgMusic) {
+// Sync cả 2 vinyl disc (gốc + nav)
+function syncVinylState(playing) {
+  if (vinylDisc) vinylDisc.classList.toggle("spinning", playing);
+  if (mobileVinyl) mobileVinyl.classList.toggle("spinning", playing);
+  if (mobileVinylIcon) {
+    mobileVinylIcon.className = playing
+      ? "fa-solid fa-pause"
+      : "fa-solid fa-play";
+  }
+}
+
+function toggleMusic() {
+  if (!bgMusic) return;
+  if (isMusicPlaying) {
+    bgMusic.pause();
+  } else {
+    bgMusic.play().catch(() => {});
+  }
+  isMusicPlaying = !isMusicPlaying;
+  syncVinylState(isMusicPlaying);
+}
+
+if (bgMusic) {
   bgMusic.volume = 0.3;
   bgMusic.src = playlist[currentSongIndex];
 
@@ -210,18 +234,10 @@ if (vinylDisc && bgMusic) {
     bgMusic.src = playlist[currentSongIndex];
     bgMusic.play().catch(() => {});
   });
-
-  vinylDisc.addEventListener("click", () => {
-    if (isMusicPlaying) {
-      bgMusic.pause();
-      vinylDisc.classList.remove("spinning");
-    } else {
-      bgMusic.play().catch(() => {});
-      vinylDisc.classList.add("spinning");
-    }
-    isMusicPlaying = !isMusicPlaying;
-  });
 }
+
+if (vinylDisc) vinylDisc.addEventListener("click", toggleMusic);
+if (mobileVinyl) mobileVinyl.addEventListener("click", toggleMusic);
 
 let hasAutoPlayed = false;
 function tryAutoPlay() {
@@ -233,7 +249,7 @@ function tryAutoPlay() {
       .then(() => {
         hasAutoPlayed = true;
         isMusicPlaying = true;
-        if (vinylDisc) vinylDisc.classList.add("spinning");
+        syncVinylState(true);
 
         // Gỡ bỏ listeners sau khi play thành công
         ["click", "touchstart", "scroll", "mousemove", "keydown"].forEach(
@@ -413,3 +429,45 @@ setInterval(() => {
   document.body.appendChild(el);
   setTimeout(() => el.remove(), dur * 1000);
 }, 450);
+
+// ====== MOBILE BOTTOM NAV ======
+(function initMobileNav() {
+  const navBtns = document.querySelectorAll(".mobile-nav-btn");
+  if (!navBtns.length) return;
+
+  // Click → smooth scroll to section
+  navBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target");
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+
+  // Scroll spy — highlight active button based on visible section
+  const sections = ["hero", "letter", "gallery", "final"];
+  const sectionEls = sections
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+
+  const navObs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navBtns.forEach((btn) => {
+            btn.classList.toggle(
+              "active",
+              btn.getAttribute("data-target") === id,
+            );
+          });
+        }
+      });
+    },
+    { threshold: 0.3 },
+  );
+
+  sectionEls.forEach((el) => navObs.observe(el));
+})();

@@ -1003,6 +1003,269 @@ body {
     transform: translateY(0);
 }
 
+/* ===== MOBILE BOTTOM NAV — LIQUID GLASS ===== */
+.mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 300;
+    width: auto;
+    max-width: calc(100vw - 24px);
+    padding: 0;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Outer glass shell — darker tint for contrast on all backgrounds ── */
+.mobile-nav-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0;
+    padding: 6px 6px;
+    border-radius: 26px;
+    position: relative;
+    overflow: visible;
+    /* Darker liquid glass — visible on light AND dark backgrounds */
+    background:
+        linear-gradient(135deg,
+            rgba(30, 10, 20, 0.65) 0%,
+            rgba(50, 15, 30, 0.55) 40%,
+            rgba(40, 12, 25, 0.6) 70%,
+            rgba(30, 10, 20, 0.65) 100%);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
+    /* Glass edge — subtle light refraction */
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-top-color: rgba(255, 255, 255, 0.2);
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+    /* Depth + subtle rose glow */
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 0 30px rgba(201, 24, 74, 0.06);
+}
+
+/* ── Animated refraction shimmer ── */
+.mobile-nav-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+        linear-gradient(105deg,
+            transparent 20%,
+            rgba(255, 255, 255, 0.08) 35%,
+            rgba(255, 255, 255, 0.02) 50%,
+            rgba(251, 113, 133, 0.05) 65%,
+            transparent 80%);
+    background-size: 250% 100%;
+    animation: liquidShimmer 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes liquidShimmer {
+
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* ── Inner frosted top highlight ── */
+.mobile-nav-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(ellipse at 50% 0%,
+            rgba(255, 255, 255, 0.08) 0%,
+            transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Nav button ── */
+.mobile-nav-btn {
+    outline: 0 !important;
+    border: 0 !important;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    padding: 8px 14px;
+    border-radius: 18px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Active pill */
+.mobile-nav-btn.active {
+    color: #fff;
+    background:
+        linear-gradient(135deg,
+            rgba(201, 24, 74, 0.5) 0%,
+            rgba(251, 113, 133, 0.3) 50%,
+            rgba(201, 24, 74, 0.35) 100%);
+    box-shadow:
+        0 0 16px rgba(201, 24, 74, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* ── Icon ── */
+.mobile-nav-icon {
+    font-size: 18px;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.mobile-nav-btn.active .mobile-nav-icon {
+    font-size: 19px;
+    filter: drop-shadow(0 0 6px rgba(251, 113, 133, 0.5));
+    transform: translateY(-1px);
+}
+
+/* ── Label ── */
+.mobile-nav-label {
+    font-family: var(--font-body);
+    font-size: 0.5rem;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.mobile-nav-btn.active .mobile-nav-label {
+    font-weight: 600;
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(251, 113, 133, 0.4);
+}
+
+/* Touch feedback */
+.mobile-nav-btn:active {
+    transform: scale(0.88);
+    transition-duration: 0.1s;
+}
+
+/* ===== CENTER VINYL DISC IN NAV ===== */
+.mobile-nav-vinyl {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    margin: 0 6px;
+    margin-top: -20px;
+    cursor: pointer;
+    z-index: 2;
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-nav-vinyl-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(201, 24, 74, 0.15);
+}
+
+.mobile-nav-vinyl-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+/* Ring glow effect */
+.mobile-nav-vinyl-ring {
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: conic-gradient(from 0deg,
+            rgba(201, 24, 74, 0.6),
+            rgba(251, 113, 133, 0.3),
+            rgba(212, 165, 116, 0.4),
+            rgba(251, 113, 133, 0.3),
+            rgba(201, 24, 74, 0.6)) border-box;
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask-composite: xor;
+    pointer-events: none;
+    animation: ringPulse 3s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+/* Spinning state */
+.mobile-nav-vinyl.spinning .mobile-nav-vinyl-img {
+    animation: vinylSpin 4s linear infinite;
+}
+
+.mobile-nav-vinyl.spinning .mobile-nav-vinyl-ring {
+    animation: ringPulse 2s ease-in-out infinite, vinylSpin 6s linear infinite;
+}
+
+.mobile-nav-vinyl:active {
+    transform: scale(0.9);
+}
+
+@media (max-width: 768px) {
+    .mobile-bottom-nav {
+        display: block;
+    }
+
+    /* Ẩn vinyl disc gốc khi có nav */
+    .vinyl-disc {
+        display: none !important;
+    }
+
+    /* Thêm padding dưới footer để không bị che */
+    .footer {
+        padding-bottom: 85px;
+    }
+}
+
 /* ===== PROTECTION ===== */
 body {
     -webkit-user-select: none;
