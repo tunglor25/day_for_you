@@ -1,90 +1,915 @@
 <!doctype html>
 <html lang="vi">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Thư Mời Đặc Biệt</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="css/envelope.css" />
+    <title>S Y S T E M_ L O C K E D // 0xDEADBEEF</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div class="floating-hearts" id="floatingHearts"></div>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff41; /* Hacker Green */
+            --secondary: #008f11; /* Darker Green */
+            --danger: #ff003c; /* Cyberpunk Red */
+            --bg-color: #030303;
+            --panel-bg: rgba(5, 10, 5, 0.85);
+            --glass-border: rgba(0, 255, 65, 0.3);
+        }
 
-    <div class="card-container">
-      <div class="card animate__animated animate__bounceIn" id="card">
-        <div
-          class="relative bg-black w-[90vw] max-w-[600px] aspect-[1.8/1] group transition-all duration-700 flex items-center justify-center shadow-2xl rounded-lg overflow-visible"
-        >
-          <!-- Nội dung thư -->
-          <div
-            class="transition-all flex flex-col items-center py-4 sm:py-8 justify-start duration-300 group-hover:duration-1000 bg-white w-[95%] mx-auto h-[120%] absolute bottom-0 group-hover:-translate-y-20 md:group-hover:-translate-y-32 shadow-xl rounded-t-lg overflow-y-auto z-10"
-          >
-            <h2
-              class="dancing-font text-2xl sm:text-3xl font-semibold text-gray-500 mb-4 receiver-name"
-            >
-              Lời Mời Đặc Biệt
-            </h2>
+        * {
+            cursor: none !important; /* Hide default cursor everywhere */
+            user-select: none; /* Prevent text highlighting */
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
 
-            <div class="qr-container mb-4">
-              <img
-                src="assets/images/qr-code.png"
-                alt="QR Code"
-                class="qr-code"
-              />
-            </div>
+        body {
+            font-family: 'Fira Code', monospace;
+            background-color: var(--bg-color);
+            color: var(--primary);
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1200px;
+        }
 
-            <p class="px-6 text-sm sm:text-base text-gray-700 text-center mb-2">
-              Quét mã QR để tới bữa tiệc
-            </p>
+        /* --- BACKGROUND EFFECTS --- */
+        /* Matrix Digital Rain Canvas */
+        #matrix-canvas {
+            position: fixed; /* Keep background static during mobile scroll */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -3;
+            opacity: 0.6;
+            pointer-events: none; /* Avoid intercepting touches */
+        }
 
-            <button class="continue-btn">Đi thôi nào</button>
-          </div>
+        /* Radial gradient vignette to focus center */
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, transparent 20%, #000 95%);
+            z-index: -2;
+            pointer-events: none;
+        }
 
-          <!-- Nút mở thư -->
-          <button
-            class="seal bg-rose-500 text-red-800 w-12 h-12 rounded-full z-40 text-sm flex items-center justify-center font-semibold [clip-path:polygon(50%_0%,_80%_10%,_100%_35%,_100%_70%,_80%_90%,_50%_100%,_20%_90%,_0%_70%,_0%_35%,_20%_10%)] group-hover:opacity-0 transition-all duration-1000 group-hover:scale-0 group-hover:rotate-180 border-4 border-rose-900"
-          >
-            MỞ
-          </button>
+        /* Scanlines overlay */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.3) 50%,
+                rgba(0,0,0,0.3)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.6;
+        }
+        
+        /* CRT Flicker effect */
+        .crt-flicker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 255, 65, 0.02);
+            opacity: 0;
+            z-index: 51;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
 
-          <!-- Các mặt của phong bì -->
-          <div
-            class="tp transition-all duration-1000 group-hover:duration-100 bg-neutral-800 absolute group-hover:[clip-path:polygon(50%_0%,_100%_0,_0_0)] w-full h-full [clip-path:polygon(50%_50%,_100%_0,_0_0)]"
-          ></div>
-          <div
-            class="lft transition-all duration-700 absolute w-full h-full bg-neutral-900 [clip-path:polygon(50%_50%,_0_0,_0_100%)]"
-          ></div>
-          <div
-            class="rgt transition-all duration-700 absolute w-full h-full bg-neutral-800 [clip-path:polygon(50%_50%,_100%_0,_100%_100%)]"
-          ></div>
-          <div
-            class="btm transition-all duration-700 absolute w-full h-full bg-neutral-900 [clip-path:polygon(50%_50%,_100%_100%,_0_100%)]"
-          ></div>
-        </div>
-      </div>
+        @keyframes flicker {
+            0% { opacity: 0.02; }
+            50% { opacity: 0.05; }
+            100% { opacity: 0.02; }
+        }
+
+        /* --- 3D PANEL --- */
+        #tilt-container {
+            transform-style: preserve-3d;
+            will-change: transform;
+            z-index: 10;
+        }
+
+        .main-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 0 30px rgba(0, 255, 65, 0.1),
+                inset 0 0 20px rgba(0, 255, 65, 0.05);
+            position: relative;
+            transform: translateZ(50px);
+            border-radius: 2px;
+        }
+
+        /* Tech Brackets around panel */
+        .main-panel::before, .main-panel::after,
+        .main-panel-inner::before, .main-panel-inner::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--primary);
+            pointer-events: none;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .main-panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        .main-panel::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+        .main-panel-inner::before { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+        .main-panel-inner::after { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+
+        /* --- TYPOGRAPHY & GLITCH --- */
+        .glitch-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #fff;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transform: translateZ(80px);
+            text-shadow: 0 0 10px var(--danger);
+        }
+
+        .glitch-title::before, .glitch-title::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        .glitch-title::before {
+            left: 3px;
+            text-shadow: -2px 0 var(--danger);
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        .glitch-title::after {
+            left: -3px;
+            text-shadow: -2px 0 var(--primary);
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            /* Keep glitch keyframes same as before but slightly faster */
+            0% { clip: rect(10px, 9999px, 86px, 0); }
+            5% { clip: rect(38px, 9999px, 81px, 0); }
+            10% { clip: rect(17px, 9999px, 20px, 0); transform: translate(-2px, 2px); }
+            15% { clip: rect(85px, 9999px, 66px, 0); }
+            20% { clip: rect(98px, 9999px, 10px, 0); transform: translate(2px, -2px); }
+            25% { clip: rect(54px, 9999px, 45px, 0); }
+            30% { clip: rect(81px, 9999px, 85px, 0); }
+            35% { clip: rect(74px, 9999px, 30px, 0); }
+            40% { clip: rect(61px, 9999px, 65px, 0); transform: translate(-2px, 0); }
+            45% { clip: rect(54px, 9999px, 61px, 0); }
+            50% { clip: rect(4px, 9999px, 5px, 0); }
+            55% { clip: rect(79px, 9999px, 27px, 0); }
+            60% { clip: rect(86px, 9999px, 69px, 0); transform: translate(2px, 2px); }
+            65% { clip: rect(38px, 9999px, 2px, 0); }
+            70% { clip: rect(62px, 9999px, 38px, 0); }
+            75% { clip: rect(31px, 9999px, 60px, 0); transform: translate(-2px, -2px); }
+            80% { clip: rect(65px, 9999px, 19px, 0); }
+            85% { clip: rect(56px, 9999px, 96px, 0); }
+            90% { clip: rect(78px, 9999px, 80px, 0); }
+            95% { clip: rect(25px, 9999px, 57px, 0); }
+            100% { clip: rect(67px, 9999px, 32px, 0); }
+        }
+
+        @keyframes glitch-anim-2 {
+            /* Keep glitch keyframes same as before */
+            0% { clip: rect(65px, 9999px, 100px, 0); transform: translate(1px, 0); }
+            5% { clip: rect(52px, 9999px, 74px, 0); transform: translate(-1px, 0); }
+            10% { clip: rect(79px, 9999px, 85px, 0); transform: translate(2px, -2px); }
+            15% { clip: rect(75px, 9999px, 5px, 0); }
+            20% { clip: rect(67px, 9999px, 61px, 0); }
+            25% { clip: rect(14px, 9999px, 79px, 0); transform: translate(-1px, 1px); }
+            30% { clip: rect(1px, 9999px, 66px, 0); transform: translate(-2px, 2px); }
+            35% { clip: rect(86px, 9999px, 30px, 0); }
+            40% { clip: rect(23px, 9999px, 98px, 0); }
+            45% { clip: rect(85px, 9999px, 72px, 0); transform: translate(2px, 2px); }
+            50% { clip: rect(71px, 9999px, 75px, 0); }
+            55% { clip: rect(2px, 9999px, 48px, 0); }
+            60% { clip: rect(30px, 9999px, 16px, 0); }
+            65% { clip: rect(59px, 9999px, 50px, 0); transform: translate(-2px, -2px); }
+            70% { clip: rect(41px, 9999px, 62px, 0); }
+            75% { clip: rect(2px, 9999px, 82px, 0); }
+            80% { clip: rect(47px, 9999px, 73px, 0); transform: translate(2px, 0); }
+            85% { clip: rect(3px, 9999px, 27px, 0); }
+            90% { clip: rect(26px, 9999px, 55px, 0); transform: translate(-1px, 1px); }
+            95% { clip: rect(42px, 9999px, 97px, 0); }
+            100% { clip: rect(38px, 9999px, 49px, 0); }
+        }
+
+        .terminal-text::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            from, to { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* --- 3D HOLOGRAM SHIELD --- */
+        .shield-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(90px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .shield-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid var(--danger);
+            transform-style: preserve-3d;
+        }
+
+        .ring-1 { width: 100%; height: 100%; animation: orbit 8s linear infinite; border-top: 3px solid var(--danger); border-bottom: 3px solid transparent; }
+        .ring-2 { width: 80%; height: 80%; animation: orbit-reverse 6s linear infinite; border-right: 3px solid var(--primary); border-left: 3px solid transparent; }
+        .ring-3 { width: 60%; height: 60%; animation: orbit 4s linear infinite; border-style: dashed; }
+
+        .shield-icon {
+            font-size: 3rem;
+            color: var(--danger);
+            text-shadow: 0 0 15px var(--danger);
+            animation: pulse-danger 2s ease-in-out infinite;
+            transform: translateZ(20px);
+        }
+
+        @keyframes orbit {
+            0% { transform: rotateX(60deg) rotateY(0deg) rotateZ(0deg); }
+            100% { transform: rotateX(60deg) rotateY(360deg) rotateZ(360deg); }
+        }
+
+        @keyframes orbit-reverse {
+            0% { transform: rotateX(45deg) rotateY(360deg) rotateZ(0deg); }
+            100% { transform: rotateX(45deg) rotateY(0deg) rotateZ(-360deg); }
+        }
+
+        @keyframes pulse-danger {
+            0% { transform: scale(0.95) translateZ(20px); text-shadow: 0 0 10px var(--danger); }
+            50% { transform: scale(1.05) translateZ(20px); text-shadow: 0 0 30px var(--danger); }
+            100% { transform: scale(0.95) translateZ(20px); text-shadow: 0 0 10px var(--danger); }
+        }
+
+        /* --- BUTTONS --- */
+        .btn-system {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 10px 20px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            transform: translateZ(60px);
+            cursor: none; /* Hide default, rely on our custom */
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+            white-space: nowrap; /* Fix button text wrapping */
+        }
+
+        .btn-system::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-system:hover {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.4), inset 0 0 10px rgba(0, 255, 65, 0.4);
+            transform: translateZ(80px) scale(1.05);
+            text-shadow: 0 0 5px var(--primary);
+        }
+
+        .btn-system:hover::before {
+            left: 100%;
+        }
+
+        .btn-system.danger {
+            color: var(--danger);
+            border-color: var(--danger);
+            box-shadow: 0 0 10px rgba(255, 0, 60, 0.1);
+        }
+        
+        .btn-system.danger::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 60, 0.4), transparent);
+        }
+
+        .btn-system.danger:hover {
+            background: rgba(255, 0, 60, 0.1);
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.4), inset 0 0 10px rgba(255, 0, 60, 0.4);
+        }
+
+        /* --- PROFESSIONAL TERMINAL LOGS --- */
+        .terminal-box {
+            background: rgba(0, 10, 0, 0.9);
+            border: 1px solid var(--glass-border);
+            border-left: 3px solid var(--primary);
+            padding: 0;
+            margin-top: 1.5rem;
+            transform: translateZ(40px);
+            border-radius: 2px;
+            width: 100%;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        .terminal-header {
+            background: rgba(0, 255, 65, 0.1);
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            z-index: 2;
+        }
+
+        .log-list {
+            position: absolute;
+            top: 30px; /* Prevent overlap with header */
+            bottom: 5px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            overflow: hidden;
+        }
+
+        .log-entry {
+            display: flex;
+            gap: 10px;
+            opacity: 0;
+            animation: logIn 0.1s forwards;
+            margin-bottom: 2px;
+            filter: drop-shadow(0 0 2px var(--primary));
+            white-space: nowrap; /* Tắt rớt dòng */
+            overflow: hidden;    /* Ẩn phần chữ dư */
+            text-overflow: ellipsis; /* Hiện ... nếu quá dài (tuỳ chọn) */
+        }
+
+        .log-time { color: #888; flex-shrink: 0; }
+        .log-src { color: #555; flex-shrink: 0; }
+        .log-msg { color: var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .log-msg.err { color: var(--danger); }
+        .log-msg.warn { color: #ffeb3b; }
+
+        @keyframes logIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        #custom-cursor {
+            position: fixed;
+            top: 0; left: 0;
+            width: 20px; height: 20px;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+        }
+
+        /* Core dot */
+        #custom-cursor .dot {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px; height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 5px var(--primary);
+        }
+
+        /* Crosshair */
+        #custom-cursor .cross {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px; height: 20px;
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            transition: width 0.2s, height 0.2s, border-color 0.2s, transform 0.1s;
+        }
+
+        #custom-cursor .cross::before, #custom-cursor .cross::after {
+            content: ''; position: absolute; background: var(--primary);
+            transition: background 0.2s;
+        }
+        #custom-cursor .cross::before { top: -4px; bottom: -4px; left: 50%; width: 1px; transform: translateX(-50%); }
+        #custom-cursor .cross::after { left: -4px; right: -4px; top: 50%; height: 1px; transform: translateY(-50%); }
+
+        /* Secondary trailing ring */
+        #cursor-trail {
+            position: fixed;
+            top: 0; left: 0;
+            width: 40px; height: 40px;
+            border: 1px dashed rgba(0, 255, 65, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+            animation: spin-trail 4s linear infinite;
+        }
+
+        @keyframes spin-trail { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        /* Hover States for Cursor */
+        body.hover-target #custom-cursor .cross {
+            width: 30px; height: 30px;
+            border-color: var(--danger);
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+        body.hover-target #custom-cursor .cross::before,
+        body.hover-target #custom-cursor .cross::after {
+            background: var(--danger);
+        }
+        body.hover-target #cursor-trail {
+            border-color: rgba(255, 0, 60, 0.5);
+            width: 50px; height: 50px;
+            animation-duration: 2s;
+        }
+        body.hover-target #custom-cursor .dot { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+
+        /* --- MOBILE OPTIMIZATION --- */
+        @media (max-width: 768px) {
+            body {
+                overflow-y: auto; /* Allow vertical scroll */
+                overflow-x: hidden;
+                align-items: flex-start;
+                height: auto;
+                min-height: 100vh;
+                padding: 20px 0;
+                perspective: none; /* Disable 3D parent container */
+            }
+            * {
+                cursor: auto !important; /* Restore standard touch behavior */
+            }
+            #custom-cursor, #cursor-trail {
+                display: none !important; /* Hide custom cursor completely on mobile */
+            }
+            #tilt-container { transform: none !important; }
+            
+            /* Remove 3D pop-out layers on mobile to fix unclickable bugs */
+            .main-panel, .glitch-title, .shield-container, .btn-system, .terminal-box {
+                transform: none !important;
+            }
+            div[style*="transform: translateZ"] {
+                transform: none !important;
+            }
+            
+            /* Sizing tweaks */
+            .glitch-title {
+                font-size: 2.2rem;
+                word-break: break-word; /* Prevent overflowing off screen */
+            }
+            #typewriter {
+                font-size: 1.1rem; /* Scale down typewriter text slightly */
+                white-space: normal; /* Allow warning to wrap instead of cutting off */
+            }
+            .terminal-box {
+                margin-bottom: 2rem;
+            }
+            .main-panel-inner {
+                padding: 2rem 1.5rem; /* More breathable padding */
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Background Canvas and Effects -->
+    <canvas id="matrix-canvas"></canvas>
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+    <div class="crt-flicker"></div>
+
+    <!-- Custom Cursor -->
+    <div id="cursor-trail"></div>
+    <div id="custom-cursor">
+        <div class="cross"></div>
+        <div class="dot"></div>
     </div>
 
-    <script type="module" src="js/firebase_db.js"></script>
-    <script src="js/script.js"></script>
-  </body>
+    <div id="tilt-container" class="w-full max-w-3xl px-4 flex justify-center">
+        <div class="main-panel w-full p-1">
+            <div class="main-panel-inner p-6 md:p-10 relative overflow-hidden flex flex-col items-center w-full">
+                
+                <!-- Status Bar -->
+                <div class="absolute top-0 left-0 w-full bg-red-900/40 border-b border-red-500 flex items-center justify-between px-3 py-1 text-[10px] md:text-xs text-red-500 tracking-widest uppercase font-bold" style="transform: translateZ(30px);">
+                    <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping"></div> SECURITY BREACH DETECTED</div>
+                    <div id="top-time">00:00:00</div>
+                </div>
+
+                <!-- 3D Hologram Shield -->
+                <div class="mt-6 mb-8 shield-container">
+                    <div class="shield-ring ring-1"></div>
+                    <div class="shield-ring ring-2"></div>
+                    <div class="shield-ring ring-3"></div>
+                    <i class="fa-solid fa-lock shield-icon"></i>
+                </div>
+
+                <!-- Text Info -->
+                <div class="text-center w-full mb-6 relative">
+                    <h1 class="glitch-title mb-2" data-text="ACCESS DENIED">ACCESS DENIED</h1>
+                    
+                    <div class="flex items-center justify-center my-4" style="transform: translateZ(60px); min-height: 2rem;">
+                        <p class="text-lg md:text-xl text-[var(--primary)] terminal-text m-0" id="typewriter">
+                            > SYSTEM HALTED.
+                        </p>
+                    </div>
+
+                    <p class="text-gray-400 text-xs md:text-sm mt-4 max-w-lg mx-auto leading-relaxed border border-[var(--glass-border)] bg-black/50 p-3 rounded" style="transform: translateZ(50px);">
+                        Khu vực này được bảo vệ bởi giao thức an ninh nội bộ. <br>
+                        Sự hiện diện của bạn đã kích hoạt hệ thống phòng thủ. <br>
+                        Địa chỉ IP và dấu vân tay trình duyệt đã được lưu trữ vào <span class="text-red-400">blacklist</span>.
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 mt-2 w-full justify-center interactive" style="transform: translateZ(70px);">
+                    <button onclick="history.back()" class="btn-system danger group interactive-element" onmousedown="playClickSound()">
+                        [ KHỞI CHẠY GIAO THỨC RÚT LUI ]
+                    </button>
+                    
+                    <a href="https://www.tiktok.com/@tunglor25" target="_blank" class="btn-system group interactive-element" onmousedown="playClickSound()">
+                        [ LIÊN HỆ ADMIN_TUNGLOR25 ]
+                    </a>
+                </div>
+
+                <!-- Alternate Contact -->
+                <div class="mt-4 text-center w-full" style="transform: translateZ(40px);">
+                    <a href="https://www.facebook.com/" target="_blank" class="text-xs text-[var(--secondary)] hover:text-[var(--primary)] transition-colors uppercase tracking-widest font-bold interactive-element">
+                        > TRUY CẬP KÊNH DỰ PHÒNG (FACEBOOK) <
+                    </a>
+                </div>
+
+                <!-- Professional Terminal Logs -->
+                <div class="terminal-box">
+                    <div class="terminal-header">
+                        <span>sys_monitor.exe</span>
+                        <span>[root@secure-node:~]#</span>
+                    </div>
+                    <div class="log-list" id="term-logs">
+                        <!-- Logs injected by JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. MATRIX RAIN BACKGROUND ---
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Use ASCII to avoid missing character glyphs (squares) in Fira Code font
+        const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*><[]{}()+-=~_'.split('');
+        
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        
+        for(let x = 0; x < columns; x++) { drops[x] = 1; }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Fade effect
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#0F0'; // Fallback green
+            ctx.font = fontSize + 'px "Fira Code", monospace';
+
+            for(let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                
+                // Head of the drop is brighter, tail is darker
+                ctx.fillStyle = Math.random() > 0.9 ? '#fff' : '#00ff41';
+                
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+                    drops[i] = 0;
+                
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 33); // ~30fps
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // --- 2. 3D HOVER TILT EFFECT ---
+        const container = document.getElementById('tilt-container');
+        const body = document.body;
+
+        let tiltX = 0;
+        let tiltY = 0;
+        let currentTiltX = 0;
+        let currentTiltY = 0;
+        let isHovering = false;
+
+        body.addEventListener('mousemove', (e) => {
+            isHovering = true;
+            // Calculate tilt based on center of screen
+            tiltX = (window.innerWidth / 2 - e.clientX) / 40;
+            tiltY = (window.innerHeight / 2 - e.clientY) / 40;
+        });
+
+        body.addEventListener('mouseleave', () => {
+            isHovering = false;
+        });
+        
+        // Smooth out tilt using requestAnimationFrame instead of directly coupling to mousemove
+        function updateTilt() {
+            if (!isHovering) {
+                // Return to center smoothly
+                tiltX = 0;
+                tiltY = 0;
+            }
+            
+            // Lerp formulation for ultra-smooth 3D movement
+            currentTiltX += (tiltX - currentTiltX) * 0.1;
+            currentTiltY += (tiltY - currentTiltY) * 0.1;
+            
+            container.style.transform = `translateZ(0) rotateY(${currentTiltX}deg) rotateX(${currentTiltY}deg)`;
+            
+            requestAnimationFrame(updateTilt);
+        }
+        updateTilt();
+
+        // --- 3. CUSTOM CROSSHAIR CURSOR ---
+        const cursor = document.getElementById('custom-cursor');
+        const trail = document.getElementById('cursor-trail');
+        
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let trailX = mouseX;
+        let trailY = mouseY;
+        
+        body.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Instant update for main crosshair
+            cursor.style.left = `${mouseX}px`;
+            cursor.style.top = `${mouseY}px`;
+        });
+        
+        // Smooth lerping for trail ring
+        function animateCursorTrail() {
+            trailX += (mouseX - trailX) * 0.15;
+            trailY += (mouseY - trailY) * 0.15;
+            
+            trail.style.left = `${trailX}px`;
+            trail.style.top = `${trailY}px`;
+            
+            requestAnimationFrame(animateCursorTrail);
+        }
+        animateCursorTrail();
+
+        // Hover effect for buttons/links
+        const interactables = document.querySelectorAll('.interactive-element');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => body.classList.add('hover-target'));
+            el.addEventListener('mouseleave', () => body.classList.remove('hover-target'));
+        });
+
+        // --- 4. TYPEWRITER EFFECT ---
+        const typeText = "> CẢNH BÁO: BẠN ĐÃ ĐI NHẦM NƠI";
+        const typewriterEl = document.getElementById('typewriter');
+        let i = 0;
+        
+        typewriterEl.innerHTML = '';
+        
+        function typeWriter() {
+            if (i < typeText.length) {
+                typewriterEl.innerHTML += typeText.charAt(i);
+                i++;
+                setTimeout(typeWriter, Math.random() * 50 + 30); // Random typing speed
+            } else {
+                // Keep blinking cursor via CSS ::after
+                typewriterEl.classList.add('terminal-text');
+            }
+        }
+        setTimeout(typeWriter, 1000);
+
+        // --- 5. PROFESSIONAL TERMINAL LOGS ---
+        const termLogs = document.getElementById('term-logs');
+        
+        // Helper to get exact timestamp format
+        function getLogTime() {
+            const d = new Date();
+            return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}.${Math.floor(d.getMilliseconds()/10).toString().padStart(2,'0')}`;
+        }
+
+        // Top clock sync
+        setInterval(() => {
+            document.getElementById('top-time').innerText = getLogTime().split('.')[0] + ' UTC+7';
+        }, 1000);
+
+        const logBase = [
+            { src: 'kernel', msg: 'Intrusion Detection System [UP]' },
+            { src: 'network', msg: `Connection established from port ${Math.floor(Math.random()*60000)+1024}...` },
+            { src: 'auth_daemon', msg: 'Verifying PGP signature... FAILED', type: 'err' },
+            { src: 'firewall', msg: 'Dropping packets from untrusted source', type: 'warn' },
+            { src: 'sys_sec', msg: 'Initiating counter-trace protocol...' },
+            { src: 'tracer', msg: `Resolving target: ${navigator.userAgent.substring(0,25)}...` },
+            { src: 'db_admin', msg: 'Locking cluster data nodes' },
+            { src: 'kernel', msg: 'Restricting shell access for anonymous entity', type: 'err' }
+        ];
+
+        let termLogIndex = 0;
+        let generatedLogs = 0;
+
+        function addTermLog() {
+            const div = document.createElement('div');
+            div.className = 'log-entry';
+            
+            const time = `<span class="log-time">[${getLogTime()}]</span>`;
+            
+            // Pick a log or generate a random hex trace
+            let logData;
+            if (termLogIndex < logBase.length && Math.random() > 0.3) {
+                logData = logBase[termLogIndex++];
+            } else {
+                // Random hex data
+                const hex = Array(4).fill(0).map(()=>Math.floor(Math.random()*16777215).toString(16).padStart(6,'0').toUpperCase()).join(' ');
+                logData = { src: 'mem_dump', msg: `0x${Math.floor(Math.random()*999)} : ${hex}` };
+            }
+
+            const src = `<span class="log-src">${logData.src.padEnd(11, ' ')}</span>`;
+            const cssClass = logData.type ? logData.type : '';
+            const msg = `<span class="log-msg ${cssClass}">${logData.msg}</span>`;
+
+            div.innerHTML = `${time} ${src} | ${msg}`;
+            termLogs.appendChild(div);
+
+            // Keep only latest 6 logs visible
+            if (termLogs.children.length > 6) {
+                termLogs.removeChild(termLogs.firstChild);
+            }
+
+            // Loop logic
+            if(termLogIndex >= logBase.length) {
+                termLogIndex = 0; // Restart predefined logs occasionally combined with random ones
+            }
+
+            // Schedule next log
+            const nextDelay = logData.type === 'err' ? 2000 : Math.random() * 800 + 100;
+            setTimeout(addTermLog, nextDelay);
+        }
+
+        setTimeout(addTermLog, 500);
+
+        // --- 6. AUDIO EFFECTS (User interaction required by browsers) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playClickSound() {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime); // Low industrial click
+            osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.1);
+            
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        // Init audio on first click
+        document.body.addEventListener('click', () => {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+        }, { once: true });
+
+        // --- 7. VIP SECURITY PROTOCOLS (Anti-Inspect & Anti-Debug) ---
+        // 1. Disable Right Click
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // 2. Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+        document.onkeydown = function (e) {
+            if (
+                e.keyCode === 123 || // F12
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
+                (e.ctrlKey && e.keyCode === 85) // Ctrl+U
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        };
+
+        // 3. Console Protection & Wipe
+        // Aggressively OVERRIDE all console methods to be empty functions
+        // Freezing alone isn't enough, we must break the internal methods so autocomplete logic fails.
+        const _console = window.console;
+        const noOp = function() {};
+        
+        ['log', 'debug', 'info', 'warn', 'error', 'dir', 'dirxml', 'trace', 'group', 'groupCollapsed', 'groupEnd', 'time', 'timeEnd', 'profile', 'profileEnd', 'count', 'exception', 'table'].forEach(function(m) {
+            window.console[m] = noOp;
+        });
+
+        // The ultimate console typer eraser running at 10ms
+        // It spams clear so fast you literally cannot type a word before it wipes the input.
+        setInterval(() => {
+            _console.clear();
+            _console.log("%cSYSTEM SECURED", "color: red; font-size: 50px; font-weight: bold; text-shadow: 0 0 10px red;");
+            _console.log("%cUnauthorized access to this console is strictly prohibited.", "color: green; font-size: 20px;");
+        }, 10);
+
+        // 4. Debugger Trap + Instant Reload
+        // Creates an infinite debugger loop if DevTools happens to be open
+        function securityTrap() {
+            let maliciousInputDetected = false;
+            function detectConsole() {
+                const start = new Date();
+                debugger; // This will pause execution ONLY if DevTools is open
+                const end = new Date();
+                if (end - start > 100) {
+                    // DevTools is open! 
+                    maliciousInputDetected = true;
+                    document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top: 20vh; font-family: monospace; font-size: 30px;'><br>[!] SECURITY BREACH DETECTED [!]<br><br>Connection Terminated.</h1>";
+                    
+                    // Spamming empty logs via the raw console bypass to push the input line out of view
+                    for(let i=0; i<100; i++) {
+                        _console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                    }
+                    _console.clear();
+                    
+                    // Force infinite reload to wipe out whatever they were trying to type
+                    window.location.reload(); 
+                }
+            }
+            setInterval(detectConsole, 100);
+        }
+        securityTrap();
+
+    </script>
+</body>
 </html>
