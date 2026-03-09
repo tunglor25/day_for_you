@@ -1,0 +1,108 @@
+/* css/wedding.css */
+
+/* Custom Fonts & Base Variables */
+:root {
+  --primary: #b22222;
+  --primary-dark: #8b0000;
+  --gold: #d4af37;
+  --cream: #fff8e7;
+}
+
+body {
+  scroll-behavior: smooth;
+  background-color: var(--cream);
+}
+
+/* Custom Scrollbar for elegant feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+::-webkit-scrollbar-hero,
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Abstract Fish Scale Background Base64 SVG */
+.bg-fish-scale {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20c5.523 0 10-4.477 10-10S25.523 0 20 0 10 4.477 10 10s4.477 10 10 10zm0 20c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10zM0 30c5.523 0 10-4.477 10-10S5.523 10 0 10v20zm40 0c-5.523 0-10-4.477-10-10s4.477-10 10-10v20z' fill='%23D4AF37' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+.bg-fish-scale-white {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20c5.523 0 10-4.477 10-10S25.523 0 20 0 10 4.477 10 10s4.477 10 10 10zm0 20c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10zM0 30c5.523 0 10-4.477 10-10S5.523 10 0 10v20zm40 0c-5.523 0-10-4.477-10-10s4.477-10 10-10v20z' fill='%23ffffff' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.override-bg {
+  background-color: var(--primary-dark) !important;
+}
+
+/* Text glow effects */
+.icon-shuangxi {
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+  animation: glow-pulse 3s infinite alternate;
+}
+
+@keyframes glow-pulse {
+  from {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+  }
+  to {
+    text-shadow: 0 0 30px rgba(212, 175, 55, 1);
+  }
+}
+
+.hover-gold-text {
+  transition: color 0.3s ease;
+}
+.hover-gold-text:hover {
+  color: var(--gold);
+}
+
+.hover-gold-border {
+  transition:
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+.hover-gold-border:hover {
+  border-color: var(--gold);
+}
+
+/* No-scrollbar utilities for comment section */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Animations */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Setup spacing for GSAP reveal elements initially hidden */
+.gs-reveal,
+.gs-reveal-left,
+.gs-reveal-right {
+  opacity: 0;
+  visibility: hidden;
+}
