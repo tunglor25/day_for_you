@@ -1,5 +1,24 @@
 // js/wedding.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, onValue, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
 console.log("Wedding JS Loaded");
+
+// --- 0. Firebase Setup for Real-time Features ---
+const firebaseConfig = {
+  databaseURL: "https://birthday-d859f-default-rtdb.asia-southeast1.firebasedatabase.app/",
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
+const locationsRef = ref(db, 'wedding/locations');
+const myLocationRef = ref(db, `wedding/locations/${guestId}`);
+
+// Delete my location when I close the browser
+onDisconnect(myLocationRef).remove();
+
+let guestName = "Khách mời";
+
 
 // --- 1. Audio Toggle ---
 const bgMusic = document.getElementById('bgMusic');
@@ -280,6 +299,16 @@ if (mapEl && typeof L !== 'undefined') {
         .openPopup();
 
     let routingControl = null;
+    let watchId = null;
+    let otherGuestMarkers = {};
+
+    // Map cluster for other guests
+    const guestIcon = L.divIcon({
+        html: '<div class="relative"><div class="w-8 h-8 bg-weddingGold rounded-full border-2 border-white flex items-center justify-center text-white font-bold shadow-lg shadow-weddingGold/50"><i class="fas fa-car-side"></i></div></div>',
+        className: 'bg-transparent',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32]
+    });
 
     document.getElementById('find-route-btn').addEventListener('click', () => {
         const infoText = document.getElementById('route-info');
@@ -288,69 +317,122 @@ if (mapEl && typeof L !== 'undefined') {
             infoText.innerText = "Trình duyệt của bạn không hỗ trợ định vị (Geolocation).";
             return;
         }
+        
+        // Ask for their name if they haven't provided one
+        const manualName = prompt("Vui lòng nhập tên của bạn để hiển thị trên bản đồ (để trống nếu muốn ẩn danh):");
+        if(manualName && manualName.trim() !== '') {
+            guestName = manualName.trim();
+        }
 
-        infoText.innerText = "Đang tìm kiếm vệ tinh để xác định vị trí của bạn...";
+        infoText.innerText = "Đang kết nối vệ tinh và chia sẻ vị trí của bạn...";
         infoText.classList.add('animate-pulse');
 
-        navigator.geolocation.getCurrentPosition(
+        // Stop previous watch if exists
+        if(watchId) navigator.geolocation.clearWatch(watchId);
+
+        // Turn on Live Tracking (Watch Position) instead of one-time (Current Position)
+        watchId = navigator.geolocation.watchPosition(
             (position) => {
                 infoText.classList.remove('animate-pulse');
                 const userLat = position.coords.latitude;
                 const userLng = position.coords.longitude;
                 const userCoords = L.latLng(userLat, userLng);
 
-                // Remove existing route if any
+                // 1. Update own map route
                 if (routingControl) {
-                    map.removeControl(routingControl);
-                }
-
-                // Add Routing Control
-                routingControl = L.Routing.control({
-                    waypoints: [
+                    routingControl.setWaypoints([
                         userCoords,
                         L.latLng(venueCoords[0], venueCoords[1])
-                    ],
-                    routeWhileDragging: true,
-                    lineOptions: {
-                        styles: [{color: '#D4AF37', opacity: 0.8, weight: 6}] // Gold route line
-                    },
-                    createMarker: function(i, wp, nWps) {
-                        if (i === 0) {
-                            return L.marker(wp.latLng, {
-                                icon: L.divIcon({
-                                    html: '<div class="w-6 h-6 bg-blue-500 rounded-full border-4 border-white shadow-lg animate-pulse"></div>',
-                                    className: 'bg-transparent'
-                                })
-                            }).bindPopup('Vị trí của bạn');
-                        }
-                        if (i === nWps - 1) {
-                            return L.marker(wp.latLng, {icon: venueIcon}); // Use venue icon for destination
-                        }
-                    },
-                    show: false // Hide the step-by-step instruction panel to keep UI clean
-                }).addTo(map);
+                    ]);
+                } else {
+                    // Create routing control for the first time
+                    routingControl = L.Routing.control({
+                        waypoints: [
+                            userCoords,
+                            L.latLng(venueCoords[0], venueCoords[1])
+                        ],
+                        routeWhileDragging: false,
+                        addWaypoints: false,
+                        lineOptions: {
+                            styles: [{color: '#D4AF37', opacity: 0.8, weight: 6}] // Gold route line
+                        },
+                        createMarker: function(i, wp, nWps) {
+                            if (i === 0) {
+                                return L.marker(wp.latLng, {
+                                    icon: L.divIcon({
+                                        html: `<div class="w-6 h-6 bg-blue-500 rounded-full border-4 border-white shadow-lg animate-pulse"></div><div class="mt-1 text-xs font-bold bg-white/80 px-1 rounded whitespace-nowrap -ml-4">Bạn (${guestName})</div>`,
+                                        className: 'bg-transparent'
+                                    })
+                                }).bindPopup('Vị trí hiện tại của bạn');
+                            }
+                            if (i === nWps - 1) return null; // Venue is already marked
+                        },
+                        show: false
+                    }).addTo(map);
 
-                // Calculate Distance/Time manually for display
-                routingControl.on('routesfound', function(e) {
-                    const routes = e.routes;
-                    const summary = routes[0].summary;
-                    const distanceKm = (summary.totalDistance / 1000).toFixed(1);
-                    const timeMin = Math.round(summary.totalTime / 60);
-                    
-                    infoText.innerHTML = `<span class="text-weddingDarkRed font-bold"><i class="fas fa-car mr-1"></i> ${distanceKm} km</span> • Khoảng <span class="text-weddingGold font-bold">${timeMin} phút</span> di chuyển thời gian thực.`;
+                    routingControl.on('routesfound', function(e) {
+                        const routes = e.routes;
+                        const summary = routes[0].summary;
+                        const distanceKm = (summary.totalDistance / 1000).toFixed(1);
+                        const timeMin = Math.round(summary.totalTime / 60);
+                        
+                        infoText.innerHTML = `<span class="text-weddingDarkRed font-bold"><i class="fas fa-car mr-1"></i> ${distanceKm} km</span> • Khoảng <span class="text-weddingGold font-bold">${timeMin} phút</span> di chuyển tới điểm cưới.`;
+                    });
+                }
+
+                // 2. Broadcast location to Firebase
+                set(myLocationRef, {
+                    name: guestName,
+                    lat: userLat,
+                    lng: userLng,
+                    timestamp: serverTimestamp()
                 });
-
             },
             (error) => {
                 infoText.classList.remove('animate-pulse');
-                let msg = "Lỗi xác định vị trí.";
-                if (error.code === 1) msg = "Bạn đã từ chối cấp quyền truy cập Vị trí.";
-                else if (error.code === 2) msg = "Không thể kết nối GPS.";
-                else if (error.code === 3) msg = "Quá thời gian kết nối GPS.";
-                infoText.innerHTML = `<span class="text-red-500"><i class="fas fa-exclamation-triangle"></i> ${msg}</span> Vui lòng bật Location/GPS trên thiết bị.`;
+                console.error(error);
+                infoText.innerHTML = `<span class="text-red-500"><i class="fas fa-exclamation-triangle"></i> Lỗi kết nối GPS. Hãy kiểm tra cài đặt thiết bị.</span>`;
             },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
         );
+        
+        // --- 3. Listen to other guests' locations from Firebase ---
+        onValue(locationsRef, (snapshot) => {
+            const data = snapshot.val();
+            if (!data) return;
+
+            // Loop through all guests in DB
+            Object.keys(data).forEach(key => {
+                if (key === guestId) return; // Skip ourself
+                
+                const guestData = data[key];
+                
+                // If timestamp is older than 30 mins, ignore (they probably left without unregistering)
+                // Note: Server timestamps are hard to compare directly on client without clock skew correction, 
+                // but we skip complex logic here for simplicity.
+                
+                const coords = [guestData.lat, guestData.lng];
+                
+                // If marker already exists, update its position
+                if (otherGuestMarkers[key]) {
+                    otherGuestMarkers[key].setLatLng(coords);
+                } else {
+                    // Create new marker for this guest
+                    otherGuestMarkers[key] = L.marker(coords, {icon: guestIcon})
+                        .bindPopup(`<b class="text-weddingDarkRed font-noto">${guestData.name || 'Khách mời'}</b><br>Đang trên đường đến...`)
+                        .addTo(map);
+                }
+            });
+            
+            // Cleanup markers that are no longer in DB
+            Object.keys(otherGuestMarkers).forEach(key => {
+                if (!data[key]) {
+                    map.removeLayer(otherGuestMarkers[key]);
+                    delete otherGuestMarkers[key];
+                }
+            });
+        });
+        
     });
 }
 
