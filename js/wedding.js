@@ -411,15 +411,23 @@ if (mapEl && typeof L !== 'undefined') {
                 // Note: Server timestamps are hard to compare directly on client without clock skew correction, 
                 // but we skip complex logic here for simplicity.
                 
-                const coords = [guestData.lat, guestData.lng];
+                // Add a very slight random jitter (offset) to coordinates. 
+                // This prevents markers from perfectly overlapping if multiple devices are at the exact same location.
+                // 0.0001 roughly equals 11 meters.
+                const jitterLat = (Math.random() - 0.5) * 0.0002;
+                const jitterLng = (Math.random() - 0.5) * 0.0002;
+
+                const coords = [guestData.lat + jitterLat, guestData.lng + jitterLng];
                 
                 // If marker already exists, update its position
                 if (otherGuestMarkers[key]) {
-                    otherGuestMarkers[key].setLatLng(coords);
+                    // Update content dynamically too just in case name changes
+                    otherGuestMarkers[key].setLatLng(coords)
+                        .setPopupContent(`<div class="text-center"><b class="text-weddingDarkRed font-noto text-lg">${guestData.name || 'Khách mời'}</b><br><span class="text-xs text-gray-500">Đang trên đường đến...</span></div>`);
                 } else {
                     // Create new marker for this guest
                     otherGuestMarkers[key] = L.marker(coords, {icon: guestIcon})
-                        .bindPopup(`<b class="text-weddingDarkRed font-noto">${guestData.name || 'Khách mời'}</b><br>Đang trên đường đến...`)
+                        .bindPopup(`<div class="text-center"><b class="text-weddingDarkRed font-noto text-lg">${guestData.name || 'Khách mời'}</b><br><span class="text-xs text-gray-500">Đang trên đường đến...</span></div>`)
                         .addTo(map);
                 }
             });
