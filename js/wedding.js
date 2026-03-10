@@ -32,9 +32,9 @@ async function initWeddingData() {
         if (snapshot.exists()) {
             const config = snapshot.val();
             
-            // Apply config if URL params are missing
-            if (!groomId) groomId = config.groomId;
-            if (!brideId) brideId = config.brideId;
+            // Only strictly use URL params for identity. Do NOT fallback to global config ID.
+            // if (!groomId) groomId = config.groomId;  <-- REMOVED
+            // if (!brideId) brideId = config.brideId;  <-- REMOVED
             
             // Apply other global settings
             if (config.loveStory) {
@@ -133,7 +133,25 @@ async function initWeddingData() {
 }
 
 async function loadUserData(id, role) {
-    if (!id) return;
+    if (!id) {
+        // Fallback explicit fake avatars when no ID is present
+        if (role === 'groom') {
+            document.getElementById('groom-photo').src = "https://images.unsplash.com/photo-1549410196-8ebdc93ff06c?auto=format&fit=crop&q=80&w=600";
+        } else if (role === 'bride') {
+            document.getElementById('bride-photo').src = "https://images.unsplash.com/photo-1541250848049-b4f71426cadb?auto=format&fit=crop&q=80&w=600";
+        }
+        return;
+    }
+
+    // Ngay lập tức bọc ảnh chuẩn (Ảnh local/thư mục) khi có ID
+    // Thay thế ảnh người mẫu trên mạng bằng ảnh thật của user
+    const defaultPhotoPath = `./assets/images/${id}/Anh1.PNG`;
+    if (role === 'groom') {
+        document.getElementById('groom-photo').src = defaultPhotoPath;
+    } else if (role === 'bride') {
+        document.getElementById('bride-photo').src = defaultPhotoPath;
+    }
+
     const userRef = ref(db, `celebrations/${id}`);
     try {
         const snapshot = await get(userRef);
@@ -162,8 +180,13 @@ function updateUIRole(data, role) {
     const adminBio = (role === 'groom') ? config.groomBio : config.brideBio;
     const desc = adminBio || data.weddingBio || data.bio; 
     
-    // Construct photo path from 'folder' field if it exists
-    const photo = data.folder ? `./assets/images/${data.folder}/Anh1.PNG` : data.photo;
+    // Construct photo path from 'folder' field if it exists explicitly, or use direct photo URL
+    let photo = null;
+    if (data.folder) {
+        photo = `./assets/images/${data.folder}/Anh1.PNG`;
+    } else if (data.photo) {
+        photo = data.photo;
+    }
 
     // Use admin's gallery folder if specified
     if (config.galleryFolder) {
