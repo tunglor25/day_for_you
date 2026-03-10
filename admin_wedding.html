@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quản Lý Thiệp Cưới</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8b0000;
+            --gold: #d4af37;
+            --cream: #fff8e7;
+        }
+        body {
+            background-color: var(--primary);
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23D4AF37' stroke-width='1' stroke-opacity='0.1'%3E%3Ccircle cx='30' cy='0' r='15'/%3E%3Ccircle cx='30' cy='0' r='25'/%3E%3Ccircle cx='0' cy='30' r='15'/%3E%3Ccircle cx='0' cy='30' r='25'/%3E%3Ccircle cx='60' cy='30' r='15'/%3E%3Ccircle cx='60' cy='30' r='25'/%3E%3C/g%3E%3C/svg%3E");
+            font-family: 'Montserrat', sans-serif;
+            color: var(--cream);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+        }
+        .input-gold {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            width: 100%;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .input-gold:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--gold);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+            color: #4a3500;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+        .admin-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .nav-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover {
+            background: var(--gold);
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen flex flex-col items-center">
+
+    <div class="max-w-4xl w-full">
+        <!-- Navigation Buttons -->
+        <div class="admin-nav justify-between items-center">
+            <div class="flex gap-3">
+                <a href="wedding.html" class="nav-btn"><i class="fas fa-eye mr-2"></i>Xem Thiệp</a>
+                <button class="nav-btn" onclick="location.reload()"><i class="fas fa-sync mr-2"></i>Làm mới</button>
+            </div>
+            <h1 class="font-cormorant text-3xl font-bold text-weddingGold">QUẢN TRỊ THIỆP CƯỚI</h1>
+        </div>
+
+        <div class="glass-card p-6 md:p-10 shadow-2xl">
+            <form id="adminForm" class="space-y-8">
+                <!-- IDs Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label>ID Chú Rể (Groom ID)</label>
+                        <input type="text" id="groomId" class="input-gold" placeholder="Ví dụ: Tran_sy">
+                    </div>
+                    <div>
+                        <label>ID Cô Dâu (Bride ID)</label>
+                        <input type="text" id="brideId" class="input-gold" placeholder="Ví dụ: Vu_nham">
+                    </div>
+                </div>
+
+                <!-- Bio Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label>Giới thiệu ngắn Chú Rể</label>
+                        <textarea id="groomBio" class="input-gold h-24" placeholder="Nhập lời giới thiệu về chú rể..."></textarea>
+                    </div>
+                    <div>
+                        <label>Giới thiệu ngắn Cô Dâu</label>
+                        <textarea id="brideBio" class="input-gold h-24" placeholder="Nhập lời giới thiệu về cô dâu..."></textarea>
+                    </div>
+                </div>
+
+                <hr class="border-weddingGold/20">
+
+                <!-- Story & Gallery Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label>Câu chuyện tình yêu (Love Story)</label>
+                        <textarea id="loveStory" class="input-gold h-32" placeholder="Kể về hành trình yêu nhau của hai bạn..."></textarea>
+                    </div>
+                    <div>
+                        <label>Tên thư mục ảnh Gallery</label>
+                        <input type="text" id="galleryFolder" class="input-gold" placeholder="Ví dụ: wedding_photos">
+                        <div class="mt-4">
+                            <label>Link nhạc nền (Youtube/MP3 ID)</label>
+                            <input type="text" id="musicUrl" class="input-gold" placeholder="Dán link hoặc ID nhạc">
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-weddingGold/20">
+
+                <!-- New Event Details Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label>Địa chỉ nhà trai</label>
+                        <input type="text" id="groomAddress" class="input-gold" placeholder="Địa chỉ rước dâu...">
+                    </div>
+                    <div>
+                        <label>Địa chỉ nhà gái</label>
+                        <input type="text" id="brideAddress" class="input-gold" placeholder="Địa chỉ vu quy...">
+                    </div>
+                    <div>
+                        <label>Link Google Maps nhà trai</label>
+                        <input type="text" id="groomMap" class="input-gold" placeholder="https://goo.gl/maps/...">
+                    </div>
+                    <div>
+                        <label>Link Google Maps nhà gái</label>
+                        <input type="text" id="brideMap" class="input-gold" placeholder="https://goo.gl/maps/...">
+                    </div>
+                    <div>
+                        <label>Ngày chung đôi</label>
+                        <input type="date" id="weddingDate" class="input-gold">
+                    </div>
+                    <div>
+                        <label>Giờ làm lễ / Ăn uống</label>
+                        <input type="text" id="weddingTime" class="input-gold" placeholder="Ví dụ: 08:00 & 11:30">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label>Màu Dress Code</label>
+                        <input type="text" id="dressCode" class="input-gold" placeholder="Ví dụ: Trắng, Kem, Vàng đồng">
+                    </div>
+                </div>
+
+                <!-- Footer / Actions -->
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 pt-4">
+                    <p class="text-xs text-weddingGold/60 italic">* Lưu ý: Dữ liệu sẽ được cập nhật ngay trên trang thiệp cưới sau khi nhấn 'Lưu Cấu Hình'.</p>
+                    <button type="submit" class="btn-gold w-full md:w-auto">
+                        <i class="fas fa-save mr-2"></i>Lưu Cấu Hình
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Success Toast -->
+        <div id="toast" class="fixed bottom-10 right-10 bg-green-600 text-white px-6 py-3 rounded-lg shadow-xl translate-y-20 opacity-0 transition-all duration-500 z-50">
+            <i class="fas fa-check-circle mr-2"></i> Đã lưu thành công!
+        </div>
+    </div>
+
+    <script type="module" src="js/admin_wedding.js"></script>
+</body>
+</html>

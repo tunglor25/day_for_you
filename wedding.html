@@ -8,7 +8,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -24,9 +24,9 @@
                         weddingCream: '#FFF8E7'
                     },
                     fontFamily: {
-                        playfair: ['"Playfair Display"', 'serif'],
-                        noto: ['"Noto Serif"', 'serif'],
-                        dancing: ['"Dancing Script"', 'cursive']
+                        cormorant: ['"Cormorant Garamond"', 'serif'],
+                        montserrat: ['"Montserrat"', 'sans-serif'],
+                        vibes: ['"Great Vibes"', 'cursive']
                     }
                 }
             }
@@ -48,52 +48,62 @@
     <link rel="stylesheet" href="./css/wedding.css">
     
 </head>
-<body class="bg-weddingCream text-gray-800 font-noto antialiased overflow-x-hidden relative">
+<body class="bg-weddingDarkRed text-gray-800 font-montserrat antialiased overflow-x-hidden relative">
+
+    <!-- Confetti Cursor Canvas (Full Screen overlay) -->
+    <canvas id="confetti-cursor-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-[9999]"></canvas>
 
     <!-- Falling Flowers Canvas (Full Screen absolute behind content) -->
     <canvas id="falling-flowers-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-2] opacity-60"></canvas>
 
-    <!-- Global Background Pattern (Fish Scale) -->
-    <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-3] bg-fish-scale opacity-10"></div>
+    <!-- Global Background Pattern (Fish Scale) - Full Vibrant Red & Gold -->
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-3] bg-fish-scale opacity-100"></div>
 
     <!-- Background Music -->
     <audio id="bgMusic" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"> <!-- Placeholder music -->
     </audio>
-    <button id="musicToggleBtn" class="fixed bottom-6 left-6 z-50 bg-weddingGold text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center hover:bg-weddingLightGold transition-all hover:scale-110">
-        <i class="fas fa-volume-mute"></i>
+    <button id="musicToggleBtn" class="hidden md:flex fixed bottom-6 right-6 z-[400] bg-weddingGold text-white w-14 h-14 rounded-full shadow-[0_0_15px_rgba(212,175,55,0.8)] items-center justify-center border-4 border-[#8b0000] hover:bg-weddingLightGold transition-all hover:scale-110">
+        <i class="fas fa-volume-mute text-xl pointer-events-none"></i>
     </button>
 
     <!-- SECTION 1: HERO (Bìa thiệp) -->
-    <section id="hero" class="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-weddingDarkRed to-weddingRed text-weddingCream">
-        <!-- Decoration Dragon/Phoenix Corners -->
-        <div class="absolute top-4 left-4 w-32 md:w-48 opacity-20 pointer-events-none">
-            <img src="https://cdn-icons-png.flaticon.com/512/3667/3667389.png" alt="Dragon" class="w-full filter invert sepia saturate-[5] hue-rotate-[10deg]"> <!-- placeholder gold tint -->
+    <section id="hero" class="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-transparent text-weddingCream section-divider-bottom">
+        <!-- Decoration Dragon/Phoenix Corners (Custom Gold SVGs) -->
+        <!-- Decoration Dragon/Phoenix Corners (Custom Gold SVGs) -->
+        <div class="absolute top-4 left-4 w-20 md:w-56 opacity-40 pointer-events-none">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full fill-weddingGold">
+                <!-- Simple Dragon Silhouette for corners -->
+                <path d="M180,20 Q150,50 120,30 T60,60 Q30,90 20,150 Q50,130 80,140 T140,110 Q170,80 180,20 Z" />
+            </svg>
         </div>
-        <div class="absolute top-4 right-4 w-32 md:w-48 opacity-20 pointer-events-none transform scale-x-[-1]">
-             <img src="https://cdn-icons-png.flaticon.com/512/3667/3667389.png" alt="Phoenix" class="w-full filter invert sepia saturate-[5] hue-rotate-[10deg]">
+        <div class="absolute top-4 right-4 w-20 md:w-56 opacity-40 pointer-events-none transform scale-x-[-1]">
+             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full fill-weddingGold">
+                <!-- Simple Phoenix Silhouette for corners -->
+                <path d="M180,20 Q150,50 120,30 T60,60 Q30,90 20,150 Q50,130 80,140 T140,110 Q170,80 180,20 Z" />
+            </svg>
         </div>
         
         <div class="container mx-auto px-4 text-center z-10 flex flex-col items-center">
             <!-- Double Happiness Icon -->
-            <div class="text-weddingGold text-6xl md:text-8xl mb-6 gs-reveal icon-shuangxi">
+            <div class="text-weddingGold text-6xl md:text-9xl mb-4 md:mb-6 gs-reveal icon-shuangxi">
                 囍
             </div>
             
-            <h3 class="font-playfair text-xl md:text-3xl uppercase tracking-widest text-weddingGold mb-4 gs-reveal">Lễ Thành Hôn</h3>
+            <h3 class="font-cormorant text-lg md:text-3xl uppercase tracking-widest text-weddingGold mb-4 gs-reveal">Lễ Thành Hôn</h3>
             
-            <div class="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 my-8 gs-reveal">
-                <h1 class="font-dancing text-5xl md:text-7xl text-weddingCream">Nguyễn Văn A</h1>
-                <span class="font-dancing text-4xl text-weddingGold">&amp;</span>
-                <h1 class="font-dancing text-5xl md:text-7xl text-weddingCream">Trần Thị B</h1>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 my-4 md:my-8 gs-reveal w-full">
+                <h1 id="groom-name-hero" class="font-vibes text-[2.75rem] sm:text-5xl md:text-7xl text-weddingCream break-words max-w-full px-2 py-4 leading-tight">Nguyễn Văn A</h1>
+                <span class="font-vibes text-3xl md:text-4xl text-weddingGold my-2 md:my-0">&amp;</span>
+                <h1 id="bride-name-hero" class="font-vibes text-[2.75rem] sm:text-5xl md:text-7xl text-weddingCream break-words max-w-full px-2 py-4 leading-tight">Trần Thị B</h1>
             </div>
             
-            <p class="font-noto text-lg md:text-2xl mt-4 max-w-2xl mx-auto leading-relaxed gs-reveal">
+            <p class="font-montserrat text-lg md:text-2xl mt-4 max-w-2xl mx-auto leading-relaxed gs-reveal">
                 Trân trọng kính mời đến dự lễ cưới của chúng tôi tại hội trường mùa thu.
             </p>
             
             <div class="mt-12 border-t border-b border-weddingGold py-4 px-12 inline-block gs-reveal">
-                <p class="font-playfair text-2xl md:text-3xl text-weddingGold tracking-widest">20 . 10 . 2026</p>
+                <p class="font-cormorant text-2xl md:text-3xl text-weddingGold tracking-widest">20 . 10 . 2026</p>
             </div>
         </div>
 
@@ -101,10 +111,18 @@
         <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
             <i class="fas fa-chevron-down text-weddingGold text-2xl opacity-70"></i>
         </div>
+        
     </section>
 
+    <!-- LIQUID TRANSITION 1: Hero to Couple (Dark Red to Cream) -->
+    <div class="liquid-separator">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="fill-wedding-cream" d="M0,160L80,144C160,128,320,96,480,106.7C640,117,800,171,960,181.3C1120,192,1280,160,1360,144L1440,128L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+        </svg>
+    </div>
+
     <!-- SECTION 2: PHOTOS & COUPLE -->
-    <section id="couple" class="py-20 md:py-32 relative bg-weddingCream overflow-hidden">
+    <section id="couple" class="py-20 md:py-32 relative bg-wedding-cream overflow-hidden section-divider-bottom">
         <div class="container mx-auto px-4 relative z-10">
             <!-- Double Happiness Center Faded -->
             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[25rem] text-weddingRed opacity-5 pointer-events-none font-bold">
@@ -112,114 +130,139 @@
             </div>
             
             <div class="text-center mb-16 relative z-10 gs-reveal">
-                <h2 class="font-playfair text-4xl hover-gold-text text-weddingDarkRed font-bold mb-4">Cô Dâu & Chú Rể</h2>
+                <h2 class="font-cormorant text-4xl hover-gold-text text-weddingDarkRed font-bold mb-4">Cô Dâu & Chú Rể</h2>
                 <div class="w-24 h-1 bg-weddingGold mx-auto rounded"></div>
             </div>
             
-            <div class="flex flex-col md:flex-row justify-center items-center gap-12 md:gap-24">
-                <!-- Groom -->
-                <div class="text-center flex flex-col items-center group gs-reveal-left">
-                    <div class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-weddingGold p-2 relative shadow-xl transition-transform duration-500 hover:scale-105">
-                        <img src="https://images.unsplash.com/photo-1549410196-8ebdc93ff06c?auto=format&fit=crop&q=80&w=600" alt="Chú Rể" class="w-full h-full object-cover rounded-full">
+            <!-- Couple Container (Perfect Alignment Image & Text) -->
+            <div class="flex flex-col md:flex-row justify-center items-center md:items-start gap-1 sm:gap-4 md:gap-12 lg:gap-16 w-full max-w-5xl mx-auto px-2 md:pb-16">
+                
+                <!-- Groom Column -->
+                <div class="flex flex-col items-center gs-reveal-left w-[85%] sm:w-[70%] md:w-1/3 mr-auto md:mr-0 transform md:-translate-y-12">
+                    <div class="w-48 h-48 sm:w-56 sm:h-56 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-weddingGold p-2 relative shadow-2xl transition-transform duration-500 hover:scale-105 bg-weddingCream/20 backdrop-blur-sm mb-4 md:mb-6">
+                        <img id="groom-photo" src="https://images.unsplash.com/photo-1549410196-8ebdc93ff06c?auto=format&fit=crop&q=80&w=600" alt="Chú Rể" class="w-full h-full object-cover rounded-full">
                     </div>
-                    <h3 class="font-dancing text-4xl text-weddingDarkRed mt-6 mb-2">Nguyễn Văn A</h3>
-                    <p class="text-gray-600 font-noto max-w-xs">Một người đàn ông trầm ấm, luôn mang lại tiếng cười và cảm giác an toàn.</p>
+                    <h3 id="groom-name-main" class="font-vibes text-4xl sm:text-5xl text-weddingGold mb-2 md:mb-4 drop-shadow-md text-center">Nguyễn Văn A</h3>
+                    <p id="groom-desc" class="text-gray-700 font-montserrat leading-relaxed text-center px-2 md:px-4">Một người đàn ông trầm ấm, luôn mang lại tiếng cười và cảm giác an toàn.</p>
+                </div>
+
+                <!-- Premium Pulsing Heart -->
+                <div class="heart-container gs-reveal shrink-0 my-[-10px] md:my-0 md:mt-24 z-20">
+                    <svg class="heart-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+
+                <!-- Bride Column -->
+                <div class="flex flex-col items-center gs-reveal-right w-[85%] sm:w-[70%] md:w-1/3 ml-auto md:ml-0 transform md:translate-y-12 mt-0 md:mt-0">
+                    <div class="w-48 h-48 sm:w-56 sm:h-56 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-weddingGold p-2 relative shadow-2xl transition-transform duration-500 hover:scale-105 bg-weddingCream/20 backdrop-blur-sm mb-4 md:mb-6">
+                        <img id="bride-photo" src="https://images.unsplash.com/photo-1541250848049-b4f71426cadb?auto=format&fit=crop&q=80&w=600" alt="Cô Dâu" class="w-full h-full object-cover rounded-full">
+                    </div>
+                    <h3 id="bride-name-main" class="font-vibes text-4xl sm:text-5xl text-weddingGold mb-2 md:mb-4 drop-shadow-md text-center">Trần Thị B</h3>
+                    <p id="bride-desc" class="text-gray-700 font-montserrat leading-relaxed text-center px-2 md:px-4">Cô gái xinh đẹp, dịu dàng, nguồn động lực lớn nhất của đời tôi.</p>
                 </div>
                 
-                <!-- Heart / & -->
-                <div class="text-4xl text-weddingGold my-4 md:my-0 animate-pulse gs-reveal">
-                    <i class="fas fa-heart"></i>
-                </div>
-                
-                <!-- Bride -->
-                <div class="text-center flex flex-col items-center group gs-reveal-right">
-                    <div class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-weddingGold p-2 relative shadow-xl transition-transform duration-500 hover:scale-105">
-                        <img src="https://images.unsplash.com/photo-1541250848049-b4f71426cadb?auto=format&fit=crop&q=80&w=600" alt="Cô Dâu" class="w-full h-full object-cover rounded-full">
-                    </div>
-                    <h3 class="font-dancing text-4xl text-weddingDarkRed mt-6 mb-2">Trần Thị B</h3>
-                    <p class="text-gray-600 font-noto max-w-xs">Cô gái xinh đẹp, dịu dàng, nguồn động lực lớn nhất của đời tôi.</p>
-                </div>
             </div>
+            
         </div>
     </section>
+
+    <!-- LIQUID TRANSITION 2: Couple to Story (Cream to Dark Red) -->
+    <div class="liquid-separator">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="fill-wedding-dark" d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,90.7C672,85,768,107,864,128C960,149,1056,171,1152,160C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
 
     <!-- SECTION 3: LOVE STORY -->
-    <section id="story" class="py-20 md:py-32 relative bg-gray-50 border-y border-weddingGold/30">
-        <div class="container mx-auto px-4 max-w-4xl text-center relative z-10 gs-reveal">
-            <h2 class="font-playfair text-4xl text-weddingDarkRed font-bold mb-4">Câu Chuyện Tình Yêu</h2>
-            <div class="w-24 h-1 bg-weddingGold mx-auto rounded flex mb-12"></div>
+    <section id="story" class="py-20 md:py-32 relative section-divider-bottom bg-wedding-dark">
+        <div class="container mx-auto px-4 max-w-4xl text-center relative z-10 gs-reveal glass-panel-dark p-4 md:p-12 rounded-2xl">
+            <h2 class="font-cormorant text-3xl md:text-4xl text-weddingGold font-bold mb-4 drop-shadow-lg">Câu Chuyện Tình Yêu</h2>
+            <div class="w-24 h-1 bg-weddingGold mx-auto rounded flex mb-8 md:mb-12"></div>
             
-            <p class="font-noto text-lg md:text-xl text-gray-700 leading-relaxed italic">
+            <p id="story-content" class="font-montserrat text-base md:text-xl text-weddingCream leading-relaxed italic drop-shadow-md">
                 "Chúng tôi gặp nhau vào một chiều mưa rào năm 2019.<br>
-                Sau nhiều năm tháng cùng bước đi trên mọi nẻo đường của cuộc sống, cùng chia sẻ niềm vui và vượt qua nỗi buồn, chúng tôi nhận ra đối phương chính là mảnh ghép không thể thiếu của đời mình.<br><br>
                 Hôm nay, chúng tôi quyết định cùng nhau bước vào một hành trình mới mang tên Gia Đình."
             </p>
+            
+            <div class="mt-12 text-weddingGold opacity-30 text-2xl tracking-[2rem]">✦✦✦</div>
         </div>
     </section>
 
+    <!-- LIQUID TRANSITION 3: Story to Events (Dark Red to Gold BG) -->
+    <div class="liquid-separator" style="transform: scaleY(-1);">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="fill-wedding-dark" d="M0,224L60,208C120,192,240,160,360,138.7C480,117,600,107,720,122.7C840,139,960,181,1080,197.3C1200,213,1320,203,1380,197.3L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+        </svg>
+    </div>
+
     <!-- SECTION 4: WEDDING INFO -->
-    <section id="events" class="py-20 md:py-32 relative bg-weddingCream overflow-hidden">
+    <section id="events" class="py-20 md:py-32 relative bg-wedding-gold-bg overflow-hidden section-divider-bottom">
         <div class="container mx-auto px-4 relative z-10">
             <div class="text-center mb-16 gs-reveal">
                 <i class="fas fa-ring text-4xl text-weddingGold mb-4"></i>
-                <h2 class="font-playfair text-4xl text-weddingDarkRed font-bold mb-4">Sự Kiện & Thời Gian</h2>
+                <h2 class="font-cormorant text-4xl text-weddingDarkRed font-bold mb-4">Sự Kiện & Thời Gian</h2>
                 <div class="w-24 h-1 bg-weddingGold mx-auto rounded"></div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12 max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mt-8 md:mt-12 max-w-6xl mx-auto">
                 
                 <!-- Vu Quy -->
-                <div class="bg-white rounded-lg shadow-2xl p-8 border-t-8 border-weddingRed relative hover-gold-border transition-all duration-300 transform hover:-translate-y-2 gs-reveal-left">
+                <div class="glass-panel rounded-lg shadow-2xl p-5 md:p-8 border-t-8 border-weddingRed relative hover-gold-border transition-all duration-300 transform md:hover:-translate-y-2 gs-reveal-left">
                     <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-weddingRed text-white w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-md border-2 border-weddingGold">
                         <i class="fas fa-venus"></i>
                     </div>
-                    <h3 class="font-playfair text-2xl font-bold text-center text-weddingDarkRed mt-4 mb-2">Lễ Vu Quy (Nhà Gái)</h3>
-                    <p class="text-center text-gray-500 mb-6 italic">Dành cho khách mời nhà Nữ</p>
+                    <h3 class="font-cormorant text-2xl font-bold text-center text-weddingDarkRed mt-2 md:mt-4 mb-2">Lễ Vu Quy (Nhà Gái)</h3>
+                    <p class="text-center text-gray-500 mb-6 italic text-sm md:text-base">Dành cho khách mời nhà Nữ</p>
                     
-                    <ul class="space-y-4 font-noto text-gray-700">
+                    <ul class="space-y-4 font-montserrat text-gray-700 text-sm md:text-base">
                         <li class="flex items-start">
-                            <i class="far fa-calendar-alt text-weddingGold mt-1 mr-4 w-6 text-center"></i>
-                            <div><strong>08:00 Sáng</strong><br>Chủ Nhật, Ngày 19 tháng 10 năm 2026</div>
+                            <i class="far fa-calendar-alt text-weddingGold mt-1 mr-3 md:mr-4 w-6 text-center"></i>
+                            <div><strong>Lễ Vu Quy</strong><br><span class="wedding-date-text">Ngày 19 tháng 10 năm 2026</span></div>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-weddingGold mt-1 mr-4 w-6 text-center"></i>
+                            <i class="fas fa-map-marker-alt text-weddingGold mt-1 mr-3 md:mr-4 w-6 text-center"></i>
                             <div>
                                 <strong>Tư gia nhà gái</strong><br>
-                                Số 456 Đường ABC, Quận XYZ, TP.HCM
+                                <span id="bride-address" class="block">Số 456 Đường ABC, Quận XYZ, TP.HCM</span>
                             </div>
                         </li>
                     </ul>
-                    <div class="mt-8 text-center">
-                        <a href="#" class="inline-block bg-weddingDarkRed text-weddingCream px-6 py-2 rounded font-bold hover:bg-weddingRed border hover:border-weddingGold transition-colors shadow-md">
-                            <i class="fas fa-map-marked-alt mr-2"></i> Chỉ Đường Tới Nhà Gái
+                    <div class="mt-6 md:mt-8 text-center">
+                        <a id="bride-map-link" href="#" target="_blank" class="inline-block bg-weddingDarkRed text-weddingCream px-4 md:px-6 py-2 rounded font-bold hover:bg-weddingRed border hover:border-weddingGold transition-colors shadow-md text-sm md:text-base">
+                            <i class="fas fa-map-marked-alt mr-2"></i> Chỉ Đường Tới Nơi
                         </a>
                     </div>
                 </div>
                 
                 <!-- Thanh Hon -->
-                <div class="bg-white rounded-lg shadow-2xl p-8 border-t-8 border-weddingGold relative hover-gold-border transition-all duration-300 transform hover:-translate-y-2 gs-reveal-right">
+                <div class="glass-panel rounded-lg shadow-2xl p-5 md:p-8 border-t-8 border-weddingGold relative hover-gold-border transition-all duration-300 transform md:hover:-translate-y-2 gs-reveal-right">
                      <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-weddingGold text-white w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-md border-2 border-weddingRed">
                         <i class="fas fa-mars"></i>
                     </div>
-                    <h3 class="font-playfair text-2xl font-bold text-center text-weddingGold mt-4 mb-2">Lễ Thành Hôn (Nhà Trai)</h3>
-                    <p class="text-center text-gray-500 mb-6 italic">Dành cho khách mời nhà Nam và Bạn bè</p>
+                    <h3 class="font-cormorant text-2xl font-bold text-center text-weddingGold mt-2 md:mt-4 mb-2">Lễ Thành Hôn (Nhà Trai)</h3>
+                    <p class="text-center text-gray-500 mb-6 italic text-sm md:text-base">Dành cho khách mời nhà Nam và Bạn bè</p>
                     
-                    <ul class="space-y-4 font-noto text-gray-700">
+                    <ul class="space-y-4 font-montserrat text-gray-700 text-sm md:text-base">
                         <li class="flex items-start">
-                            <i class="far fa-calendar-alt text-weddingRed mt-1 mr-4 w-6 text-center"></i>
-                            <div><strong>18:00 Tối</strong><br>Thứ Hai, Ngày 20 tháng 10 năm 2026</div>
+                            <i class="far fa-calendar-alt text-weddingRed mt-1 mr-3 md:mr-4 w-6 text-center"></i>
+                            <div><strong>Lễ Thành Hôn</strong><br><span class="wedding-date-text">Ngày 20 tháng 10 năm 2026</span></div>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-weddingRed mt-1 mr-4 w-6 text-center"></i>
+                            <i class="fas fa-clock text-weddingRed mt-1 mr-3 md:mr-4 w-6 text-center"></i>
+                            <div><strong>Thời gian:</strong> <span id="wedding-time-text">18:00 Tối</span></div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-weddingRed mt-1 mr-3 md:mr-4 w-6 text-center"></i>
                             <div>
-                                <strong>Nhà Hàng Cưới Trọng Đại</strong><br>
-                                123 Đường Nguyễn Trãi, Thanh Xuân, Hà Nội
+                                <strong>Địa điểm</strong><br>
+                                <span id="groom-address" class="block">123 Đường Nguyễn Trãi, Thanh Xuân, Hà Nội</span>
                             </div>
                         </li>
                     </ul>
-                    <div class="mt-8 text-center">
-                        <a href="#" class="inline-block bg-weddingGold text-white px-6 py-2 rounded font-bold hover:bg-weddingLightGold border hover:border-weddingRed transition-colors shadow-md">
-                            <i class="fas fa-map-marked-alt mr-2"></i> Chỉ Đường Tới Nhà Hàng
+                    <div class="mt-6 md:mt-8 text-center">
+                        <a id="groom-map-link" href="#" target="_blank" class="inline-block bg-weddingGold text-white px-4 md:px-6 py-2 rounded font-bold hover:bg-weddingLightGold border hover:border-weddingRed transition-colors shadow-md text-sm md:text-base">
+                            <i class="fas fa-map-marked-alt mr-2"></i> Chỉ Đường Tới Nơi
                         </a>
                     </div>
                 </div>
@@ -228,14 +271,21 @@
         </div>
     </section>
 
-    <!-- SECTION 4.5: INTERACTIVE LIVE MAP -->
-    <section id="location" class="py-16 md:py-24 relative bg-gray-50 border-t border-weddingGold/30">
+    <!-- LIQUID TRANSITION 4: Events to Dress Code (Gold BG to Dark Red) -->
+    <div class="liquid-separator">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="fill-wedding-dark" d="M0,0L120,21.3C240,43,480,85,720,85.3C960,85,1200,43,1320,21.3L1440,0L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path>
+        </svg>
+    </div>
+
+    <!-- SECTION 4.5: INTERACTIVE LIVE MAP (Temporarily Hidden as requested) -->
+    <section id="location" class="py-16 md:py-24 relative bg-gray-50 hidden">
         <div class="container mx-auto px-4 relative z-10">
             <div class="text-center mb-12 gs-reveal">
                 <i class="fas fa-map-marked-alt text-4xl text-weddingGold mb-4"></i>
-                <h2 class="font-playfair text-3xl md:text-4xl text-weddingDarkRed font-bold mb-4">Bản Đồ Chỉ Đường Trực Tuyến</h2>
+                <h2 class="font-cormorant text-3xl md:text-4xl text-weddingDarkRed font-bold mb-4">Bản Đồ Chỉ Đường Trực Tuyến</h2>
                 <div class="w-24 h-1 bg-weddingGold mx-auto rounded mb-4"></div>
-                <p class="text-gray-600 italic font-noto max-w-2xl mx-auto">Kết nối vị trí của bạn với Nhà Hàng Trọng Đại để nhận chỉ đường Real-time nhanh nhất.</p>
+                <p class="text-gray-600 italic font-montserrat max-w-2xl mx-auto">Kết nối vị trí của bạn với Nhà Hàng Trọng Đại để nhận chỉ đường Real-time nhanh nhất.</p>
             </div>
             
             <div class="max-w-6xl mx-auto bg-white p-4 rounded-lg shadow-xl border border-weddingGold/30 gs-reveal">
@@ -256,80 +306,89 @@
     </section>
 
     <!-- SECTION 4.6: DRESS CODE -->
-    <section id="dresscode" class="py-16 md:py-24 relative bg-weddingCream overflow-hidden">
-         <!-- Double Happiness Background fade -->
-        <div class="absolute top-0 right-0 transform translate-x-1/3 -translate-y-1/4 text-[20rem] text-weddingRed opacity-5 pointer-events-none font-bold">囍</div>
-        <div class="container mx-auto px-4 relative z-10 text-center gs-reveal">
-            <h2 class="font-playfair text-3xl md:text-4xl text-weddingDarkRed font-bold mb-4">Dress Code</h2>
-            <div class="w-24 h-1 bg-weddingGold mx-auto rounded mb-8"></div>
-            <p class="text-gray-600 italic font-noto mb-12 max-w-2xl mx-auto">Vui lòng chọn trang phục theo tông màu chủ đạo để cùng chúng tôi tạo nên những khoảnh khắc tuyệt đẹp nhất trong ngày trọng đại.</p>
-            
-            <div class="flex flex-wrap justify-center gap-6 md:gap-12 max-w-3xl mx-auto">
-                <!-- Color 1 -->
-                <div class="group flex flex-col items-center">
-                    <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-[#B22222] border-4 border-weddingGold shadow-lg group-hover:scale-110 transition-transform"></div>
-                    <span class="mt-4 font-bold text-weddingDarkRed font-noto">Đỏ Rượu</span>
+    <section id="dresscode" class="py-16 md:py-24 relative bg-wedding-dark overflow-hidden">
+        <!-- Double Happiness Background fade -->
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/4 text-[25rem] text-weddingRed opacity-[0.03] pointer-events-none font-bold">囍</div>
+        
+        <div class="container mx-auto px-4 relative z-10 gs-reveal">
+            <div class="luxury-mist-bg max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="font-cormorant text-4xl md:text-6xl text-weddingGold font-bold mb-4 italic">Trang Phục</h2>
+                    <div class="flex items-center justify-center gap-4 mb-8">
+                        <div class="h-[1px] w-12 bg-weddingGold/50"></div>
+                        <div class="text-weddingGold">✦</div>
+                        <div class="h-[1px] w-12 bg-weddingGold/50"></div>
+                    </div>
+                    <p class="text-weddingCream/90 font-cormorant text-lg md:text-xl italic max-w-2xl mx-auto leading-relaxed" id="dress-code-subtitle">
+                        Để những bức hình kỷ niệm trở nên hài hòa và đẹp mắt nhất,<br>
+                        Quý khách vui lòng ưu tiên chọn trang phục theo các tông màu chủ đạo:
+                    </p>
                 </div>
-                <!-- Color 2 -->
-                <div class="group flex flex-col items-center">
-                    <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-[#D4AF37] border-4 border-white shadow-lg group-hover:scale-110 transition-transform"></div>
-                    <span class="mt-4 font-bold text-[#D4AF37] font-noto">Vàng Ánh Kim</span>
+                
+                <div class="flex flex-wrap justify-center gap-6 md:gap-20" id="dress-code-container">
+                    <!-- Dynamically populated from JS -->
                 </div>
-                <!-- Color 3 -->
-                <div class="group flex flex-col items-center">
-                    <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-[#FFF8E7] border-4 border-gray-300 shadow-lg group-hover:scale-110 transition-transform"></div>
-                    <span class="mt-4 font-bold text-gray-600 font-noto">Trắng Kem</span>
+                
+                <div class="mt-16 text-center">
+                    <p class="text-weddingCream/90 font-cormorant text-xl italic tracking-wide">
+                        Cám ơn sự tinh tế của bạn!
+                    </p>
                 </div>
-                <!-- Color 4 -->
-                <div class="group flex flex-col items-center">
-                    <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-[#1A1A1A] border-4 border-gray-500 shadow-lg group-hover:scale-110 transition-transform"></div>
-                    <span class="mt-4 font-bold text-gray-800 font-noto">Đen Lịch Lãm</span>
-                </div>
-            </div>
-            
-            <div class="mt-12 text-sm text-gray-500 italic max-w-lg mx-auto bg-white/50 p-4 rounded-lg border border-weddingGold/20">
-                Lưu ý: Khuyến khích trang phục áo dài truyền thống hoặc suit/váy dạ hội sang trọng. Cám ơn sự tinh tế của bạn!
             </div>
         </div>
     </section>
 
+    <!-- LIQUID TRANSITION 5: Trang Phục to Countdown (Dark Red to Red) -->
+    <div class="liquid-separator">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="fill-wedding-red" d="M0,32L80,37.3C160,43,320,53,480,85.3C640,117,800,171,960,181.3C1120,192,1280,160,1360,144L1440,128L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+        </svg>
+    </div>
+
     <!-- SECTION 5: COUNTDOWN -->
-    <section id="countdown" class="py-16 md:py-24 relative bg-weddingDarkRed text-weddingCream text-center override-bg overflow-hidden shadow-inner">
+    <section id="countdown" class="py-16 md:py-24 relative bg-wedding-red text-weddingCream text-center overflow-hidden">
         <!-- Fish scale overlay specific to red background -->
         <div class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20 bg-fish-scale-white"></div>
         
         <div class="container mx-auto px-4 relative z-10 gs-reveal">
-            <h2 class="font-playfair text-3xl md:text-5xl font-bold mb-4 text-weddingGold">Ngày Chung Đôi</h2>
+            <h2 class="font-cormorant text-3xl md:text-5xl font-bold mb-4 text-weddingGold">Ngày Chung Đôi</h2>
             <p class="mb-12 text-lg italic tracking-wi">Cùng đếm ngược thời khắc quan trọng...</p>
             
-            <div class="flex justify-center gap-4 md:gap-8 max-w-3xl mx-auto" id="countdown-timer">
-                <div class="timer-box bg-white/10 backdrop-blur-sm border border-weddingGold/50 rounded-lg p-4 w-20 md:w-32 flex flex-col items-center">
-                    <span class="days text-3xl md:text-5xl font-bold text-weddingGold font-playfair mb-2">00</span>
-                    <span class="text-xs md:text-sm uppercase tracking-wider">Ngày</span>
+            <div class="flex justify-center gap-2 sm:gap-4 md:gap-8 max-w-3xl mx-auto" id="countdown-timer">
+                <div class="timer-box bg-white/10 backdrop-blur-sm border border-weddingGold/50 rounded-lg p-2 sm:p-4 w-16 sm:w-20 md:w-32 flex flex-col items-center">
+                    <span class="days text-2xl sm:text-3xl md:text-5xl font-bold text-weddingGold font-cormorant mb-1 sm:mb-2">00</span>
+                    <span class="text-[0.6rem] sm:text-xs md:text-sm uppercase tracking-wider">Ngày</span>
                 </div>
-                <div class="timer-box bg-white/10 backdrop-blur-sm border border-weddingGold/50 rounded-lg p-4 w-20 md:w-32 flex flex-col items-center">
-                    <span class="hours text-3xl md:text-5xl font-bold text-weddingGold font-playfair mb-2">00</span>
-                    <span class="text-xs md:text-sm uppercase tracking-wider">Giờ</span>
+                <div class="timer-box bg-white/10 backdrop-blur-sm border border-weddingGold/50 rounded-lg p-2 sm:p-4 w-16 sm:w-20 md:w-32 flex flex-col items-center">
+                    <span class="hours text-2xl sm:text-3xl md:text-5xl font-bold text-weddingGold font-cormorant mb-1 sm:mb-2">00</span>
+                    <span class="text-[0.6rem] sm:text-xs md:text-sm uppercase tracking-wider">Giờ</span>
                 </div>
-                <div class="timer-box bg-white/10 backdrop-blur-sm border border-weddingGold/50 rounded-lg p-4 w-20 md:w-32 flex flex-col items-center">
-                    <span class="minutes text-3xl md:text-5xl font-bold text-weddingGold font-playfair mb-2">00</span>
-                    <span class="text-xs md:text-sm uppercase tracking-wider">Phút</span>
+                <div class="timer-box bg-white/10 backdrop-blur-sm border border-weddingGold/50 rounded-lg p-2 sm:p-4 w-16 sm:w-20 md:w-32 flex flex-col items-center">
+                    <span class="minutes text-2xl sm:text-3xl md:text-5xl font-bold text-weddingGold font-cormorant mb-1 sm:mb-2">00</span>
+                    <span class="text-[0.6rem] sm:text-xs md:text-sm uppercase tracking-wider">Phút</span>
                 </div>
-                <div class="timer-box bg-white/10 backdrop-blur-sm border border-weddingGold/50 rounded-lg p-4 w-20 md:w-32 flex flex-col items-center">
-                    <span class="seconds text-3xl md:text-5xl font-bold text-weddingGold font-playfair mb-2">00</span>
-                    <span class="text-xs md:text-sm uppercase tracking-wider">Giây</span>
+                <div class="timer-box bg-white/10 backdrop-blur-sm border border-weddingGold/50 rounded-lg p-2 sm:p-4 w-16 sm:w-20 md:w-32 flex flex-col items-center">
+                    <span class="seconds text-2xl sm:text-3xl md:text-5xl font-bold text-weddingGold font-cormorant mb-1 sm:mb-2">00</span>
+                    <span class="text-[0.6rem] sm:text-xs md:text-sm uppercase tracking-wider">Giây</span>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Countdown to Gallery (Red to Cream) -->
+    <div class="liquid-separator">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="fill-wedding-cream" d="M0,192L48,181.3C96,171,192,149,288,138.7C384,128,480,128,576,149.3C672,171,768,213,864,224C960,235,1056,213,1152,192C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+
     <!-- SECTION 6: GALLERY -->
-    <section id="gallery" class="py-20 md:py-32 relative bg-weddingCream">
-        <div class="container mx-auto px-4 gs-reveal">
+    <section id="gallery" class="py-20 md:py-32 relative bg-wedding-cream">
+        <div class="container mx-auto px-4 gs-reveal relative z-10">
             <div class="text-center mb-16">
-                <h2 class="font-playfair text-4xl text-weddingDarkRed font-bold mb-4">Khoảnh Khắc Đáng Nhớ</h2>
+                <h2 class="font-cormorant text-4xl text-weddingDarkRed font-bold mb-4">Khoảnh Khắc Đáng Nhớ</h2>
                 <div class="w-24 h-1 bg-weddingGold mx-auto rounded mb-4"></div>
-                <p class="text-gray-600 italic font-noto">Lưu giữ lại thanh xuân và tình yêu nồng nhiệt</p>
+                <p class="text-gray-600 italic font-montserrat">Lưu giữ lại thanh xuân và tình yêu nồng nhiệt</p>
             </div>
             
             <!-- Swiper Slider / Grid Wrapper -->
@@ -370,40 +429,40 @@
         </div>
     </section>
 
-    <!-- SECTION 6.5: RSVP -->
-    <section id="rsvp" class="py-20 md:py-32 relative bg-gray-50 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] border-t border-b border-weddingGold/30">
+    <!-- SECTION 6.5: RSVP (Temporarily Hidden as requested) -->
+    <section id="rsvp" class="py-20 md:py-32 relative bg-gray-50 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] hidden">
         <div class="container mx-auto px-4 max-w-3xl gs-reveal">
             <div class="bg-white p-8 md:p-12 rounded-xl border-2 border-weddingGold shadow-2xl relative text-center transform hover:scale-[1.01] transition-transform">
                 <!-- Ribbon decoration -->
                 <div class="absolute -top-4 -left-4 w-12 h-12 border-t-4 border-l-4 border-weddingRed"></div>
                 <div class="absolute -bottom-4 -right-4 w-12 h-12 border-b-4 border-r-4 border-weddingRed"></div>
                 
-                <h2 class="font-dancing text-5xl md:text-6xl text-weddingDarkRed font-bold mb-2">RSVP</h2>
-                <p class="font-playfair text-xl text-weddingGold mb-8">Xác Nhận Tham Dự</p>
-                <p class="text-gray-600 font-noto italic mb-8 max-w-xl mx-auto">Sự hiện diện của quý khách là niềm vinh hạnh lớn nhất đối với gia đình chúng tôi. Xin vui lòng xác nhận phản hồi trước ngày 10/10/2026.</p>
+                <h2 class="font-vibes text-5xl md:text-6xl text-weddingDarkRed font-bold mb-2">Xác Nhận</h2>
+                <p class="font-cormorant text-xl text-weddingGold mb-8">Tham Dự Lễ Cưới</p>
+                <p class="text-gray-600 font-montserrat italic mb-8 max-w-xl mx-auto">Sự hiện diện của quý khách là niềm vinh hạnh lớn nhất đối với gia đình chúng tôi. Xin vui lòng xác nhận phản hồi trước ngày 10/10/2026.</p>
                 
                 <form id="rsvp-form" class="space-y-6 max-w-lg mx-auto text-left">
                     <div>
-                        <label class="block text-gray-700 font-bold mb-2 font-noto text-sm" for="rsvp-name">Quý danh khách mời</label>
+                        <label class="block text-gray-700 font-bold mb-2 font-montserrat text-sm" for="rsvp-name">Quý danh khách mời</label>
                         <input class="w-full px-4 py-3 bg-gray-50 rounded border border-gray-300 focus:outline-none focus:border-weddingGold focus:ring-1 focus:ring-weddingGold transition-colors" id="rsvp-name" type="text" placeholder="Nhập tên của bạn..." required>
                     </div>
                     
                     <div>
-                        <label class="block text-gray-700 font-bold mb-3 font-noto text-sm">Bạn sẽ tham dự chứ?</label>
+                        <label class="block text-gray-700 font-bold mb-3 font-montserrat text-sm">Bạn sẽ tham dự chứ?</label>
                         <div class="flex flex-col sm:flex-row gap-4">
                             <label class="flex items-center cursor-pointer group">
                                 <input type="radio" name="attendance" value="yes" class="form-radio text-weddingGold h-5 w-5 focus:ring-weddingGold" checked required>
-                                <span class="ml-2 text-gray-700 font-noto group-hover:text-weddingRed transition-colors">Tôi sẽ đến chung vui</span>
+                                <span class="ml-2 text-gray-700 font-montserrat group-hover:text-weddingRed transition-colors">Tôi sẽ đến chung vui</span>
                             </label>
                             <label class="flex items-center cursor-pointer group">
                                 <input type="radio" name="attendance" value="no" class="form-radio text-weddingGold h-5 w-5 focus:ring-weddingGold">
-                                <span class="ml-2 text-gray-700 font-noto group-hover:text-weddingRed transition-colors">Tiếc quá, tôi bận mất rồi</span>
+                                <span class="ml-2 text-gray-700 font-montserrat group-hover:text-weddingRed transition-colors">Tiếc quá, tôi bận mất rồi</span>
                             </label>
                         </div>
                     </div>
                     
                     <div>
-                        <label class="block text-gray-700 font-bold mb-2 font-noto text-sm" for="rsvp-guests">Số lượng người đi cùng</label>
+                        <label class="block text-gray-700 font-bold mb-2 font-montserrat text-sm" for="rsvp-guests">Số lượng người đi cùng</label>
                         <select class="w-full px-4 py-3 bg-gray-50 rounded border border-gray-300 focus:outline-none focus:border-weddingGold focus:ring-1 focus:ring-weddingGold transition-colors" id="rsvp-guests">
                             <option value="0">Đi một mình</option>
                             <option value="1">1 Người</option>
@@ -422,25 +481,32 @@
         </div>
     </section>
 
+    <!-- Gallery to Wishes (Cream to Gray Light) -->
+    <div class="liquid-separator">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="fill-wedding-gray-light" d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,106.7C672,117,768,171,864,197.3C960,224,1056,224,1152,197.3C1248,171,1344,117,1392,90.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+
     <!-- SECTION 7: GUEST WISHES -->
-    <section id="wishes" class="py-20 md:py-32 relative bg-gray-50 border-t border-weddingGold/30">
+    <section id="wishes" class="py-20 md:py-32 relative bg-wedding-gray-light">
         <div class="container mx-auto px-4 max-w-5xl">
             <div class="text-center mb-12 gs-reveal">
-                <h2 class="font-playfair text-4xl text-weddingDarkRed font-bold mb-4">Sổ Lưu Bút</h2>
+                <h2 class="font-cormorant text-4xl text-weddingDarkRed font-bold mb-4">Sổ Lưu Bút</h2>
                 <div class="w-24 h-1 bg-weddingGold mx-auto rounded mb-4"></div>
-                <p class="text-gray-600 italic font-noto">Hãy gửi những lời chúc tốt đẹp nhất đến với chúng tôi</p>
+                <p class="text-gray-600 italic font-montserrat">Hãy gửi những lời chúc tốt đẹp nhất đến với chúng tôi</p>
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <!-- Form Box -->
-                <div class="bg-white p-8 rounded-lg shadow-lg border border-gray-100 gs-reveal-left">
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg border border-gray-100 gs-reveal-left">
                     <form justify="center" id="wish-form" class="space-y-6">
                         <div>
-                            <label class="block text-gray-700 font-bold mb-2 font-noto" for="guest-name">Tên khách mời</label>
+                            <label class="block text-gray-700 font-bold mb-2 font-montserrat" for="guest-name">Tên khách mời</label>
                             <input class="w-full px-4 py-3 rounded border border-gray-300 focus:outline-none focus:border-weddingGold focus:ring-1 focus:ring-weddingGold transition-colors" id="guest-name" type="text" placeholder="Nhập tên của bạn..." required>
                         </div>
                         <div>
-                            <label class="block text-gray-700 font-bold mb-2 font-noto" for="guest-wish">Lời chúc</label>
+                            <label class="block text-gray-700 font-bold mb-2 font-montserrat" for="guest-wish">Lời chúc</label>
                             <textarea class="w-full px-4 py-3 rounded border border-gray-300 focus:outline-none focus:border-weddingGold focus:ring-1 focus:ring-weddingGold transition-colors h-32 resize-none" id="guest-wish" placeholder="Viết lời yêu thương..." required></textarea>
                         </div>
                         <button class="w-full bg-gradient-to-r from-weddingDarkRed to-weddingRed hover:from-weddingRed hover:to-weddingLightGold text-weddingCream font-bold py-3 px-4 rounded shadow-md transition-all transform hover:-translate-y-1" type="submit">
@@ -454,34 +520,105 @@
                     <!-- Wish items dynamically populated here -->
                     <div class="border-b border-gray-100 py-4 mb-2 animate-fade-in">
                         <h4 class="font-bold text-weddingDarkRed"><i class="fas fa-heart text-weddingGold text-sm mr-2"></i> Nguyễn Minh</h4>
-                        <p class="text-gray-600 mt-2 text-sm italic font-noto">"Chúc hai bạn trăm năm hạnh phúc, răng long đầu bạc ❤️ Cung hỷ cung hỷ!"</p>
+                        <p class="text-gray-600 mt-2 text-sm italic font-montserrat">"Chúc hai bạn trăm năm hạnh phúc, răng long đầu bạc ❤️ Cung hỷ cung hỷ!"</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Wishes to Contact (Gray Light to Dark Red) -->
+    <div class="liquid-separator">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="fill-wedding-dark" d="M0,192L60,181.3C120,171,240,149,360,165.3C480,181,600,235,720,240C840,245,960,203,1080,170.7C1200,139,1320,117,1380,106.7L1440,96L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+        </svg>
+    </div>
+
     <!-- SECTION 8: CONTACT -->
-    <section id="contact" class="py-16 md:py-24 relative bg-weddingDarkRed text-weddingCream text-center override-bg">
-        <h2 class="font-playfair text-4xl font-bold text-weddingGold mb-8">Trân Trọng Kính Mời</h2>
+    <section id="contact" class="py-12 md:py-20 relative bg-weddingDarkRed text-weddingCream text-center override-bg">
+        <h2 class="font-cormorant text-3xl md:text-5xl font-bold text-weddingGold mb-8 gs-reveal">Trân Trọng Kính Mời</h2>
         
-        <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 mb-8">
-            <div>
-                <h4 class="font-bold mb-2 uppercase tracking-wide">Nhà Trai</h4>
-                <p class="mb-1"><i class="fas fa-phone-alt text-weddingGold mr-2"></i> Chú rể: 0901 234 567</p>
+        <div class="flex flex-row justify-center items-center gap-4 md:gap-16 mb-4 max-w-2xl mx-auto gs-reveal">
+            <!-- Nha Trai -->
+            <div class="flex-1 text-right border-r border-weddingGold/30 pr-4 md:pr-8">
+                <h4 class="font-bold mb-1 md:mb-2 uppercase tracking-widest text-sm md:text-base text-weddingGold">Nhà Trai</h4>
+                <p class="text-sm md:text-lg font-montserrat flex items-center justify-end gap-2 text-weddingCream/90">
+                    0901 234 567 
+                </p>
             </div>
+            
             <!-- Center icon -->
-            <div class="text-4xl text-weddingGold my-4 md:my-0 opacity-50">
+            <div class="text-3xl md:text-5xl text-weddingGold opacity-60 px-2">
                 囍
             </div>
-            <div>
-                <h4 class="font-bold mb-2 uppercase tracking-wide">Nhà Gái</h4>
-                <p class="mb-1"><i class="fas fa-phone-alt text-weddingGold mr-2"></i> Cô dâu: 0909 876 543</p>
+            
+            <!-- Nha Gai -->
+            <div class="flex-1 text-left border-l border-weddingGold/30 pl-4 md:pl-8">
+                <h4 class="font-bold mb-1 md:mb-2 uppercase tracking-widest text-sm md:text-base text-weddingGold">Nhà Gái</h4>
+                <p class="text-sm md:text-lg font-montserrat flex items-center justify-start gap-2 text-weddingCream/90">
+                     0909 876 543
+                </p>
             </div>
         </div>
-        
-        <p class="text-xs text-white/50 mt-12 mb-0">Thiết kế bởi Hệ Thống Wedding Code<br>2026</p>
     </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer relative bg-wedding-darker text-weddingCream py-12 md:py-20 overflow-hidden pb-32 md:pb-12 border-t-4 border-weddingGold/30">
+        <!-- Decoration top row -->
+        <div class="flex justify-center items-center mb-8 gap-4 opacity-50">
+             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 fill-weddingGold">
+                <!-- Simple Dragon Silhouette -->
+                <path d="M180,20 Q150,50 120,30 T60,60 Q30,90 20,150 Q50,130 80,140 T140,110 Q170,80 180,20 Z" />
+            </svg>
+            <div class="text-3xl text-weddingGold icon-shuangxi">囍</div>
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 fill-weddingGold transform scale-x-[-1]">
+                <!-- Simple Phoenix Silhouette -->
+                <path d="M180,20 Q150,50 120,30 T60,60 Q30,90 20,150 Q50,130 80,140 T140,110 Q170,80 180,20 Z" />
+            </svg>
+        </div>
+        
+        <div class="container mx-auto px-4 text-center z-10 relative">
+            <h2 class="font-cormorant text-2xl md:text-4xl text-weddingGold font-bold mb-4 uppercase tracking-[0.2em] gs-reveal">Cám ơn bạn đã tới dự</h2>
+            <p class="font-vibes text-4xl md:text-5xl text-weddingCream mt-4 mb-8 leading-relaxed gs-reveal">
+                Sự hiện diện của bạn là vô giá với chúng tôi.
+            </p>
+            <div class="w-32 h-px bg-weddingGold/50 mx-auto my-8"></div>
+            
+            <p class="font-montserrat text-sm md:text-base text-gray-400 opacity-80 mt-12 tracking-wider">
+                Made with <i class="fa-solid fa-heart text-weddingRed mx-1 heart-beat"></i> by TungLor
+            </p>
+        </div>
+    </footer>
+
+    <!-- ===== MOBILE BOTTOM NAV ===== -->
+    <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+      <div class="mobile-nav-container">
+        <button class="mobile-nav-btn active" data-target="hero" aria-label="Trang chủ">
+          <i class="fas fa-envelope-open-text mobile-nav-icon"></i>
+          <span class="mobile-nav-label">Trang chủ</span>
+        </button>
+        <button class="mobile-nav-btn" data-target="events" aria-label="Sự kiện">
+          <i class="fas fa-calendar-alt mobile-nav-icon"></i>
+          <span class="mobile-nav-label">Lịch Trình</span>
+        </button>
+        
+        <!-- Center icon -->
+        <div class="relative w-14 h-14 flex items-center justify-center -mt-8 pt-2">
+            <button id="musicToggleBtnMobile" class="absolute bg-weddingGold text-white w-14 h-14 rounded-full shadow-[0_0_15px_rgba(212,175,55,0.8)] flex items-center justify-center border-4 border-[#8b0000] hover:bg-weddingLightGold transition-all z-[100] outline-none">
+                <i class="fas fa-volume-mute text-xl pointer-events-none"></i>
+            </button>
+        </div>
+
+        <button class="mobile-nav-btn" data-target="gallery" aria-label="Ảnh cưới">
+          <i class="fas fa-camera-retro mobile-nav-icon"></i>
+          <span class="mobile-nav-label">Bộ Ảnh</span>
+        </button>
+        <button class="mobile-nav-btn" data-target="wishes" aria-label="Lời chúc">
+          <i class="fas fa-comment-dots mobile-nav-icon"></i>
+          <span class="mobile-nav-label">Lời chúc</span>
+        </button>
+      </div>
+    </nav>
 
     <!-- Fullscreen Lightbox for Gallery -->
     <div id="lightbox" class="fixed top-0 left-0 w-full h-full bg-black/90 z-[100] hidden flex-col items-center justify-center">
@@ -494,6 +631,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     
     <!-- Module Script referencing JS file -->
     <script type="module" src="./js/wedding.js"></script>

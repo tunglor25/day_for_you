@@ -1,6 +1,6 @@
 // js/wedding.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, onDisconnect, serverTimestamp, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 console.log("Wedding JS Loaded");
 
@@ -19,33 +19,208 @@ onDisconnect(myLocationRef).remove();
 
 let guestName = "Khách mời";
 
+// --- URL & Config Parameter Data Loading ---
+const urlParams = new URLSearchParams(window.location.search);
+let groomId = urlParams.get('groomId');
+let brideId = urlParams.get('brideId');
+
+async function initWeddingData() {
+    // 1. Fetch Global Admin Config
+    const configRef = ref(db, 'wedding/config');
+    try {
+        const snapshot = await get(configRef);
+        if (snapshot.exists()) {
+            const config = snapshot.val();
+            
+            // Apply config if URL params are missing
+            if (!groomId) groomId = config.groomId;
+            if (!brideId) brideId = config.brideId;
+            
+            // Apply other global settings
+            if (config.loveStory) {
+                const storyEl = document.getElementById('story-content');
+                if (storyEl) storyEl.innerText = config.loveStory;
+            }
+            // Wedding Bio overrides
+            window.adminConfig = config; // Store globals for later use
+
+            // --- Apply New Fields to UI ---
+            if (config.groomAddress) {
+                const el = document.getElementById('groom-address');
+                if (el) el.innerText = config.groomAddress;
+            }
+            if (config.brideAddress) {
+                const el = document.getElementById('bride-address');
+                if (el) el.innerText = config.brideAddress;
+            }
+            if (config.groomMap) {
+                const el = document.getElementById('groom-map-link');
+                if (el) el.href = config.groomMap;
+            }
+            if (config.brideMap) {
+                const el = document.getElementById('bride-map-link');
+                if (el) el.href = config.brideMap;
+            }
+            if (config.weddingTime) {
+                const el = document.getElementById('wedding-time-text');
+                if (el) el.innerText = config.weddingTime;
+            }
+            if (config.dressCode) {
+                const el = document.getElementById('dress-code-text');
+                if (el) el.innerText = config.dressCode;
+
+                const container = document.getElementById('dress-code-container');
+                if (container) {
+                    container.innerHTML = ''; // Clear existing
+                    const colors = config.dressCode.split('&').map(c => c.trim());
+                    
+                    const colorMap = {
+                        'đỏ rượu': '#B22222',
+                        'vàng gold': '#D4AF37',
+                        'vàng ánh kim': '#D4AF37',
+                        'trắng kem': '#FFF8E7',
+                        'đen lịch lãm': '#1A1A1A',
+                        'đen': '#1A1A1A',
+                        'trắng': '#FFFFFF',
+                        'đỏ': '#FF0000',
+                        'vàng': '#FFFF00',
+                        'xanh': '#0000FF',
+                        'hồng': '#FFC0CB',
+                        'do ruou': '#B22222',
+                        'vang gold': '#D4AF37',
+                        'vang anh kim': '#D4AF37',
+                        'trang kem': '#FFF8E7'
+                    };
+
+                    const displayNames = {
+                        'vang gold': 'Vàng Gold',
+                        'vàng gold': 'Vàng Gold',
+                        'do ruou': 'Đỏ Rượu',
+                        'đỏ rượu': 'Đỏ Rượu',
+                        'trang kem': 'Trắng Kem',
+                        'trắng kem': 'Trắng Kem',
+                        'den lich lam': 'Đen Lịch Lãm',
+                        'đen lịch lãm': 'Đen Lịch Lãm'
+                    };
+
+                    colors.forEach((colorName) => {
+                        const hex = colorMap[colorName.toLowerCase()] || '#CCCCCC';
+                        const displayName = displayNames[colorName.toLowerCase()] || colorName;
+                        const colorDiv = document.createElement('div');
+                        colorDiv.className = 'flex flex-col items-center';
+                        colorDiv.innerHTML = `
+                            <div class="color-circle-luxury">
+                                <div class="w-full h-full rounded-full border-[3px] border-white shadow-xl relative z-10" style="background-color: ${hex};"></div>
+                            </div>
+                            <span class="mt-6 luxury-label text-weddingGold uppercase">${displayName}</span>
+                        `;
+                        container.appendChild(colorDiv);
+                    });
+                }
+            }
+            // Update countdown date if provided
+            if (config.weddingDate) {
+                window.weddingDateOverride = new Date(config.weddingDate + 'T18:00:00').getTime();
+            }
+        }
+    } catch (e) {
+        console.warn("No admin config found, using defaults/URL.");
+    }
+
+    // 2. Load Specific User Data
+    loadUserData(groomId, 'groom');
+    loadUserData(brideId, 'bride');
+}
+
+async function loadUserData(id, role) {
+    if (!id) return;
+    const userRef = ref(db, `celebrations/${id}`);
+    try {
+        const snapshot = await get(userRef);
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            updateUIRole(data, role);
+        }
+    } catch (error) {
+        console.error(`Error loading ${role} data:`, error);
+    }
+}
+
+async function loadGalleryData(folder) {
+    if (!folder) return;
+    // For now, we'll just log it as we'll need to implement the gallery loading logic later 
+    // based on how the files are structured in that folder.
+    console.log("Gallery Folder to load:", folder);
+}
+
+function updateUIRole(data, role) {
+    // Map Firebase fields to UI
+    const name = data.name;
+    
+    // Check if admin provided a specific bio for this wedding, else use user's bio
+    const config = window.adminConfig || {};
+    const adminBio = (role === 'groom') ? config.groomBio : config.brideBio;
+    const desc = adminBio || data.weddingBio || data.bio; 
+    
+    // Construct photo path from 'folder' field if it exists
+    const photo = data.folder ? `./assets/images/${data.folder}/Anh1.PNG` : data.photo;
+
+    // Use admin's gallery folder if specified
+    if (config.galleryFolder) {
+        loadGalleryData(config.galleryFolder);
+    }
+
+    if (role === 'groom') {
+        if (name) {
+            document.getElementById('groom-name-hero').innerText = name;
+            document.getElementById('groom-name-main').innerText = name;
+        }
+        if (photo) document.getElementById('groom-photo').src = photo;
+        if (desc) document.getElementById('groom-desc').innerText = desc;
+    } else if (role === 'bride') {
+        if (name) {
+            document.getElementById('bride-name-hero').innerText = name;
+            document.getElementById('bride-name-main').innerText = name;
+        }
+        if (photo) document.getElementById('bride-photo').src = photo;
+        if (desc) document.getElementById('bride-desc').innerText = desc;
+    }
+}
+
+// Start loading
+initWeddingData();
+
 
 // --- 1. Audio Toggle ---
 const bgMusic = document.getElementById('bgMusic');
-const musicToggleBtn = document.getElementById('musicToggleBtn');
+const musicToggleBtnDesktop = document.getElementById('musicToggleBtn');
+const musicToggleBtnMobile = document.getElementById('musicToggleBtnMobile');
+
 let isPlaying = false;
+
+function toggleMusic(e) {
+    if(e) e.stopPropagation();
+    if (isPlaying) {
+        bgMusic.pause();
+        if(musicToggleBtnDesktop) musicToggleBtnDesktop.innerHTML = '<i class="fas fa-volume-mute text-xl pointer-events-none"></i>';
+        if(musicToggleBtnMobile) musicToggleBtnMobile.innerHTML = '<i class="fas fa-volume-mute text-xl pointer-events-none"></i>';
+    } else {
+        bgMusic.play().catch(e => console.log("Audio play caught:", e));
+        if(musicToggleBtnDesktop) musicToggleBtnDesktop.innerHTML = '<i class="fas fa-volume-up text-xl pointer-events-none"></i>';
+        if(musicToggleBtnMobile) musicToggleBtnMobile.innerHTML = '<i class="fas fa-volume-up text-xl pointer-events-none"></i>';
+    }
+    isPlaying = !isPlaying;
+}
 
 // Attempt to play music on first interaction
 document.body.addEventListener('click', () => {
     if (!isPlaying) {
-        bgMusic.play().then(() => {
-            isPlaying = true;
-            musicToggleBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-        }).catch(e => console.log("Audio autoplay prevented by browser"));
+        toggleMusic();
     }
 }, { once: true });
 
-musicToggleBtn.addEventListener('click', (e) => {
-    e.stopPropagation(); // prevent triggering the body click again
-    if (isPlaying) {
-        bgMusic.pause();
-        musicToggleBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-    } else {
-        bgMusic.play();
-        musicToggleBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-    }
-    isPlaying = !isPlaying;
-});
+if(musicToggleBtnDesktop) musicToggleBtnDesktop.addEventListener('click', toggleMusic);
+if(musicToggleBtnMobile) musicToggleBtnMobile.addEventListener('click', toggleMusic);
 
 // --- 2. GSAP Scroll Animations ---
 gsap.registerPlugin(ScrollTrigger);
@@ -92,7 +267,7 @@ revealRight.forEach((el) => {
 
 // --- 3. Countdown Timer ---
 // Set Wedding Date (YYYY-MM-DDTHH:MM:SS)
-const weddingDate = new Date('2026-10-20T18:00:00').getTime();
+const defaultWeddingDate = new Date('2026-10-20T18:00:00').getTime();
 
 const daysEl = document.querySelector('.days');
 const hoursEl = document.querySelector('.hours');
@@ -100,6 +275,7 @@ const minutesEl = document.querySelector('.minutes');
 const secondsEl = document.querySelector('.seconds');
 
 function updateCountdown() {
+    const weddingDate = window.weddingDateOverride || defaultWeddingDate;
     const now = new Date().getTime();
     const distance = weddingDate - now;
 
@@ -174,7 +350,7 @@ wishForm.addEventListener('submit', (e) => {
         newWish.innerHTML = `
             <h4 class="font-bold text-weddingDarkRed"><i class="fas fa-heart text-weddingGold text-sm mr-2"></i> ${// escape HTML simply
             nameInput.value.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h4>
-            <p class="text-gray-600 mt-2 text-sm italic font-noto">"${wishInput.value.replace(/</g, "&lt;").replace(/>/g, "&gt;")}"</p>
+            <p class="text-gray-600 mt-2 text-sm italic font-montserrat">"${wishInput.value.replace(/</g, "&lt;").replace(/>/g, "&gt;")}"</p>
         `;
         
         // Prepend to list
@@ -423,11 +599,11 @@ if (mapEl && typeof L !== 'undefined') {
                 if (otherGuestMarkers[key]) {
                     // Update content dynamically too just in case name changes
                     otherGuestMarkers[key].setLatLng(coords)
-                        .setPopupContent(`<div class="text-center"><b class="text-weddingDarkRed font-noto text-lg">${guestData.name || 'Khách mời'}</b><br><span class="text-xs text-gray-500">Đang trên đường đến...</span></div>`);
+                        .setPopupContent(`<div class="text-center"><b class="text-weddingDarkRed font-montserrat text-lg">${guestData.name || 'Khách mời'}</b><br><span class="text-xs text-gray-500">Đang trên đường đến...</span></div>`);
                 } else {
                     // Create new marker for this guest
                     otherGuestMarkers[key] = L.marker(coords, {icon: guestIcon})
-                        .bindPopup(`<div class="text-center"><b class="text-weddingDarkRed font-noto text-lg">${guestData.name || 'Khách mời'}</b><br><span class="text-xs text-gray-500">Đang trên đường đến...</span></div>`)
+                        .bindPopup(`<div class="text-center"><b class="text-weddingDarkRed font-montserrat text-lg">${guestData.name || 'Khách mời'}</b><br><span class="text-xs text-gray-500">Đang trên đường đến...</span></div>`)
                         .addTo(map);
                 }
             });
@@ -477,3 +653,171 @@ if(rsvpForm) {
     });
 }
 
+// --- 9. Confetti Cursor Trail Effect ---
+const confettiCanvas = document.getElementById('confetti-cursor-canvas');
+if (confettiCanvas && window.matchMedia("(pointer: fine)").matches) {
+    const cCtx = confettiCanvas.getContext('2d');
+    let cw = confettiCanvas.width = window.innerWidth;
+    let ch = confettiCanvas.height = window.innerHeight;
+    
+    window.addEventListener('resize', () => {
+        cw = confettiCanvas.width = window.innerWidth;
+        ch = confettiCanvas.height = window.innerHeight;
+    });
+
+    const confettiParticles = [];
+    const confettiColors = ['#D4AF37', '#B22222', '#FFF8E7', '#FF69B4', '#FFD700'];
+
+    class Confetti {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 6 + 4;
+            this.speedX = Math.random() * 4 - 2;
+            this.speedY = Math.random() * -2 - 1;
+            this.gravity = 0.15;
+            this.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+            this.rotation = Math.random() * 360;
+            this.rotationSpeed = Math.random() * 10 - 5;
+            this.opacity = 1;
+            this.shape = Math.random() > 0.5 ? 'circle' : 'square';
+        }
+        
+        update() {
+            this.x += this.speedX;
+            this.speedY += this.gravity;
+            this.y += this.speedY;
+            this.rotation += this.rotationSpeed;
+            this.opacity -= 0.015; // fade out speed
+        }
+        
+        draw() {
+            cCtx.save();
+            cCtx.globalAlpha = this.opacity;
+            cCtx.translate(this.x, this.y);
+            cCtx.rotate(this.rotation * Math.PI / 180);
+            cCtx.fillStyle = this.color;
+            
+            if (this.shape === 'square') {
+                cCtx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+            } else {
+                cCtx.beginPath();
+                cCtx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+                cCtx.fill();
+            }
+            cCtx.restore();
+        }
+    }
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let isMouseMoving = false;
+    let mouseTimeout;
+
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        isMouseMoving = true;
+        
+        // Spawn 1-2 particles per mouse move event
+        for(let i=0; i<2; i++) {
+            confettiParticles.push(new Confetti(mouseX, mouseY));
+        }
+        
+        clearTimeout(mouseTimeout);
+        mouseTimeout = setTimeout(() => {
+            isMouseMoving = false;
+        }, 100);
+    });
+
+    function animateConfetti() {
+        cCtx.clearRect(0, 0, cw, ch);
+        
+        for (let i = 0; i < confettiParticles.length; i++) {
+            confettiParticles[i].update();
+            confettiParticles[i].draw();
+            
+            // Remove dead particles
+            if (confettiParticles[i].opacity <= 0) {
+                confettiParticles.splice(i, 1);
+                i--;
+            }
+        }
+        requestAnimationFrame(animateConfetti);
+    }
+    
+    animateConfetti();
+    
+    // Keep Magnetic effect for buttons only
+    const magneticElements = document.querySelectorAll('button, a, .image-gallery>div');
+    magneticElements.forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            el.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.02)`;
+        });
+        el.addEventListener('mouseleave', () => {
+            el.style.transform = 'translate(0px, 0px) scale(1)';
+        });
+        el.classList.add('magnetic');
+    });
+}
+
+// Global Tilt Effect Initiation (3D perspective on photos)
+if (typeof VanillaTilt !== 'undefined') {
+    const tiltElements = document.querySelectorAll('.image-gallery>div, #couple .rounded-full');
+    VanillaTilt.init(tiltElements, {
+        max: 8,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.4
+    });
+}
+
+// --- 10. Mobile Bottom Nav Handling ---
+const navButtons = document.querySelectorAll('.mobile-nav-btn');
+const sectionIds = Array.from(navButtons).map(btn => btn.getAttribute('data-target'));
+const navSections = sectionIds.map(id => document.getElementById(id));
+
+if (navButtons.length > 0) {
+    // Click to smooth scroll
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+             // Let the scroll listener handle the active state
+            const targetId = btn.getAttribute('data-target');
+            const targetSection = document.getElementById(targetId);
+            if(targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Change active state on scroll
+    window.addEventListener('scroll', () => {
+        let current = '';
+        const scrollPosition = window.scrollY + window.innerHeight / 3;
+
+        navSections.forEach(section => {
+            if(!section || section.classList.contains('hidden')) return;
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        // Special case for very bottom of the page
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
+            current = 'wishes';
+        }
+
+        navButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-target') === current) {
+                btn.classList.add('active');
+            }
+        });
+    });
+}
